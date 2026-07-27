@@ -1,18 +1,43 @@
 import { useState } from "react";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Character } from "@/types/characterTypes";
+import "./background.css";
 
+//temp variables
 const ancestries = ["Honi","Hyvani","Machina","Meliades","Merrow","Nagani","Phalaena","Ullik","Human","Orc","Elf","Dwarf","Halfling","Pixie"];
 const backgrounds = ["Velari Truth-Seeker", "Mahoken Institute Affiliate", "Jennite Follower", "Bolnean Citizen","Nagen-Tei", "Saile Trader","Fionn Shaman","Wanderer"];
+const ancVariants = ["Variant 1", "Variant 2", "Variant 3"];
+const backVariants = ["Variant 1", "Variant 2", "Variant 3"];
+const descy = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu ex ante. Phasellus ut sapien ac ipsum euismod hendrerit. Vestibulum congue interdum magna, ac aliquet odio posuere in. Integer pretium rhoncus faucibus. In porttitor bibendum neque scelerisque faucibus. Aliquam vitae blandit lorem. Vivamus dictum mollis nisi, sit amet tincidunt nunc congue et. Ut luctus rutrum nibh, non rhoncus nunc molestie in. Integer aliquet dictum mi nec fermentum. Pellentesque sit amet volutpat sem, a sagittis orci. Donec bibendum magna quis ex porta, eu eleifend diam auctor. Integer aliquam ac libero sit amet aliquam. Donec in nisl molestie, semper leo cursus, vestibulum diam. In porttitor enim ut faucibus efficitur. Vestibulum iaculis venenatis lorem, quis sodales ipsum mollis id. ";
 
 export default function background(character:Character,setCharacterData:Function) {
 
     const [ancestrySelection, setAncestrySelection] = useState(false);
     const [backgroundSelection, setBackgroundSelection] = useState(false);
+    const [ancestryVariant, setAncestryVariant] = useState("");
+    const [backgroundVariant, setBackgroundVariant] = useState("");
+    const [ancVariantList, setAncVariantList] = useState(buildAncestryVariants(ancVariants));
+    const [backVariantList, setBackVariantList] = useState(buildBackgroundVariants(backVariants));
+    const [characterName, setCharacterName] = useState("");
 
+    function buildAncestryVariants(variants:string[]) {
+        return <select defaultValue={variants[0]} onChange={(e)=>(setAncestryVariant(e.currentTarget.value))}>Choose Variant
+            {variants.map((variant: string)=>(
+                <option value = {variant} key={variant}>
+                    {variant}
+                </option>
+            ))}
+        </select>
+    }
+
+    function buildBackgroundVariants(variants:string[]) {
+        return <select defaultValue={variants[0]} onChange={(e)=>(setBackgroundVariant(e.currentTarget.value))}>Choose Variant
+            {variants.map((variant: string)=>(
+                <option value = {variant} key={variant}>
+                    {variant}
+                </option>
+            ))}
+        </select>
+    }
 
     const ancestryReturn = ()=> {
         setAncestrySelection(false);
@@ -21,114 +46,116 @@ export default function background(character:Character,setCharacterData:Function
         setBackgroundSelection(false);
     }
     const ancestryChoice = (ancestry:string) => {
+        //ancVariants will be chosen with ancestry choice
         setAncestrySelection(true);
-        setCharacterData((prev: any) => ({
-        ...prev,
-        ancestryName: ancestry
-        }))
+        setAncVariantList(buildAncestryVariants(ancVariants));
+        setAncestryVariant(ancVariants[0]);
+        if (character.ancestryName != ancestry) {
+            setCharacterData((prev: any) => ({
+            ...prev,
+            ancestryName: ancestry
+            }))
+        }
     }
     const backgroundChoice = (background:string) => {
+        //backVariants will be chosen with background choice
         setBackgroundSelection(true);
-        setCharacterData((prev: any) => ({
-        ...prev,
-        backgroundName: background
-        }))
+        setBackVariantList(buildBackgroundVariants(backVariants));
+        setBackgroundVariant(backVariants[0]);
+        if (character.backgroundName != background) {
+            setCharacterData((prev: any) => ({
+            ...prev,
+            backgroundName: background
+            }))
+        }
     }
 
     function buildAncestryList(ancestries:string[]) {
-    return <div>{ancestries.map((ancestry: string) => (
-        <div className="ancestryCell" key={ancestry} onClick={()=>{ancestryChoice(ancestry)}}>
-            {ancestry}
-        </div>
-    ))}</div>
+        return <div>{ancestries.map((ancestry: string) => (
+            <div className="cell" key={ancestry} onClick={()=>{ancestryChoice(ancestry)}}>
+                <div className="cellName">
+                    {ancestry}
+                </div>
+                <div className="cellDescription">
+                    Ancestry description text
+                </div>
+                <div className="cellImage">
+
+                </div>                
+            </div>
+        ))}</div>
     }
 
     function buildBackgroundList(backgrounds:string[]) {
-    return <div>{backgrounds.map((background: string) => (
-        <div className="ancestryCell" key={background} onClick={()=>{backgroundChoice(background)}}>
-            {background}
-        </div>
-    ))}</div>
+        return <div>{backgrounds.map((background: string) => (
+            <div className="cell" key={background} onClick={()=>{backgroundChoice(background)}}>
+                <div className="cellName">
+                    {background}
+                </div>
+                <div className="cellDescription">
+                    Background description text
+                </div>
+                <div className="cellImage">
+
+                </div>
+            </div>
+        ))}</div>
     }
 
     return (
     <div className="background">
         <div className="name">
-            Character Name
-            <Field>
-                <Input name="name"
-                />
-            </Field>
+            <input className="nameBox" type="text" placeholder="Character Name" value={characterName} onChange={(e)=>(setCharacterName(e.currentTarget.value))}/>
+            <div className="image">
+                
+            </div>
         </div>
         
         <div className="ancestry">
             {ancestrySelection ? (
             <div>
-                <div onClick={()=>{ ancestryReturn()}}>Back</div>
-                Ancestry: {character.ancestryName}
-                <Field>
-                    <FieldLabel>Variant</FieldLabel>
-                    <Select>
-                        <SelectTrigger className="w-full max-w-48">
-                            <SelectValue placeholder="Select Variant"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Choose Variant</SelectLabel>
-                                <SelectItem value="1">0</SelectItem>
-                                <SelectItem value="2">1</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </Field>
-                Traits:
-                Charasmatic
-                Magical
+                Ancestry
+                <div onClick={()=>{ ancestryReturn()}} className="return">
+                    {character.ancestryName}
+                </div>
+                <div className="variants">
+                    {ancVariantList}
+                </div>
+                Traits: {ancestryVariant}
                 <div className="description">
-                    Lorem Ipsum
+                    {descy} {descy}
                 </div>
             </div>
         ): (<div>
-                Choose Ancestry
-                <ScrollArea className={"h-[85vh]"}> 
+                Choose an Ancestry
+                <div className="scrollList">
                     {buildAncestryList(ancestries)}
-                </ScrollArea>
+                </div>
             </div>)}
         </div>
         
-        <div className="faction">
+        <div className="flex flex-col faction">
             {backgroundSelection ? (
             <div>
-                <div onClick={()=>{ backgroundReturn()}}>Back</div>
-                Background: {character.backgroundName}
-                <Field>
-                    <FieldLabel>Variant</FieldLabel>
-                    <Select>
-                        <SelectTrigger className="w-full max-w-48">
-                            <SelectValue placeholder="Select Variant"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Choose Variant</SelectLabel>
-                                <SelectItem value="1">0</SelectItem>
-                                <SelectItem value="2">1</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </Field>
-                Traits:
-                Charasmatic
-                Magical
+                Background
+                <div onClick={()=>{ backgroundReturn()}} className="return">
+                    {character.backgroundName}
+                </div>
+                <div className="variants">
+                    {backVariantList}
+                </div>
+                Traits: {backgroundVariant}
                 <div className="description">
                     Lorem Ipsum
                 </div>
             </div>
         ): (<div>
-                Choose Background
-                <ScrollArea className={"h-[85vh]"}> 
+                Choose a Background
+                <div className="scrollList">
                     {buildBackgroundList(backgrounds)}
-                </ScrollArea>
-            </div>)}
+                </div>
+            </div>
+            )}
     </div>
     </div>
 )

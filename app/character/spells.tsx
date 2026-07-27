@@ -1,12 +1,12 @@
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { emptySpell, Spell } from "@/types/spellTypes";
 import { useEffect, useState } from "react";
 import { Toggle } from "@/components/ui/toggle";
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
+import "./spells.css";
 
 
 const max0spells = 3;
-const max1spells = 2;
+const max1spells = 1;
 const maxSpells = 6;
 var current0spells = 0;
 var current1spells = 0;
@@ -18,16 +18,37 @@ function generateSpellList() {
     var spells = [];
     for (let i = 0; i < 50; i++) {
         spells.push({...emptySpell});
-        spells[i].name = i.toString();
+        spells[i].name = i.toString() + " Spell Name";
         spells[i].manaCost = Math.round(i/10);
-        spells[i].actionCost = Math.round(i/15).toString();
-        spells[i].range = Math.round(i/3).toString();
-        spells[i].description = "lala";
+        spells[i].actionCost = Math.round(i/15).toString() + " Actions";
+        spells[i].range = Math.round(i/3).toString() + "m";
+        spells[i].description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu ex ante. Phasellus ut sapien ac ipsum euismod hendrerit. Vestibulum congue interdum magna, ac aliquet odio posuere in. Integer pretium rhoncus faucibus. In porttitor bibendum neque scelerisque faucibus. Aliquam vitae blandit lorem. Vivamus dictum mollis nisi, sit amet tincidunt nunc congue et. Ut luctus rutrum nibh, non rhoncus nunc molestie in. Integer aliquet dictum mi nec fermentum.";
+        if (i % 3 == 0) {
+            spells[i].spellType = "Projection";
+        }
+        else if (i % 3 == 1) {
+            spells[i].spellType = "Hex";
+        }
+        else if (i % 3 == 2) {
+            spells[i].spellType = "Enchantment";
+        }
+        if (i % 4 == 0) {
+            spells[i].source = "Domain";
+        }
+        else if (i % 4 == 1) {
+            spells[i].source = "Covenant";
+        }
+        else if (i % 4 == 2) {
+            spells[i].source = "Covenant Keystone";
+        }
+        else if (i % 4 == 3) {
+            spells[i].source = "Covenant Capstone";
+        }
     }
     return spells;
 }
 
-const filterList = ["0", "1", "2", "3", "4", "5"];
+const filterList = ["Domain", "Covenant", "Covenant Keystone", "Covenant Capstone"];
 
 function generateToggleStates(filterList:string[]) {
     let states : boolean[] = [];
@@ -40,28 +61,28 @@ function generateToggleStates(filterList:string[]) {
 const toggleList : boolean[] = generateToggleStates(filterList);
 
 export default function spells() {
-    
+    const [allFilters, setAllFitlers] = useState(filterList);
+    const [activeFilters, setActiveFilters] = useState(filterList);
+
     const [currentSpellList, setCurrentSpellList] = useState<Spell[]>([]);
     const [availableSpellList, setAvailableSpellList] = useState(generateSpellList());
-    const [activeCurrentSpells, setActiveCurrentSpells] = useState<Spell[]>([]);
-    const [activeAvailableSpells, setActiveAvailableSpells] = useState<Spell[]>([]);
 
     const [availableSpellsTable, setAvailableSpellsTable] = useState(spellsMapper(generateSpellList()));
     const [activeCurrentSpellsTable, setActiveCurrentDisplayTable] = useState(currentSpellsMapper(currentSpellList));
     
-    const [allFilters, setAllFitlers] = useState(filterList);
-    const [activeFilters, setActiveFilters] = useState(filterList);
-
     const [filterChecks, setFilterChecks] = useState(new Map());
 
 
 
     function validSpell(spell:Spell) {
-        let spellSource = spell.actionCost;
-        if (spellSource == "0") {
+        let spellSource = spell.source;
+        if (currentSpellList.includes(spell)) {
+            return (false);
+        }
+        if (spellSource == "Domain") {
             return (max0spells > current0spells);
         }
-        else if (spellSource == "1") {
+        else if (spellSource == "Covenant Keystone") {
             return (max1spells > current1spells);
         }
         else {
@@ -71,44 +92,62 @@ export default function spells() {
 
     function spellsMapper(spellList: Spell[]) {
         return (
-        <div className="">{
+        <div className="availableTable">{
             spellList.map((spell: Spell) => (
-                <div key={spell.name} className="flex hover:bg-black" >
-                    <div onClick={()=>{addSpell(spell)}} className={(validSpell(spell)) ? ("w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]") : ("w-[30px] bg-[#cccccc] hover:bg-[#ff0000]")}>
-                        
+                <div key={spell.name} className={(validSpell(spell)) ? ("cell") : ("disabledCell")}>
+                    <div onClick={()=>{addSpell(spell)}} className={(validSpell(spell)) ? ("w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]") : ("w-[30px] bg-[#cccccc] hover:bg-[#cc0000]")}>
+                        +
                     </div>
                     <Accordion>
                         <AccordionItem>
                             <AccordionTrigger>
-                                <div className="w-[100] rounded-md border" >{spell.name}</div>
-                                <div className="w-[100] rounded-md border">{spell.manaCost}</div>
-                                <div className="w-[100] rounded-md border">{spell.actionCost}</div>
-                                <div className="w-[100] rounded-md border">{spell.range}</div>
-                                <div className="row-span-full w-[100] rounded-md border">{spell.description}</div>
+                                <div className="cellContentName">{spell.name}</div>
+                                <div className="cellContentMedium">{spell.manaCost} Mana</div>
+                                <div className="cellContentMedium">{spell.actionCost}</div>
+                                <div className="cellContentShort">{spell.range}</div>
+                                <div className="cellContentLong">{spell.spellType}</div>
+                                <div className="cellContentLong">{spell.source}</div>
                             </AccordionTrigger>
                             <AccordionContent>
-                                Secrets are Here
+                                <div className="cellDescription">
+                                    {spell.description}
+                                </div>
                             </AccordionContent>
                         </AccordionItem>
-                       
                     </Accordion>
+                    {(activeFilters.length == 0) ? ("No Filters Selected"):("")}
                 </div>
-
                 ))}
         </div>)
     }
 
     function currentSpellsMapper(spellList: Spell[]) {
         return (
-        <div className="">{
+        <div className="currentTable">{
             spellList.map((spell: Spell) => (
-                <div key={spell.name} className="flex hover:bg-black" onClick={()=>{removeSpell(spell)}}>
-                    <div className="w-[100] rounded-md border">{spell.name}</div>
-                    <div className="w-[100] rounded-md border">{spell.manaCost}</div>
-                    <div className="w-[100] rounded-md border">{spell.actionCost}</div>
-                    <div className="w-[100] rounded-md border">{spell.range}</div>
-                    <div className="row-span-full w-[100] rounded-md border">{spell.description}</div>
+                <div className="cell" key={spell.name}>
+                    <div onClick={()=>{removeSpell(spell)}} className="w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]">
+                        -
+                    </div>
+                    <Accordion>
+                        <AccordionItem>
+                            <AccordionTrigger>
+                                <div className="cellContentName" >{spell.name}</div>
+                                <div className="cellContentMedium">{spell.manaCost} Mana</div>
+                                <div className="cellContentMedium">{spell.actionCost}</div>
+                                <div className="cellContentShort">{spell.range}</div>
+                                <div className="cellContentLong">{spell.spellType}</div>
+                                <div className="cellContentLong">{spell.source}</div>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <div className="cellDescription">
+                                    {spell.description}
+                                </div>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </div>
+                
                 ))}
         </div>)
     }
@@ -118,16 +157,14 @@ export default function spells() {
             let temp = currentSpellList;
             temp.push(spell);
             setCurrentSpellList(temp);
-            updateCurrentSpellTable();
-            if (spell.actionCost == "0") {
+            if (spell.source == "Domain") {
                 current0spells += 1;
-                if (current0spells >= max0spells){updateAvailableSpellTable();}
             }
-            else if (spell.actionCost == "1") {
+            else if (spell.source == "Covenant Keystone") {
                 current1spells += 1;
-                if (current1spells >= max1spells){updateAvailableSpellTable();}
             }
-            if (currentSpellList.length >= maxSpells){updateAvailableSpellTable();}
+            updateCurrentSpellTable();
+            updateAvailableSpellTable();
         }
     }
 
@@ -137,27 +174,36 @@ export default function spells() {
             let temp = currentSpellList;
             temp.splice(index, 1);
             setCurrentSpellList(temp);
-            updateCurrentSpellTable();
-            if (spell.actionCost == "0") {
+            if (spell.source == "Domain") {
                 current0spells -= 1;
-                if (current0spells == max0spells - 1){updateAvailableSpellTable();}
-                
             }
-            else if (spell.actionCost == "1") {
+            else if (spell.source == "Covenant Keystone") {
                 current1spells -= 1;
-                if (current1spells == max1spells - 1){updateAvailableSpellTable();}
-                
             }
-            if (currentSpellList.length == maxSpells - 1){updateAvailableSpellTable();}
+            updateCurrentSpellTable();
+            updateAvailableSpellTable();
         }
     }
 
     function filterAvailableSpells(e:boolean, filter:string) {
-        if (e) {
+        if (activeFilters.length == allFilters.length) {
+            let temp = [filter]
+            setActiveFilters(temp);
+
+            let tempMap = new Map(filterChecks);
+            [...tempMap.keys()].forEach(key=>{tempMap.set(key, true)});
+            tempMap.set(filter, false);
+            setFilterChecks(tempMap);
+        }
+        else if (e) {
             if (activeFilters.indexOf(filter) == -1) {
                 let temp = [...activeFilters];
                 temp.push(filter);
                 setActiveFilters(temp);
+
+                let tempMap = new Map(filterChecks);
+                tempMap.set(filter, !e);
+                setFilterChecks(tempMap);
             }
         }
         else {
@@ -166,11 +212,13 @@ export default function spells() {
                 let temp = [...activeFilters];
                 temp.splice(index, 1);
                 setActiveFilters(temp);
+
+                let tempMap = new Map(filterChecks);
+                tempMap.set(filter, !e);
+                setFilterChecks(tempMap);
             }
         }
-        let tempMap = new Map(filterChecks);
-        tempMap.set(filter, !e);
-        setFilterChecks(tempMap);
+        
     }
 
     useEffect(() => {updateAvailableSpellTable()},[activeFilters]);
@@ -185,7 +233,7 @@ export default function spells() {
         for (let i = 0; i < allFilters.length; i++) {
             let fil = allFilters[i];
             let temp = (
-                <Toggle key={fil} variant="outline" onPressedChange={(pressed) => (filterAvailableSpells(!pressed, fil))} pressed={filterChecks.get(fil)} className="bg-[#aaaaaa]">
+                <Toggle key={fil} variant="outline" onPressedChange={(pressed) => (filterAvailableSpells(!pressed, fil))} pressed={filterChecks.get(fil)} className="bg-[#aaaaaa] text-[28px]">
                     {fil}
                 </Toggle>
             )
@@ -199,14 +247,13 @@ export default function spells() {
     }
 
     function updateAvailableSpellTable() {
-        console.log("x");
         let filteredSpells : Spell[] = [];
         for (let i = 0; i < availableSpellList.length; i++) {
-            if (activeFilters.includes(availableSpellList[i].actionCost)) {
+            if (activeFilters.includes(availableSpellList[i].source)) {
                 filteredSpells.push(availableSpellList[i]);
             }
         }
-        setActiveAvailableSpells(filteredSpells);
+        //setActiveAvailableSpells(filteredSpells);
         setAvailableSpellsTable(spellsMapper(filteredSpells));
     }
 
@@ -221,28 +268,19 @@ export default function spells() {
     <div className="spells">
         <div className="selectedList">
             Selected Spells Table
-            <ScrollArea className="h-[500px]">
-                {activeCurrentSpellsTable}
-            </ScrollArea>
+            {activeCurrentSpellsTable}
         </div>
         <div className="info justify-self-center justify-text-center">
             Current Spell Number: {current0spells} / {current1spells} / {currentSpellList.length} 
         </div>
         <div className="filter">
-            Filters: {activeFilters}
-        </div>
-        <div className="choices">
-            Spell Options Table
-            <div className="flex">
-                <div className="w-[100px]" onClick={() => (resetFilters())}>
-                    Reset
-                </div>
-                {availableFilterDivs()}
+            Filters: 
+            <div className="showAll" onClick={() => (resetFilters())}>
+                    All
             </div>
-            <ScrollArea className="h-[500px]" id="availSpellsTable">
-                {availableSpellsTable}
-            </ScrollArea>
+            {availableFilterDivs()}
         </div>
+        {availableSpellsTable}
         <div className="free">
             Free
         </div>

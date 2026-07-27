@@ -1,0 +1,126 @@
+.background {
+    display: grid;
+    font-size: 36px;
+    text-align: center;
+    grid-template-areas: "name ancestry faction";
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    background-color: #eeeeee;
+    height: calc(100vh - 240px);
+    width: calc(100vw - 130px);
+    gap: 10px;
+}
+
+.background div.name {
+    grid-area: name;
+    height: calc(100vh - 240px);
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.name div.nameBox {
+    border: 1px solid rgb(85, 85, 85);
+}
+
+input {
+    font-size: 56px;
+    text-align: center;
+}
+
+.name div.image {
+    border: 1px solid rgb(85, 85, 85);
+    background-color: rgb(179, 179, 255);
+    flex: 1;
+
+}
+
+.background div.ancestry {
+    grid-area: ancestry;
+    border-style: solid;
+    height: calc(100vh - 240px);
+    border: 1px solid rgb(85, 85, 85);
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollList {
+    height: calc(100vh - 295px);
+    overflow-y: auto;
+}
+
+.scrollList div.cell {
+    display: grid;
+    grid-template-areas: "name name"
+    "description image";
+    grid-template-rows: 50px auto;
+    border: 1px solid rgb(85, 85, 85);
+    height: 150px;
+}
+
+.cell:hover {
+    background-color: #dddddd;
+    cursor: pointer;
+}
+
+.cell div.cellName {
+    grid-area: name;
+    text-align: left;
+    border: 1px solid rgb(173, 173, 173);
+}
+
+.cell div.cellDescription {
+    grid-area: description;
+    text-align: left;
+    font-size: 18px;
+    border: 1px solid rgb(173, 173, 173);
+}
+
+.cell div.cellImage {
+    grid-area: image;
+    border: 1px solid rgb(173, 173, 173);
+    background-color: rgb(179, 179, 255);
+}
+
+.ancestry div.description {
+    font-size: 20px;
+    text-align: left;
+    border: 1px solid rgb(85, 85, 85);
+    overflow-y: auto;
+    padding-right: 8px;
+    height: calc(100vh - 489px);
+}
+
+.background div.faction {
+    grid-area: faction;
+    height: calc(100vh - 240px);
+    border: 1px solid rgb(85, 85, 85);
+    display: flex;
+}
+
+.faction div.description {
+    font-size: 20px;
+    text-align: left;
+    border: 1px solid rgb(85, 85, 85);
+    overflow-y: auto;
+    padding-right: 8px;
+    height: calc(100vh - 489px);
+}
+
+.return {
+    flex: 1;
+    border: 1px solid rgb(85, 85, 85);
+    font-size: 56px;
+    text-align: left;
+    text-decoration: underline;
+    text-wrap: nowrap;
+    overflow-x: hidden;
+}
+
+.return:hover {
+    background-color: #dddddd;
+    cursor: pointer;
+}
+
+.variants:hover {
+    background-color: #dddddd;
+}

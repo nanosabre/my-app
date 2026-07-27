@@ -1,0 +1,179 @@
+.attributes {
+    display: grid;
+    grid-template-areas: "talent1name talent1name talent1name talent1name level level talent2name talent2name talent2name talent2name"
+    "talent1attributes talent1attributes talent1stones talent1stones talent1stones talent2attributes talent2attributes talent2attributes talent2stones talent2stones"
+    "skills skills skills skills skills skills1 skills1 skills2 skills3 skills4"
+    "fitness focus precision sense sense skills1 skills1 skills2 skills3 skills4";
+    grid-template-rows: 1fr 5fr 0.3fr 3fr;
+    grid-template-columns: 2fr 2fr 2fr 1fr 1fr 1fr 1fr 2fr 2fr 2fr;
+    background-color: #bbbbbb;
+    border: 1px solid white;
+    text-align: center;
+    height: calc(100vh - 240px);
+    width: calc(100vw - 130px);
+}
+
+.attributes div.level {
+    grid-area: level;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.level div.levelName {
+    font-size: 28px;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.level div.levelSelect {
+    font-size: 48px;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.level div.levelSelect:hover {
+    background-color: #a3a3a3;
+}
+
+.level div.levelPoints {
+    border: 1px solid rgb(31, 31, 31);
+}   
+
+.attributes div.talent1name {
+    font-size: 48px;
+    grid-area: talent1name;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.talent2name {
+    font-size: 48px;
+    grid-area: talent2name;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.talent1attributes {
+    grid-area: talent1attributes;
+    display: grid;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.talent2attributes {
+    grid-area: talent2attributes;
+    display: grid;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.talent1stones {
+    display: grid;
+    grid-area: talent1stones;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.talent2stones {
+    display: grid;
+    grid-area: talent2stones;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.keystone {
+    font-size: 24px;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.capstone {
+    font-size: 24px;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.keystoneActive {
+    font-size: 24px;
+    border: 1px solid rgb(31, 31, 31);
+    background-color: #777777;
+}
+
+.capstoneActive {
+    font-size: 24px;
+    border: 1px solid rgb(31, 31, 31);
+    background-color: #777777;
+}
+
+.attributes div.skillsTitle {
+    grid-area: skills;
+    font-size: 36px;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.fitness {
+    line-height: 1.0;
+    font-size: 26px;
+    grid-area: fitness;
+    border: 1px solid rgb(31, 31, 31);
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.attributes div.focus {
+    line-height: 1.0;
+    font-size: 26px;
+    grid-area: focus;
+    border: 1px solid rgb(31, 31, 31);
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.attributes div.precision {
+    line-height: 1.0;
+    font-size: 26px;
+    grid-area: precision;
+    border: 1px solid rgb(31, 31, 31);
+    padding-left: 25px;
+    padding-right: 25px;
+}
+.attributes div.sense {
+    line-height: 1.0;
+    font-size: 26px;
+    grid-area: sense;
+    border: 1px solid rgb(31, 31, 31);
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.attributes div.skills1 {
+    grid-area: skills1;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.skills2 {
+    grid-area: skills2;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.skills3 {
+    grid-area: skills3;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributes div.skills4 {
+    grid-area: skills4;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributeNotSelected {
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.attributeNotSelected:hover {
+    background-color: #777777;
+}
+
+.attributeDisallowed {
+    border: 1px solid rgb(31, 31, 31);
+    background-color: #666666;
+}
+
+.attributeSelected {
+    border: 1px solid rgb(31, 31, 31);
+    color: whitesmoke;
+    background-color: #1a1a1a;
+}
+
+.attributeSelected:hover {
+    background-color: #303030;
+}
