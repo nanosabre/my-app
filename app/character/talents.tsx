@@ -120,7 +120,7 @@ export default function talents(character:Character,setCharacterData:Function) {
                     Mage, Utility, Disruption
                 </div>
                 <div className="selectedComplexity">
-                    Complexity : 3
+                    Complexity: 3
                 </div>
                 <div className="selectedSkills">
                     Preferred Skills: Focus, Sense

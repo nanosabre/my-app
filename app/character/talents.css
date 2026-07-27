@@ -3,7 +3,7 @@
     flex-direction: column;
     height: calc(100vh - 240px);
     width: calc(100vw - 130px);
-    background-color: #c5c5c5;
+    background-color: #eeeeee;
 }
 
 .talents div.header {
@@ -152,11 +152,12 @@
     "selectedAbility selectedAbility"
     "selectedAtts selectedAtts"
     "selectedAttributes selectedAttributes";
-    grid-template-rows: 65px 28px 160px 28px 56px 100px 36px auto;
+    grid-template-rows: 4fr 1fr 8fr 1fr 3fr 5fr 2fr 6fr;
     grid-template-columns: 1fr 1fr;
     font-size: 36px;
     border: 1px solid #1d1d1d;
     overflow-y: auto;
+    padding-right: 5px;
 }
 
 .selected div.viewTalent2 {
@@ -170,11 +171,12 @@
     "selectedAbility selectedAbility"
     "selectedAtts selectedAtts"
     "selectedAttributes selectedAttributes";
-    grid-template-rows: 65px 28px 160px 28px 56px 100px 36px auto;
+    grid-template-rows: 4fr 1fr 8fr 1fr 3fr 5fr 2fr 6fr;
     grid-template-columns: 1fr 1fr;
     font-size: 36px;
     border: 1px solid #1d1d1d;
     overflow-y: auto;
+    padding-right: 5px;
 }
 
 .selectedName {
@@ -186,46 +188,46 @@
 .selectedType {
     grid-area: selectedType;
     border: 1px solid #1d1d1d;
-    font-size: 20px;
+    font-size: 28px;
 }
 
 .selectedRoles {
     grid-area: selectedRoles;
     border: 1px solid #1d1d1d;
-    font-size: 20px;
+    font-size: 28px;
 }
 
 .selectedFlavor {
     grid-area: selectedFlavor;
     border: 1px solid #1d1d1d;
-    font-size: 16px;
+    font-size: 20px;
     text-align: left;
 }
 
 .selectedComplexity {
     grid-area: selectedComplexity;
     border: 1px solid #1d1d1d;
-    font-size: 20px;
+    font-size: 28px;
 }
 
 .selectedSkills {
     grid-area: selectedSkills;
     border: 1px solid #1d1d1d;
-    font-size: 20px;
+    font-size: 28px;
 }
 
 .selectedBonus {
     line-height: 1.2;
     grid-area: selectedBonus;
     border: 1px solid #1d1d1d;
-    font-size: 20px;
+    font-size: 28px;
 }
 
 .selectedAbility {
     grid-area: selectedAbility;
     border: 1px solid #1d1d1d;
     text-align: left;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .selectedAtts {
@@ -242,7 +244,7 @@
     "arr3 att4";
     grid-template-columns: 1fr 1fr;
     border: 1px solid #1d1d1d;
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .selectedAttributes att1 {

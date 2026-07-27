@@ -95,15 +95,15 @@ export default function attributes(character:Character,setCharacterData:Function
                 </div>
                 <div className="levelSelect">
                     <select defaultValue={character?.attributeLevel?.toString()} onChange={(e)=>{setCharacterLevel(Number(e.currentTarget.value))}}>
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
+                        <option value="0" className="text-[32px]">0</option>
+                        <option value="1" className="text-[32px]">1</option>
+                        <option value="2" className="text-[32px]">2</option>
+                        <option value="3" className="text-[32px]">3</option>
+                        <option value="4" className="text-[32px]">4</option>
+                        <option value="5" className="text-[32px]">5</option>
+                        <option value="6" className="text-[32px]">6</option>
+                        <option value="7" className="text-[32px]">7</option>
+                        <option value="8" className="text-[32px]">8</option>
                     </select>
                 </div>
             </div>

@@ -5,12 +5,13 @@ import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@/
 import "./spells.css";
 
 
-const max0spells = 3;
-const max1spells = 1;
-const maxSpells = 6;
-var current0spells = 0;
-var current1spells = 0;
-
+const maxDomainSpells = 3;
+const maxKeystoneSpells = 1;
+const maxCapstoneSpells = 1;
+const maxSpells = 12;
+var currentDomainSpellCount = 0;
+var currentKeystoneSpellCount = 0;
+var currentCapstoneSpellCount = 0;
 
 
 
@@ -67,8 +68,8 @@ export default function spells() {
     const [currentSpellList, setCurrentSpellList] = useState<Spell[]>([]);
     const [availableSpellList, setAvailableSpellList] = useState(generateSpellList());
 
-    const [availableSpellsTable, setAvailableSpellsTable] = useState(spellsMapper(generateSpellList()));
-    const [activeCurrentSpellsTable, setActiveCurrentDisplayTable] = useState(currentSpellsMapper(currentSpellList));
+    const [availableSpellsTable, setAvailableSpellsTable] = useState(buildAvailableSpellTable(generateSpellList()));
+    const [activeCurrentSpellsTable, setActiveCurrentDisplayTable] = useState(buildCurrentSpellTable(currentSpellList));
     
     const [filterChecks, setFilterChecks] = useState(new Map());
 
@@ -80,20 +81,23 @@ export default function spells() {
             return (false);
         }
         if (spellSource == "Domain") {
-            return (max0spells > current0spells);
+            return (maxDomainSpells > currentDomainSpellCount);
         }
         else if (spellSource == "Covenant Keystone") {
-            return (max1spells > current1spells);
+            return (maxKeystoneSpells > currentKeystoneSpellCount);
+        }
+        else if (spellSource == "Covenant Capstone") {
+            return (maxCapstoneSpells > currentCapstoneSpellCount);
         }
         else {
             return (maxSpells > currentSpellList.length);
         }
     }
 
-    function spellsMapper(spellList: Spell[]) {
+    function buildAvailableSpellTable(spellList: Spell[]) {
         return (
-        <div className="availableTable">{
-            spellList.map((spell: Spell) => (
+        <div className="availableTable">
+            {spellList.map((spell: Spell) => (
                 <div key={spell.name} className={(validSpell(spell)) ? ("cell") : ("disabledCell")}>
                     <div onClick={()=>{addSpell(spell)}} className={(validSpell(spell)) ? ("w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]") : ("w-[30px] bg-[#cccccc] hover:bg-[#cc0000]")}>
                         +
@@ -121,10 +125,10 @@ export default function spells() {
         </div>)
     }
 
-    function currentSpellsMapper(spellList: Spell[]) {
+    function buildCurrentSpellTable(spellList: Spell[]) {
         return (
-        <div className="currentTable">{
-            spellList.map((spell: Spell) => (
+        <div className="currentTable">
+            {spellList.map((spell: Spell) => (
                 <div className="cell" key={spell.name}>
                     <div onClick={()=>{removeSpell(spell)}} className="w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]">
                         -
@@ -158,10 +162,13 @@ export default function spells() {
             temp.push(spell);
             setCurrentSpellList(temp);
             if (spell.source == "Domain") {
-                current0spells += 1;
+                currentDomainSpellCount += 1;
             }
             else if (spell.source == "Covenant Keystone") {
-                current1spells += 1;
+                currentKeystoneSpellCount += 1;
+            }
+            else if (spell.source == "Covenant Capstone") {
+                currentCapstoneSpellCount += 1;
             }
             updateCurrentSpellTable();
             updateAvailableSpellTable();
@@ -175,10 +182,13 @@ export default function spells() {
             temp.splice(index, 1);
             setCurrentSpellList(temp);
             if (spell.source == "Domain") {
-                current0spells -= 1;
+                currentDomainSpellCount -= 1;
             }
             else if (spell.source == "Covenant Keystone") {
-                current1spells -= 1;
+                currentKeystoneSpellCount -= 1;
+            }
+            else if (spell.source == "Covenant Capstone") {
+                currentCapstoneSpellCount -= 1;
             }
             updateCurrentSpellTable();
             updateAvailableSpellTable();
@@ -228,12 +238,12 @@ export default function spells() {
         setFilterChecks(checks);
     }, [])
 
-    function availableFilterDivs() {
+    function buildFilterButtons() {
         let temps = [];
         for (let i = 0; i < allFilters.length; i++) {
             let fil = allFilters[i];
             let temp = (
-                <Toggle key={fil} variant="outline" onPressedChange={(pressed) => (filterAvailableSpells(!pressed, fil))} pressed={filterChecks.get(fil)} className="bg-[#aaaaaa] text-[28px]">
+                <Toggle key={fil} variant="outline" onPressedChange={(pressed) => (filterAvailableSpells(!pressed, fil))} pressed={filterChecks.get(fil)} className="bg-[#aaaaaa] text-[28px] cursor-pointer">
                     {fil}
                 </Toggle>
             )
@@ -243,7 +253,7 @@ export default function spells() {
     }
 
     function updateCurrentSpellTable() {
-        setActiveCurrentDisplayTable(currentSpellsMapper(currentSpellList));
+        setActiveCurrentDisplayTable(buildCurrentSpellTable(currentSpellList));
     }
 
     function updateAvailableSpellTable() {
@@ -254,7 +264,7 @@ export default function spells() {
             }
         }
         //setActiveAvailableSpells(filteredSpells);
-        setAvailableSpellsTable(spellsMapper(filteredSpells));
+        setAvailableSpellsTable(buildAvailableSpellTable(filteredSpells));
     }
 
     function resetFilters() {
@@ -266,19 +276,26 @@ export default function spells() {
 
     return (
     <div className="spells">
-        <div className="selectedList">
-            Selected Spells Table
-            {activeCurrentSpellsTable}
+        <div className="currentHeader">
+            Chosen Spells
         </div>
-        <div className="info justify-self-center justify-text-center">
-            Current Spell Number: {current0spells} / {current1spells} / {currentSpellList.length} 
+        {activeCurrentSpellsTable}
+        <div className="info1">
+            Domain Spells : ({currentDomainSpellCount}/{maxDomainSpells}) <br/>
+            Class Spells: ({currentSpellList.length-currentDomainSpellCount-currentKeystoneSpellCount-currentCapstoneSpellCount}/{maxSpells-maxDomainSpells-maxKeystoneSpells-maxCapstoneSpells}) <br/>
+            Keystone Spells: ({currentKeystoneSpellCount}/{maxKeystoneSpells}) <br/>
+            Capstone Spells: ({currentCapstoneSpellCount}/{maxCapstoneSpells})
+
+        </div>
+        <div className="info2">
+            Long Description
         </div>
         <div className="filter">
             Filters: 
             <div className="showAll" onClick={() => (resetFilters())}>
                     All
             </div>
-            {availableFilterDivs()}
+            {buildFilterButtons()}
         </div>
         {availableSpellsTable}
         <div className="free">

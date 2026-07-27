@@ -1,10 +1,11 @@
 .spells {
     display: grid;
-    grid-template-areas: "selectedList info info"
-    "selectedList filter filter"
-    "selectedList availableTable free";
-    grid-template-columns: 8fr 10fr 1fr;
-    grid-template-rows: 3fr auto 6fr;
+    grid-template-areas: "currentHeader info1 info2 info2"
+    "currentTable info1 info2 info2"
+    "currentTable filter filter filter"
+    "currentTable availableTable availableTable free";
+    grid-template-columns: 8fr 5fr 4fr 1fr;
+    grid-template-rows: 0.6fr 3fr auto 6fr;
     border: 1px solid black;
     text-align: center;
     height: calc(100vh - 240px);
@@ -12,14 +13,23 @@
     background-color: #eeeeee;
 }
 
-.spells div.selectedList {
+.currentHeader {
+    grid-area: currentHeader;
     font-size: 28px;
-    grid-area: selectedList;
+    border: 1px solid rgb(255, 0, 0);
+}
+
+.spells div.info1 {
+    text-align: left;
+    font-size: 28px;
+    grid-area: info1;
     border: 1px solid black;
 }
 
-.spells div.info {
-    grid-area: info;
+.spells div.info2 {
+    text-align: left;
+    font-size: 28px;
+    grid-area: info2;
     border: 1px solid black;
 }
 
@@ -40,10 +50,11 @@
 }
 
 .currentTable {
+    grid-area: currentTable;
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
-    overflow-y: auto;
+    border: 1px solid rgb(0, 17, 255);
+    overflow-y: scroll;
 }
 
 .availableTable {
@@ -130,4 +141,5 @@
 
 .showAll:hover {
     background-color: #d8d8d8;
+    cursor: pointer;
 }
