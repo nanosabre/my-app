@@ -2,31 +2,32 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-left justify-left bg-zinc-50 font-sans dark:bg-black">
-      <main className="main">
-        <div className="headerBar">
-          
-          <ul>
-            <li><a href="#Home">Spellblade TTRPG</a></li>
-            <li><a href="/mycharacters">My Characters</a></li>
-            <li><a href="/mygames">My Games</a></li>
-            <li><a href="/rules">Rules</a></li>
-          </ul>
-        </div>
+    <main className="main">
+      <div className="headerBar">
+        <ul>
+          <li><a href="#Home">Spellblade TTRPG</a></li>
+          <li><a href="/mycharacters">My Characters</a></li>
+          <li><a href="/mygames">My Games</a></li>
+          <li><a href="/rules">Rules</a></li>
+        </ul>
+        <div className="account">Sign Out <br/> fakeemail@gmail.com </div>
+      </div>
 
-        <div className="login">
-          <a href="#login">Log In</a>
-        </div>
+      <div className="login">
+        <a href="#login">Log In</a>
+      </div>
 
-        <div className="create">
-          <a href="/character">Create a Character</a>
-        </div>
+      <div className="create">
+        <a href="/character">Create a Character</a>
+      </div>
 
-        <div className="play">
-          <a href="/character">Play the Game</a>
-        </div>
-      
-      </main>
-    </div>
+      <div className="play">
+        <a href="/character">Play the Game</a>
+      </div>
+
+      <div className="footerbar">
+        Footer
+      </div>
+    </main>
   );
 }

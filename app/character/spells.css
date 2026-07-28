@@ -16,7 +16,7 @@
 .currentHeader {
     grid-area: currentHeader;
     font-size: 28px;
-    border: 1px solid rgb(255, 0, 0);
+    border: 1px solid black;
 }
 
 .spells div.info1 {
@@ -53,7 +53,7 @@
     grid-area: currentTable;
     display: flex;
     flex-direction: column;
-    border: 1px solid rgb(0, 17, 255);
+    border: 1px solid black;
     overflow-y: scroll;
 }
 

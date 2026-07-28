@@ -1,15 +1,6 @@
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import { useState } from "react";
 import { emptyItem, Item } from "@/types/itemTypes";
-
-
-const alchemistPack = [];
-const hunterPack = [];
-const adventurerPack = [];
+import "./equipment.css";
 
 const healthPotion = {...emptyItem};
 healthPotion.name = "Health Potion";
@@ -27,8 +18,20 @@ const grapplingHook = {...emptyItem};
 grapplingHook.name = "Grappling Hook";
 grapplingHook.itemType = "Tool";
 grapplingHook.description = "A tool used to climb up to 8m.";
+const arrow1 = {...emptyItem};
+arrow1.name = "arrow1";
+arrow1.itemType = "ammunition";
+arrow1.description = "Ammunition for a bow or crossbow";
+const arrow2 = {...arrow1};
+arrow2.name = "arrow2"
+const arrow3 = {...arrow1};
+arrow3.name = "arrow3"
+const arrow4 = {...arrow1};
+arrow4.name = "arrow4"
+const arrow5 = {...arrow1};
+arrow5.name = "arrow5"
 
-const itemList = [healthPotion, torch, rope, grapplingHook];
+const itemList = [healthPotion, torch, rope, grapplingHook, arrow1, arrow2, arrow3, arrow4, arrow5];
 
 export default function equipment() {
 
@@ -37,16 +40,16 @@ export default function equipment() {
 
     function makeInventoryRows(inventoryList: Item[]) {
         return (
-            <TableBody>
+            <div className="inventoryTable">
                 {inventoryList.map((item: Item) => (
-                    <TableRow key={item.name}>
-                        <TableCell className="font-medium">{item.name}</TableCell>
-                        <TableCell className="w-[75px]"><Input placeholder="1"/></TableCell>
-                        <TableCell>{item.itemType}</TableCell>
-                        <TableCell className="w-[300px] whitespace-normal break-words text-left">{item.description}</TableCell>
-                    </TableRow>
+                    <div className="tableRow" key={item.name}>
+                        <div className="tableName">{item.name}</div>
+                        <div className="tableQTY">5</div>
+                        <div className="tableType">{item.itemType}</div>
+                        <div className="tableDesc">{item.description}</div>
+                    </div>
                 ))}
-            </TableBody>
+            </div>
         )
     }
 
@@ -55,232 +58,131 @@ export default function equipment() {
     return (
     <div className="equipment">
         <div className="inventory">
-            Inventory
-            <Field className="Starting Pack">
-                <FieldLabel>Pack Choice</FieldLabel>
-                <Select>
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select Starting Pack"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Choose Ancestry</SelectLabel>
-                            <SelectItem value="1">0</SelectItem>
-                            <SelectItem value="2">1</SelectItem>
-                            <SelectItem value="3">2</SelectItem>
-                            <SelectItem value="4">3</SelectItem>
-                            <SelectItem value="5">4</SelectItem>
-                            <SelectItem value="6">4</SelectItem>
-                            <SelectItem value="7">4</SelectItem>
-                            <SelectItem value="8">4</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </Field>
-            <div className="inventoryHeader">
-                <div className="currency">
-                    currency
-                </div>
-                <div className="supplies">
-                    supplies
-                </div>
-                <div className="reagents">
-                    reagents
-                </div>
-                <div className="materials">
-                    materials
-                </div>
-                <div className="innerwear">
-                    innerwear
-                    <Field className="Innerwear">
-                        <FieldLabel>Innerwear Choice</FieldLabel>
-                        <Select>
-                            <SelectTrigger className="w-full max-w-48">
-                                <SelectValue placeholder="Select Innerwear"/>
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Choose Innerwear</SelectLabel>
-                                    <SelectItem value="1">0</SelectItem>
-                                    <SelectItem value="2">1</SelectItem>
-                                    <SelectItem value="3">2</SelectItem>
-                                    <SelectItem value="4">3</SelectItem>
-                                    <SelectItem value="5">4</SelectItem>
-                                    <SelectItem value="6">4</SelectItem>
-                                    <SelectItem value="7">4</SelectItem>
-                                    <SelectItem value="8">4</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </Field>
-                </div>
-                <div className="outerwear">
-                    outerwear
-                    <Field className="Outerwear">
-                        <FieldLabel>Outerwear Choice</FieldLabel>
-                        <Select>
-                            <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select Outerwear"/>
-                        </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Choose Outerwear</SelectLabel>
-                                    <SelectItem value="1">0</SelectItem>
-                                    <SelectItem value="2">1</SelectItem>
-                                    <SelectItem value="3">2</SelectItem>
-                                    <SelectItem value="4">3</SelectItem>
-                                    <SelectItem value="5">4</SelectItem>
-                                    <SelectItem value="6">4</SelectItem>
-                                    <SelectItem value="7">4</SelectItem>
-                                    <SelectItem value="8">4</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                     </Field>
-                </div>
+            <div className="startPack">
+                <div className="startHead"> Inventory: </div>
+                <select className="startChoice" defaultValue="Choose a Starting Pack">
+                    <option value="Choose a Starting Pack">Choose a Starting Pack</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
             </div>
+            <div className="currency">
+                <div className="currencyHead">
+                    Currencies
+                </div>
+                <div className="currencyTotal">Total<br/><div className="text-[36px]">1,234c</div></div>
+                <div className="currencyDenom1">Platinum<br/><div className="text-[28px]">1</div> </div>
+                <div className="currencyDenom2">Gold<br/><div className="text-[28px]">2</div> </div>
+                <div className="currencyDenom3">Silver<br/><div className="text-[28px]">3</div> </div>
+                <div className="currencyDenom4">Copper<br/><div className="text-[28px]">4</div> </div>
+            </div>
+            <div className="supplies">
+                <div className="suppliesHead">
+                    Supplies
+                </div>
+                <div className="suppliesFood">Food<br/><div className="text-[28px]">1 Day</div></div>
+                <div className="suppliesWater">Water<br/><div className="text-[28px]">1 Day</div></div>
+                <div className="suppliesSalves">Salves<br/><div className="text-[28px]">3 Salves</div></div>
+            </div>
+            <div className="reagents">
+                <div className="reagentsHead">
+                    Reagents
+                </div>
+                <div className="reagentsOrdinary">Ordinary<br/><div className="text-[24px]">16</div></div>
+                <div className="reagentsCommon">Common<br/><div className="text-[24px]">10</div> </div>
+                <div className="reagentsUncommon">Uncommon<br/><div className="text-[24px]">7</div> </div>
+                <div className="reagentsRare">Rare<br/><div className="text-[24px]">3</div></div>
+                <div className="reagentsLegendary">Legendary<br/><div className="text-[24px]">1</div> </div>
+            </div>
+            <div className="materials">
+                <div className="materialsHead">
+                    Materials
+                </div>
+                <div className="materialsOrdinary">Ordinary<br/><div className="text-[24px]">16</div></div>
+                <div className="materialsCommon">Common<br/><div className="text-[24px]">10</div> </div>
+                <div className="materialsUncommon">Uncommon<br/><div className="text-[24px]">7</div> </div>
+                <div className="materialsRare">Rare<br/><div className="text-[24px]">3</div></div>
+                <div className="materialsLegendary">Legendary<br/><div className="text-[24px]">1</div> </div>
+            </div>
+            <div className="innerwear">
+                <div className="innerHead">Innerwear</div>
+                <select className="innerChoice" defaultValue="Choose a Starting Pack">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <div className="innerDesc">Description of chosen innerwear</div>
+            </div>
+            <div className="outerwear">
+                <div className="outerHead">Outerwear</div>
+                <select className="outerChoice" defaultValue="Choose a Starting Pack">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <div className="outerDesc">Description of chosen outerwear</div>
+            </div>
+            <div className="tableHead">
+                <div className="tableName">
+                    Item Name
+                </div>
+                <div className="tableQTY">
+                    QTY
+                </div>
+                <div className="tableType">
+                    Item Type
+                </div>
+                <div className="tableDesc">
+                    Description
+                </div>
 
-            <div>
-                Inventory
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-[200px] text-center">Item Name</TableHead>
-                            <TableHead className="w-[50px] text-center">Qty</TableHead>
-                            <TableHead className="text-center">Item Type</TableHead>
-                            <TableHead className="text-center">Description</TableHead>
-                            <TableHead className="text-center">Weight</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                </Table>
-                <ScrollArea>
-                    <Table>
-                        {inventoryRows}
-                    </Table>
-                </ScrollArea>
             </div>
+            {inventoryRows}
         </div>
         <div className="proficiencies">
-            Proficiency 1
-            <Field className="WeaponClass">
-                <FieldLabel>Weapon Class Choice</FieldLabel>
-                <Select>
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select Weapon Class"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Choose Outerwear</SelectLabel>
-                            <SelectItem value="1">0</SelectItem>
-                            <SelectItem value="2">1</SelectItem>
-                            <SelectItem value="3">2</SelectItem>
-                            <SelectItem value="4">3</SelectItem>
-                            <SelectItem value="5">4</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </Field>
-            <Field className="WeaponList">
-                <FieldLabel>Outerwear Choice</FieldLabel>
-                <Select>
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select Weapon"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Choose Outerwear</SelectLabel>
-                            <SelectItem value="1">0</SelectItem>
-                            <SelectItem value="2">1</SelectItem>
-                            <SelectItem value="3">2</SelectItem>
-                            <SelectItem value="4">3</SelectItem>
-                            <SelectItem value="5">4</SelectItem>
-                            <SelectItem value="6">4</SelectItem>
-                            <SelectItem value="7">4</SelectItem>
-                            <SelectItem value="8">4</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </Field>
-            Proficiency 2
-            <Field className="WeaponClass">
-                <FieldLabel>Weapon Class Choice</FieldLabel>
-                <Select>
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select Weapon Class"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Choose Outerwear</SelectLabel>
-                            <SelectItem value="1">0</SelectItem>
-                            <SelectItem value="2">1</SelectItem>
-                            <SelectItem value="3">2</SelectItem>
-                            <SelectItem value="4">3</SelectItem>
-                            <SelectItem value="5">4</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </Field>
-            <Field className="WeaponList">
-                <FieldLabel>Outerwear Choice</FieldLabel>
-                <Select>
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select Weapon"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Choose Outerwear</SelectLabel>
-                            <SelectItem value="1">0</SelectItem>
-                            <SelectItem value="2">1</SelectItem>
-                            <SelectItem value="3">2</SelectItem>
-                            <SelectItem value="4">3</SelectItem>
-                            <SelectItem value="5">4</SelectItem>
-                            <SelectItem value="6">4</SelectItem>
-                            <SelectItem value="7">4</SelectItem>
-                            <SelectItem value="8">4</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </Field>
-            Proficiency 3
-            <Field className="WeaponClass">
-                <FieldLabel>Weapon Class Choice</FieldLabel>
-                <Select>
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select Weapon Class"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Choose Outerwear</SelectLabel>
-                            <SelectItem value="1">0</SelectItem>
-                            <SelectItem value="2">1</SelectItem>
-                            <SelectItem value="3">2</SelectItem>
-                            <SelectItem value="4">3</SelectItem>
-                            <SelectItem value="5">4</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </Field>
-            <Field className="WeaponList">
-                <FieldLabel>Outerwear Choice</FieldLabel>
-                <Select>
-                    <SelectTrigger className="w-full max-w-48">
-                        <SelectValue placeholder="Select Weapon"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Choose Outerwear</SelectLabel>
-                            <SelectItem value="1">0</SelectItem>
-                            <SelectItem value="2">1</SelectItem>
-                            <SelectItem value="3">2</SelectItem>
-                            <SelectItem value="4">3</SelectItem>
-                            <SelectItem value="5">4</SelectItem>
-                            <SelectItem value="6">4</SelectItem>
-                            <SelectItem value="7">4</SelectItem>
-                            <SelectItem value="8">4</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </Field>
+            <div className="prof1">
+                Proficiency 1 <br/>
+                <select className="" defaultValue="Choose a Starting Pack">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <br/>
+                <select className="" defaultValue="Choose a Starting Pack">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div className="prof2">
+                Proficiency 2 <br/>
+                <select className="" defaultValue="Choose a Starting Pack">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <br/>
+                <select className="" defaultValue="Choose a Starting Pack">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div className="prof3">
+                Proficiency 3 <br/>
+                <select className="" defaultValue="Choose a Starting Pack">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <br/>
+                <select className="" defaultValue="Choose a Starting Pack">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
         </div>
         <div className="search">
             <div>
