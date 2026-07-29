@@ -29,8 +29,6 @@ export default function attributes(character:Character,setCharacterData:Function
         setAttrubute2List(attributeList.filter(a=>a.talentName===character.talent2.name))
     },[character.talent1, character.talent2])
 
-    useEffect(()=>{console.log(character.attributes1)},[character])
-
     //todo skill value recalculation on ancestry+talent change
 
     function addAttribute(talent:boolean, attribute:Attribute) {
