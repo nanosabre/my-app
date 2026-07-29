@@ -1,10 +1,10 @@
-export interface Aspect {
+export interface Attribute {
     [key: string]: string | number | null | undefined,
     id: string
     name: string
     talentName: string
-    flag: number
-    description: string
+    description1: string
+    description2: string
 }
 
 export interface Talent { 
@@ -24,5 +24,20 @@ export interface Talent {
 
 export interface TalentDAO {
     talent: Talent
-    attributes: Aspect[]
+    attributes: Attribute[]
+}
+
+export var emptyTalent : Talent = {
+    id: "",
+    name: "",
+    ability1: "",
+    ability2: "",
+    description: "",
+    hpBonus: 0,
+    prioritySkills: "",
+    role: "",
+    complexity: 0,
+    keystone: "",
+    capstone: "",
+    caster: false
 }

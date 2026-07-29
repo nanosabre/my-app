@@ -1,50 +1,65 @@
 import { Character } from "@/types/characterTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Plus, Minus } from "lucide-react";
 import "./attributes.css";
-
-const attributeList1 = [];
-const attributeList2 = [];
+import { Attribute } from "@/types/talentTypes";
+import { useGetAttributeList } from "@/hooks/useGetAttributeList";
 
 export default function attributes(character:Character,setCharacterData:Function) {
     const [attrib1Counter, setattrib1Counter] = useState(0);
     const [attrib2Counter, setattrib2Counter] = useState(0);
+    const [attributeList, setAttrubuteList] = useState<Attribute[]>([]);
+    const [attribute1List, setAttrubute1List] = useState<Attribute[]>([]);
+    const [attribute2List, setAttrubute2List] = useState<Attribute[]>([]);
+    
 
     var points = (6 - character.baseFitness - character.baseFocus - character.basePrecision - character.baseSense - (-character.attributeLevel));
 
 
+    useEffect(()=>{
+        useGetAttributeList().then(data=>{
+            setAttrubuteList(data.data.data.getAttributeList);
+        })
+    },[])
 
-    function addAttribute(talent:boolean, flag:number) {
+    useEffect(()=>{
+        setAttrubute1List(attributeList.filter(a=>a.talentName===character.talent1.name))
+        setAttrubute2List(attributeList.filter(a=>a.talentName===character.talent2.name))
+    },[character.talent1, character.talent2])
+
+    //todo skill value recalculation on ancestry+talent change
+
+    function addAttribute(talent:boolean, attribute:Attribute) {
         if (!talent){
             setCharacterData((prev: any) => ({
             ...prev,
-            attribute1: character.attribute1 | flag
+            attributes1: character.attributes1?.concat(attribute)
             }))
             setattrib1Counter(attrib1Counter+1);
         }
         else {
             setCharacterData((prev: any) => ({
             ...prev,
-            attribute2: character.attribute2  | flag
+            attributes2: character.attributes2?.concat(attribute)
             }))
             setattrib2Counter(attrib2Counter+1);
         }
     }
 
-    function removeAttribute(talent:boolean, flag:number) {
+    function removeAttribute(talent:boolean, attribute:Attribute) {
         if (!talent){
             setCharacterData((prev: any) => ({
             ...prev,
-            attribute1: character.attribute1 & ~flag
+            attributes1: character.attributes1.filter(a=>a.name!=attribute.name)
             }))
             setattrib1Counter(attrib1Counter-1);
         }
         else {
             setCharacterData((prev: any) => ({
             ...prev,
-            attribute2: character.attribute2 & ~flag
+            attributes2: character.attributes2.filter(a=>a.name!=attribute.name)
             }))
             setattrib2Counter(attrib2Counter-1);
         }
@@ -87,7 +102,7 @@ export default function attributes(character:Character,setCharacterData:Function
     return (
         <div className="attributes">
             <div className="talent1name">
-                { character.talent1 }
+                { character.talent1.name }
             </div>
             <div className="level">
                 <div className="levelName">
@@ -108,130 +123,56 @@ export default function attributes(character:Character,setCharacterData:Function
                 </div>
             </div>
             <div className="talent2name">
-                { character.talent2 }
+                { character.talent2.name }
             </div>
             <div className="talent1attributes">
-                <div>
-                    {((character.attribute1 & 1) == 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib1Counter - attrib2Counter < 2)) ? (
-                        <div className="attributeNotSelected" onClick={()=>{addAttribute(false,1)}}>
-                            <u>Cleric</u> <br/> Guidance | Cure Wounds | Revive | Silence | Dissuade
+                {attribute1List.map((attribute: Attribute)=>(
+                <div key={attribute.name}>
+                    {!(character.attributes1?.filter(a=>attribute.name===a.name).length>0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib1Counter - attrib2Counter < 2)) ? (
+                        <div className="attributeNotSelected" onClick={()=>{addAttribute(false,attribute)}}>
+                            {attribute.name} <br/> {attribute.description1}
                         </div>): (
                         <div className="attributeDisallowed">
-                            <u>Cleric</u> <br/> Guidance | Cure Wounds | Revive | Silence | Dissuade
+                            {attribute.name} <br/> {attribute.description1}
                         </div>
                         ))
-                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(false,1)}}>
-                        <u>Cleric</u> <br/> Guidance | Cure Wounds | Revive | Silence | Dissuade
+                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(false,attribute)}}>
+                            {attribute.name} <br/> {attribute.description1}
                     </div>)}
                 </div>
-                <div>
-                    {((character.attribute1 & 2) == 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib1Counter - attrib2Counter < 2)) ? (
-                        <div className="attributeNotSelected" onClick={()=>{addAttribute(false,2)}}>
-                            <u>Paladin</u> <br/> Soul Armor | Taunting Presence | Forify Mind | Rebuke | Resiliance
-                        </div>): (
-                        <div className="attributeDisallowed">
-                            <u>Paladin</u> <br/> Soul Armor | Taunting Presence | Forify Mind | Rebuke | Resiliance
-                        </div>
-                        ))
-                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(false,2)}}>
-                        <u>Paladin</u> <br/> Soul Armor | Taunting Presence | Forify Mind | Rebuke | Resiliance
-                    </div>)}
-                </div>
-                <div>
-                    {((character.attribute1 & 4) == 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib1Counter - attrib2Counter < 2)) ? (
-                        <div className="attributeNotSelected" onClick={()=>{addAttribute(false,4)}}>
-                            <u>Warlock</u> <br/> Light/Extinguish | Hallow/Desecrate | Essence Transfer | Weaken Soul | Drain
-                        </div>): (
-                        <div className="attributeDisallowed">
-                            <u>Warlock</u> <br/> Light/Extinguish | Hallow/Desecrate | Essence Transfer | Weaken Soul | Drain
-                        </div>
-                        ))
-                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(false,4)}}>
-                        <u>Warlock</u> <br/> Light/Extinguish | Hallow/Desecrate | Essence Transfer | Weaken Soul | Drain
-                    </div>)}
-                </div>
-                <div>
-                    {((character.attribute1 & 8) == 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib1Counter - attrib2Counter < 2)) ? (
-                        <div className="attributeNotSelected" onClick={()=>{addAttribute(false,8)}}>
-                            <u>Justiciar</u> <br/> Holy Weapon | Summon Creature | Divine Warning | Zealotry | Persecute
-                        </div>): (
-                        <div className="attributeDisallowed">
-                            <u>Justiciar</u> <br/> Holy Weapon | Summon Creature | Divine Warning | Zealotry | Persecute
-                        </div>
-                        ))
-                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(false,8)}}>
-                        <u>Justiciar</u> <br/> Holy Weapon | Summon Creature | Divine Warning | Zealotry | Persecute
-                    </div>)}
-                </div>
+                ))}
             </div>
             <div className="talent1stones">
                 <div className={(attrib1Counter < 2) ? ("keystone"): ("keystoneActive")}>
-                    <u>{character.talent1} Keystone</u> <br/> Patronic Form | Aura of Alacrity | Aura of Protection | Aura of Mind Shielding | Possession
+                    <u>{character.talent1.name} Keystone</u> <br/> {character.talent1.keystone}
                 </div>
                 <div className={(attrib1Counter < 4) ? ("capstone"): ("capstoneActive")}>
-                    <u>{character.talent1} Capstone</u> <br/> Summon Patron | Prayer | Banish | Divine Passage | Divine Reinforcements
+                    <u>{character.talent1.name} Capstone</u> <br/> {character.talent1.capstone}
                 </div>
             </div>
             <div className="talent2attributes">
-                <div>
-                    {((character.attribute2 & 1) == 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
-                        <div className="attributeNotSelected" onClick={()=>{addAttribute(true,1)}}>
-                            <u>Interceptor</u> <br/> Interceptor
+                {attribute2List.map((attribute: Attribute)=>(
+                <div key={attribute.name}>
+                    { !character.attributes2?.includes(attribute) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
+                        <div className="attributeNotSelected" onClick={()=>{addAttribute(true,attribute)}}>
+                            {attribute.name} <br/> {attribute.description1}
                         </div>): (
                         <div className="attributeDisallowed">
-                            <u>Interceptor</u> <br/> Interceptor
+                            {attribute.name} <br/> {attribute.description1}
                         </div>
                         ))
-                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(true,1)}}>
-                        <u>Interceptor</u> <br/> Interceptor
+                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(true,attribute)}}>
+                        {attribute.name} <br/> {attribute.description1}
                     </div>)}
                 </div>
-                <div>
-                    {((character.attribute2 & 2) == 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
-                        <div className="attributeNotSelected" onClick={()=>{addAttribute(true,2)}}>
-                            <u>Provoker</u> <br/> Provoker
-                        </div>): (
-                        <div className="attributeDisallowed">
-                            <u>Provoker</u> <br/> Provoker
-                        </div>
-                        ))
-                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(true,2)}}>
-                        <u>Provoker</u> <br/> Provoker
-                    </div>)}
-                </div>
-                <div>
-                    {((character.attribute2 & 4) == 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
-                        <div className="attributeNotSelected" onClick={()=>{addAttribute(true,4)}}>
-                            <u>Tactician</u> <br/> Tactician
-                        </div>): (
-                        <div className="attributeDisallowed">
-                            <u>Tactician</u> <br/> Tactician
-                        </div>
-                        ))
-                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(true,4)}}>
-                        <u>Tactician</u> <br/> Tactician
-                    </div>)}
-                </div>
-                <div>
-                    {((character.attribute2 & 8) == 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
-                        <div className="attributeNotSelected" onClick={()=>{addAttribute(true,8)}}>
-                            <u>Deflector</u> <br/> Deflector
-                        </div>): (
-                        <div className="attributeDisallowed">
-                            <u>Deflector</u> <br/> Deflector
-                        </div>
-                        ))
-                    ):(<div className="attributeSelected" onClick={()=>{removeAttribute(true,8)}}>
-                        <u>Deflector</u> <br/> Deflector
-                    </div>)}
-                </div>
+                ))}
             </div>
             <div className="talent2stones">
                 <div className={(attrib2Counter < 2) ? ("keystone"): ("keystoneActive")}>
-                    <u> {character.talent2} Keystone</u> <br/> Keystone
+                    <u> {character.talent2.name} Keystone</u> <br/> {character.talent2.keystone}
                 </div>
                 <div className={(attrib2Counter < 4) ? ("capstone"): ("capstoneActive")}>
-                    <u>{character.talent2} Capstone</u> <br/> Capstone
+                    <u>{character.talent2.name} Capstone</u> <br/> {character.talent2.capstone}
                 </div>
             </div>
             <div className="skillsTitle">

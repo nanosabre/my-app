@@ -1,23 +1,26 @@
 import { InventoryDAO } from "./itemTypes"
+import { AncestryInner, BackgroundInner, CharacterState, emptyAncestryInner, emptyBackgroundInner, emptyCharacterState } from "./stateTypes"
+import { Attribute, emptyTalent, Talent } from "./talentTypes"
 
 //defines the character type for the whole app 
 export interface Character {
-    [key: string]: string | number | null | undefined,
+    [key: string]: string | number | null | undefined | Attribute[] | AncestryInner | BackgroundInner | Talent | CharacterState,
     id: string | null,
     userId: string,
     name: string,
-    talent1: string,
-    talent2: string,
+    talent1: Talent,
+    talent2: Talent,
     attributeLevel: number,
-    attribute1: number,
-    attribute2: number,
-    ancestryName: string,
-    ancestryTrait: string,
+    attributes1: Attribute[],
+    attributes2: Attribute[],
+    ancestry: AncestryInner,
+    background: BackgroundInner,
     baseFitness: number,
     basePrecision: number,
     baseFocus: number,
     baseSense: number,
     proficiencies: string,
+    state: CharacterState
 }
 
 export interface CalculatedState {
@@ -51,45 +54,31 @@ export interface CharacterDAO {
     inventory: InventoryDAO[]
 }
 
-export interface CharacterState {
-    id: string
-    characterId: string
-    hitPoints: number
-    armor: number
-    manaPoints: number
-    activeEffects: string
-    inactiveEffects: string
-}
-
-export interface Ancestry {
-    id: string
-    name: string
-    description: string
-}
-
 export interface SpellCharacter {
     id: string
     characterId: string
     spellId: string
 }
 
-export var emptyCharacter = {
+export var emptyCharacter: Character = {
     id: null, 
     userId: "",
     name: "",
-    talent1: " ",
-    talent2: " ",
+    talent1: emptyTalent,
+    talent2: emptyTalent,
     attributeLevel: 0,
-    attribute1: 0,
-    attribute2: 0,
-    ancestryName: "",
-    ancestryTrait: "",
+    attributes1: [],
+    attributes2: [],
+    ancestry: emptyAncestryInner,
+    background: emptyBackgroundInner,
     baseFitness: 0,
     basePrecision: 0,
     baseFocus: 0,
     baseSense: 0,
     size: "Medium",
-    proficiencies: "null,null,null"
+    proficiencies: "null,null,null",
+    state: emptyCharacterState
+
 }
 
 export var emptyCalculatedState = {
@@ -116,13 +105,3 @@ export var emptyCalculatedState = {
     woundsMax: 6,
     movement: 6,
 }
-
-export var emptyCharacterState = {
-    id: "",
-    characterId:"",
-    hitPoints: 40,
-    armor: 0,
-    manaPoints: 0,
-    activeEffects: "",
-    inactiveEffects: ""
-  }
