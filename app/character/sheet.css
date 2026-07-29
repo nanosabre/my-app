@@ -1,0 +1,97 @@
+.sheet {
+    display: grid;
+    grid-template-areas: "invPanel mainPanel spellPanel";
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid black;
+    text-align: center;
+    height: calc(100vh - 240px);
+    width: calc(100vw - 130px);
+    background-color: #eeeeee;
+}
+
+.sheet div.invPanel {
+    border: 1px solid black;
+    grid-area: invPanel;
+}
+
+
+
+
+
+.sheet div.mainPanel {
+    border: 1px solid black;
+    grid-area: mainPanel;
+    display: grid;
+    grid-template-areas: "name name name name name name"
+    "armor armor picture picture healthMana healthMana"
+    "skills skills skills conditions conditions conditions"
+    "fitness focus focus precision precision sense"
+    "talent1 talent1 talent1 talent2 talent2 talent2";
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 2fr;
+    grid-template-rows: 1fr 4fr 5fr 1fr 4fr;
+}
+
+.mainPanel div.mainName {
+    grid-area: name;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainArmor {
+    grid-area: armor;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainPicture {
+    grid-area: picture;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainHealthMana {
+    grid-area: healthMana;
+        border: 1px solid black;
+}
+
+.mainPanel div.mainSkills {
+    grid-area: skills;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainConditions {
+    grid-area: conditions;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainFitness {
+    grid-area: fitness;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainFocus {
+    grid-area: focus;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainPrecision {
+    grid-area: precision;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainSense {
+    grid-area: sense;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainTalent1 {
+    grid-area: talent1;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainTalent2 {
+    grid-area: talent2;
+    border: 1px solid black;
+}
+
+.sheet div.spellPanel {
+    border: 1px solid black;
+    grid-area: spellPanel;
+}
