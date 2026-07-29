@@ -9,7 +9,7 @@ import equipment from "./equipment";
 import story from "./story";
 import sheet from "./sheet";
 import { useState } from "react";
-import { Character } from "@/types/characterTypes";
+import { Character, emptyCharacter } from "@/types/characterTypes";
 import "./page.css";
 
 
@@ -19,24 +19,7 @@ const tabs = ["background", "talents", "attributes", "spells", "equipment", "sto
 
 export default function Home() {
     const [currentTab, setCurrentTab] = useState("background");
-    const [characterData, setCharacterData] = useState<Character>({
-    id: null, 
-    userId: "",
-    name: "",
-    talent1: " ",
-    talent2: " ",
-    attributeLevel: 0,
-    attribute1: 0,
-    attribute2: 0,
-    ancestryName: "",
-    ancestryTrait: "",
-    baseFitness: 0,
-    basePrecision: 0,
-    baseFocus: 0,
-    baseSense: 0,
-    size: "Medium",
-    proficiencies: "null,null,null"
-    })
+    const [characterData, setCharacterData] = useState<Character>(emptyCharacter)
 
     function moveTab(tab:string) {
       let place = tabs.indexOf(tab);

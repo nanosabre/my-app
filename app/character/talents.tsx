@@ -1,39 +1,37 @@
 import { useEffect, useState } from "react";
 import { Character } from "@/types/characterTypes";
 import "./talents.css";
-
-const talentList = ["Assassination", "Counteraction","Covenant","Dueling","Elemental","Fabrication","Occult","Psychic","Somatic","Theatrics","Vanguarding","Wayfaring"];
-
-const descy = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu ex ante. Phasellus ut sapien ac ipsum euismod hendrerit. Vestibulum congue interdum magna, ac aliquet odio posuere in. Integer pretium rhoncus faucibus. In porttitor bibendum neque scelerisque faucibus. Aliquam vitae blandit lorem. Vivamus dictum mollis nisi, sit amet tincidunt nunc congue et. Ut luctus rutrum nibh, non rhoncus nunc molestie in. Integer aliquet dictum mi nec fermentum. Pellentesque sit amet volutpat sem, a sagittis orci. Donec bibendum magna quis ex porta, eu eleifend diam auctor. Integer aliquam ac libero sit amet aliquam. Donec in nisl molestie, semper leo cursus, vestibulum diam. In porttitor enim ut faucibus efficitur. Vestibulum iaculis venenatis lorem, quis sodales ipsum mollis id. ";
-
-const covAbility = "Your Patron’s spells are not counted against your maximum number of learned spells and you may learn one of its blessing spells. Choose a form of soul damage based on your Patron. When you deal damage to a creature, you may expend one Mana Point to additionally deal 3d4 of your chosen soul damage’s type to that creature.";
-const countAbility = "You may perform your actions on any other creature’s turn as a reaction without needing to declare the action beforehand. Your parry action may be used on any melee or ranged weapon attack within its range. Your passive Sense score (the DC for deception and stealth roll made against you) is increased by your Focus score.";
+import { Talent } from "@/types/talentTypes";
+import { useGetTalentList } from "@/hooks/useGetTalentList";
 
 export default function talents(character:Character,setCharacterData:Function) {
     const [talentSelection, setTalentSelection] = useState(true);
     const [readySelection, setReadySelection] = useState(false);
     const [showSelected, setShowSelected] = useState(false);
-    const [talent1, setTalent1] = useState("None Selected");
-    const [talent2, setTalent2] = useState("None Selected");
+    const [talentList, setTalentList] = useState<Talent[]>([]);
 
-    const setTalent = (e:string)=> {
-        if (e == talent1) {
+    useEffect(()=>{
+        useGetTalentList().then((data)=>{
+            setTalentList(data.data.data.getTalentList);
+        })
+    },[])
+
+    const setTalent = (e:Talent)=> {
+        if (e.name == character.talent1.name) {
             setCharacterData((prev: any) => ({
             ...prev,
             attribute1: 0,
             talent1: ""
             }))
             setTalentSelection(true);
-            setTalent1("None Selected");
         }
-        else if (e == talent2) {
+        else if (e.name == character.talent2.name) {
             setCharacterData((prev: any) => ({
             ...prev,
             attribute2: 0,
             talent2: ""
             }))
             setReadySelection(false);
-            setTalent2("None Selected");
         }
         else if (talentSelection) {
             setCharacterData((prev: any) => ({
@@ -41,7 +39,6 @@ export default function talents(character:Character,setCharacterData:Function) {
             talent1: e
             }))
             setTalentSelection(false);
-            setTalent1(e);
         }
         else if (!readySelection) {
             setCharacterData((prev: any) => ({
@@ -49,31 +46,30 @@ export default function talents(character:Character,setCharacterData:Function) {
             talent2: e
             }))
             setReadySelection(true);
-            setTalent2(e);
         }
 
     }
 
-    function buildTalentCards(talentList:string[]) {
+    function buildTalentCards() {
         return(<div className="talentChoices">
-            {talentList.map((talent:string)=>(
-                <button key={talent} className={((!talentSelection)&&(readySelection)) ? ("disabledTalentCard"): ("talentCard")} onClick={()=>{ setTalent(talent)}}>
-                    {!((talent1 == talent)||(talent2 == talent)) ? (
+            {talentList.map((talent:Talent)=>(
+                <button key={talent.name} className={((!talentSelection)&&(readySelection)) ? ("disabledTalentCard"): ("talentCard")} onClick={()=>{ setTalent(talent)}}>
+                    {!((character.talent1.name === talent.name)||(character.talent2.name === talent.name)) ? (
                         <div className="cardGrid">
                             <div className="talentName">
-                                {talent}
+                                {talent.name}
                             </div>
                             <div className="talentIcon">
                                 Icon
                             </div>
                             <div className="talentType">
-                                Type
+                                {talent.caster ? "Spellcaster" : "Blademaster"}
                             </div>
                             <div className="talentRole">
-                                Role
+                                {talent.role}
                             </div>
                             <div className="talentCompl">
-                                Complexity
+                                { talent.complexity}
                             </div>
                             <div className="talentSplash">
                                 Splash
@@ -81,10 +77,10 @@ export default function talents(character:Character,setCharacterData:Function) {
                         </div>
                     ): (<div className="cardBack">
                             <div className="cardBackName">
-                                {talent}
+                                {talent.name}
                             </div>
                             <div className="cardDesc">
-                                Talent Description Here
+                                {talent.description}
                             </div>
                     </div>)}
                 </button>
@@ -99,7 +95,7 @@ export default function talents(character:Character,setCharacterData:Function) {
         </div>
         { !showSelected ? (
             <div>
-                {buildTalentCards(talentList)}
+                {buildTalentCards()}
                 <div className="view" onClick={()=>{ setShowSelected(true)}}>
                     View Details
                 </div>
@@ -108,28 +104,28 @@ export default function talents(character:Character,setCharacterData:Function) {
         <div className="selected">
             <div className="viewTalent1">
                 <div className="selectedName">
-                    { talent1 }
+                    { character.talent1.name }
                 </div>
                 <div className="selectedType">
-                    Spellcaster
+                    {character.talent1.caster ? "Spellcaster" : "Blademaster"}
                 </div>
                 <div className="selectedFlavor">
-                    {descy}
+                    {character.talent1.description}
                 </div>
                 <div className="selectedRoles">
-                    Mage, Utility, Disruption
+                    {character.talent1.role}
                 </div>
                 <div className="selectedComplexity">
-                    Complexity: 3
+                    Complexity: {character.talent1.complexity}
                 </div>
                 <div className="selectedSkills">
-                    Preferred Skills: Focus, Sense
+                    Preferred Skills: {character.talent1.prioritySkills}
                 </div>
                 <div className="selectedBonus">
-                    Bonuses: <br/> +6 Hit Point Maximum | +3 Mana Maximum
+                    Bonuses: <br/> +{character.talent1.hpBonus} Hit Point Maximum{character.talent1.caster && " | +3 Mana Bonus"}
                 </div>
                 <div className="selectedAbility">
-                    Abilities: <br/> {covAbility}
+                    Abilities: <br/> {character.talent1.ability1}
                 </div>
                 <div className="selectedAtts">
                     Attributes:
@@ -151,28 +147,28 @@ export default function talents(character:Character,setCharacterData:Function) {
             </div>
             <div className="viewTalent2">
                 <div className="selectedName">
-                    { talent2 }
+                    { character.talent2.name }
                 </div>
                 <div className="selectedType">
-                    Blademaster
-                </div>
+                    {character.talent2.caster ? "Spellcaster" : "Blademaster"}               
+                    </div>
                 <div className="selectedFlavor">
-                    {descy}
+                    {character.talent2.description}
                 </div>
                 <div className="selectedRoles">
-                    Fighter, Tank, Lethality
+                    {character.talent2.role}
                 </div>
                 <div className="selectedComplexity">
-                    Complexity: 1
+                    Complexity: {character.talent2.complexity}
                 </div>
                 <div className="selectedSkills">
-                    Preferred Skills: Fitness, Precisoon
+                    Preferred Skills: {character.talent2.prioritySkills}
                 </div>
                 <div className="selectedBonus">
-                    Bonuses: <br/> +10 Hit Point Maximum
+                    Bonuses: <br/> +{character.talent2.hpBonus} Hit Point Maximum{character.talent2.caster && " | +3 Mana Bonus"}
                 </div>
                 <div className="selectedAbility">
-                    Abilities: <br/> {countAbility}
+                    Abilities: <br/> {character.talent2.ability1}
                 </div>
                 <div className="selectedAtts">
                     Attributes:
