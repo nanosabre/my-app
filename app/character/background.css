@@ -50,9 +50,10 @@ input {
 
 .scrollList div.cell {
     display: grid;
-    grid-template-areas: "name name"
+    grid-template-areas: "name image"
     "description image";
     grid-template-rows: 50px auto;
+    grid-template-columns: 5fr 2fr; 
     border: 1px solid rgb(85, 85, 85);
     height: 150px;
 }
