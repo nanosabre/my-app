@@ -2,48 +2,64 @@ import { useEffect, useState } from "react";
 import { Character } from "@/types/characterTypes";
 import "./talents.css";
 import { Talent } from "@/types/talentTypes";
-import { useGetTalentList } from "@/hooks/useGetTalentList";
+import { useGetTalentScreen } from "@/hooks/useGetTalentScreen";
+import { Effect } from "@/types/stateTypes";
+import { useModifyEffect } from "@/hooks/operations/effectOperations";
 
 export default function talents(character:Character,setCharacterData:Function) {
     const [talentSelection, setTalentSelection] = useState(true);
     const [readySelection, setReadySelection] = useState(false);
     const [showSelected, setShowSelected] = useState(false);
     const [talentList, setTalentList] = useState<Talent[]>([]);
+    const [effectList, setEffectList] = useState<Effect[]>([]);
 
     useEffect(()=>{
-        useGetTalentList().then((data)=>{
-            setTalentList(data.data.data.getTalentList);
+        useGetTalentScreen().then((data)=>{
+            setTalentList(data.data.data.getTalentScreen.talents);
+            setEffectList(data.data.data.getTalentScreen.effects);
         })
     },[])
 
     const setTalent = (e:Talent)=> {
+        let effects = effectList.filter(e=>e.name.includes(e.name));
+        let state = character.state;
         if (e.name == character.talent1.name) {
+            state.activeEffects = state.activeEffects.filter(ae=>!ae.name.includes(character.talent1.name));
+            state.inactiveEffects = state.inactiveEffects.filter(ie=>!ie.name.includes(character.talent1.name));
             setCharacterData((prev: any) => ({
             ...prev,
             attribute1: 0,
-            talent1: ""
+            talent1: "",
+            state: {...state}
             }))
             setTalentSelection(true);
         }
         else if (e.name == character.talent2.name) {
+            state.activeEffects = state.activeEffects.filter(ae=>!ae.name.includes(character.talent2.name));
+            state.inactiveEffects = state.inactiveEffects.filter(ie=>!ie.name.includes(character.talent2.name));
             setCharacterData((prev: any) => ({
             ...prev,
             attribute2: 0,
-            talent2: ""
+            talent2: "",
+            state: {...state}
             }))
             setReadySelection(false);
         }
         else if (talentSelection) {
+            state = effects.length > 0 ? useModifyEffect(character.state, false, ...effects) : character.state;
             setCharacterData((prev: any) => ({
             ...prev,
-            talent1: e
+            talent1: e,
+            state: {...state}
             }))
             setTalentSelection(false);
         }
         else if (!readySelection) {
+            state = effects.length > 0 ? useModifyEffect(character.state, false, ...effects) : character.state;
             setCharacterData((prev: any) => ({
             ...prev,
-            talent2: e
+            talent2: e,
+            state: {...state}
             }))
             setReadySelection(true);
         }
