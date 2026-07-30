@@ -1,19 +1,18 @@
 import axios from "axios";
 
 //calls the endpoint to save the character
-export const useGetBackgroundScreen = async (source: string) => {
+export const useGetTalentScreen = async () => {
 
     const axios = require('axios');
     let data = JSON.stringify({
-        query: `query Query ($source: String){
-   getBackgroundScreen (source: $source) {
-    ancestries { name description parent source trait1 trait2 size }
-    backgrounds { name description source parentTrait childTrait deity }
-    traits { name traitType description tags}
+        query: `query Query {
+               getTalentScreen  {
+    talents {name ability1 ability2 description hpBonus prioritySkills role complexity caster keystone capstone}
     effects { name description charProperty effectType conditionalCheck effect}
+
    }
-}`,
-        variables: {"source": source}
+            }`,
+        variables: {}
     });
 
     let config = {

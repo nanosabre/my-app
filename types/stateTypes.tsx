@@ -1,10 +1,22 @@
+export interface Effect { 
+    id: string
+    name: string
+    description: string
+    charProperty: string
+    effectType: number
+    conditionalCheck: string
+    effect: string
+}
+
 export interface CharacterState {
     id: string
     characterId: string
     hitPoints: number
     armor: number
     manaPoints: number
-    activeEffects: string
+    wounds: number
+    activeEffects: Effect[]
+    inactiveEffects: Effect[]
 }
 
 export interface Ancestry {
@@ -94,6 +106,8 @@ export var emptyCharacterState: CharacterState = {
     characterId:"",
     hitPoints: 40,
     armor: 0,
+    wounds: 0,
     manaPoints: 0,
-    activeEffects: ""
+    activeEffects: [],
+    inactiveEffects: []
   }

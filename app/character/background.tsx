@@ -2,14 +2,8 @@ import { useEffect, useState } from "react";
 import { Character } from "@/types/characterTypes";
 import "./background.css";
 import { useGetBackgroundScreen } from "@/hooks/useGetBackgroundScreen";
-import { Ancestry, Background, Trait } from "@/types/stateTypes";
-
-//temp variables
-const ancestries = ["Honi","Hyvani","Machina","Meliades","Merrow","Nagani","Phalaena","Ullik","Human","Orc","Elf","Dwarf","Halfling","Pixie"];
-const backgrounds = ["Velari Truth-Seeker", "Mahoken Institute Affiliate", "Jennite Follower", "Bolnean Citizen","Nagen-Tei", "Saile Trader","Fionn Shaman","Wanderer"];
-const ancVariants = ["Variant 1", "Variant 2", "Variant 3"];
-const backVariants = ["Variant 1", "Variant 2", "Variant 3"];
-const descy = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu ex ante. Phasellus ut sapien ac ipsum euismod hendrerit. Vestibulum congue interdum magna, ac aliquet odio posuere in. Integer pretium rhoncus faucibus. In porttitor bibendum neque scelerisque faucibus. Aliquam vitae blandit lorem. Vivamus dictum mollis nisi, sit amet tincidunt nunc congue et. Ut luctus rutrum nibh, non rhoncus nunc molestie in. Integer aliquet dictum mi nec fermentum. Pellentesque sit amet volutpat sem, a sagittis orci. Donec bibendum magna quis ex porta, eu eleifend diam auctor. Integer aliquam ac libero sit amet aliquam. Donec in nisl molestie, semper leo cursus, vestibulum diam. In porttitor enim ut faucibus efficitur. Vestibulum iaculis venenatis lorem, quis sodales ipsum mollis id. ";
+import { Ancestry, Background, Effect, Trait } from "@/types/stateTypes";
+import { useModifyEffect } from "@/hooks/operations/effectOperations";
 
 export default function background(character:Character,setCharacterData:Function) {
 
@@ -23,6 +17,7 @@ export default function background(character:Character,setCharacterData:Function
     const [traitsList, setTraitsList] = useState<Trait[]>([]);
     const [ancestryParentList, setAncestryParentList] = useState<Ancestry[]>([]);
     const [backgroundParentList, setBackgroundParentList] = useState<Background[]>([]);
+    const [effectList, setEffectList] = useState<Effect[]>([])
     
 
     useEffect(()=>{
@@ -31,6 +26,7 @@ export default function background(character:Character,setCharacterData:Function
             setAncestryList(response.ancestries);
             setBackgroundList(response.backgrounds);
             setTraitsList(response.traits);
+            setEffectList(response.effects);
             let parentList = response.ancestries.filter((value: Ancestry, index: Number, self:Ancestry[])=>self.findIndex(a=>a.parent===value.parent)===index);
             setAncestryParentList(parentList);
             parentList = response.backgrounds.filter((value: Background, index: Number, self:Background[])=>self.findIndex(a=>a.parentTrait===value.parentTrait)===index);
@@ -40,10 +36,17 @@ export default function background(character:Character,setCharacterData:Function
 
     function saveAncestrytoCharacter(e:string){
         let value = ancestryList.find(a=>a.name===e);
+        let effects = effectList.filter(e=>e.name===value?.trait1 || e.name===value?.trait2);
+        let state = effects.length > 0 ? useModifyEffect(character.state, true, ...effects) : character.state;
+        //remove old effects from state
+        state.activeEffects = state.activeEffects.filter(ae=>ae.name!=character.ancestry.trait1.name || ae.name!=character.ancestry.trait2.name);
+        state.inactiveEffects = state.inactiveEffects.filter(ie=>ie.name!=character.ancestry.trait1.name || ie.name!=character.ancestry.trait2.name);
+        
         if(value)
             setCharacterData((prev: Character)=>({
                 ...prev,
-                ancestry: buildAncestryInner(value)
+                ancestry: buildAncestryInner(value),
+                state: {...state}
             }))
     }
 
@@ -109,10 +112,7 @@ export default function background(character:Character,setCharacterData:Function
         setAncestrySelection(true);
         setAncVariantList(buildAncestryVariants(ancestry.parent));
         if (character.ancestry?.parent != ancestry.parent) {
-            setCharacterData((prev: any) => ({
-            ...prev,
-            ancestry: buildAncestryInner(ancestry)
-            }))
+            saveAncestrytoCharacter(ancestry.name);
         }
     }
     const backgroundChoice = (background:Background) => {
