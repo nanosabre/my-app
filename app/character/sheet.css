@@ -12,11 +12,80 @@
 .sheet div.invPanel {
     border: 1px solid black;
     grid-area: invPanel;
+    display: grid;
+    grid-template-areas: "invTitle invTitle"
+    "currencies supplies"
+    "reagents materials"
+    "equip1 equip1"
+    "equip2 equip2"
+    "equip3 equip3"
+    "innerwear outerwear"
+    "itemFilter itemFilter"
+    "itemTable itemTable";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 2fr 2fr 2fr 2fr 2fr 3fr 1fr 5fr;
 }
 
+.invPanel div.invTitle {
+    grid-area: invTitle;
+    border: 1px solid black;
+}
 
+.invPanel div.currencies {
+    grid-area: currencies;
+    border: 1px solid black;
+}
 
+.invPanel div.supplies {
+    grid-area: supplies;
+    border: 1px solid black;
+}
 
+.invPanel div.reagents {
+    grid-area: reagents;
+    border: 1px solid black;
+}
+
+.invPanel div.materials {
+    grid-area: materials;
+    border: 1px solid black;
+}
+
+.invPanel div.equip1 {
+    grid-area: equip1;
+    border: 1px solid black;
+
+}
+
+.invPanel div.equip2 {
+    grid-area: equip2;
+    border: 1px solid black;
+}
+
+.invPanel div.equip3 {
+    grid-area: equip3;
+    border: 1px solid black;
+}
+
+.invPanel div.innerwear {
+    grid-area: innerwear;
+    border: 1px solid black;
+}
+
+.invPanel div.outerwear {
+    grid-area: outerwear;
+    border: 1px solid black;
+}
+
+.invPanel div.itemFilter {
+    grid-area: itemFilter;
+    border: 1px solid black;
+}
+
+.invPanel div.itemTable {
+    grid-area: itemTable;
+    border: 1px solid black;
+}
 
 .sheet div.mainPanel {
     border: 1px solid black;
@@ -94,4 +163,36 @@
 .sheet div.spellPanel {
     border: 1px solid black;
     grid-area: spellPanel;
+    display: grid;
+    grid-template-areas: "spellTitle spellTitle"
+    "spellInfo1 spellInfo2"
+    "spellFilter spellFilter"
+    "spellTable spellTable";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 3fr 1fr 15fr;
+}
+
+.spellPanel div.spellTitle{
+    grid-area: spellTitle;
+    border: 1px solid black;
+}
+
+.spellPanel div.spellInfo1 {
+    grid-area: spellInfo1;
+    border: 1px solid black;
+}
+
+.spellPanel div.spellInfo2 {
+    grid-area: spellInfo2;
+    border: 1px solid black;
+}
+
+.spellPanel div.spellFilter {
+    grid-area: spellFilter;
+    border: 1px solid black;
+}
+
+.spellPanel div.spellTable {
+    grid-area: spellTable;
+    border: 1px solid black;
 }

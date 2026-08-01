@@ -4,7 +4,42 @@ export default function sheet() {
     return (
     <div className="sheet">
         <div className="invPanel">
-            Inventory
+            <div className="invTitle">
+                Inventory
+            </div>
+            <div className="currencies">
+                currencies
+            </div>
+            <div className="supplies">
+                supplies
+            </div>
+            <div className="reagents">
+                reagents
+            </div>
+            <div className="materials">
+                materials
+            </div>
+            <div className="equip1">
+                equip1
+            </div>
+            <div className="equip2">
+                equip2
+            </div>
+            <div className="equip3">
+                equip3
+            </div>
+            <div className="innerwear">
+                innerwear
+            </div>
+            <div className="outerwear">
+                outerwear
+            </div>
+            <div className="itemFilter">
+                itemfilter
+            </div>
+            <div className="itemTable">
+                itemTable
+            </div>
         </div>
         <div className="mainPanel">
             <div  className="mainName">
@@ -45,7 +80,21 @@ export default function sheet() {
             </div>
         </div>
         <div className="spellPanel">
-            Spells
+            <div className="spellTitle">
+                Spells and Abilities
+            </div>
+            <div className="spellInfo1">
+                spell info 1
+            </div>
+            <div className="spellInfo2">
+                spell info 2
+            </div>
+            <div className="spellFilter">
+                spell filter
+            </div>
+            <div className="spellTable">
+                spell table
+            </div>
         </div>
     </div>
 )
