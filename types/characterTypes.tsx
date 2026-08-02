@@ -63,12 +63,6 @@ export interface CharacterDAO {
     inventory: InventoryDAO[]
 }
 
-export interface SpellCharacter {
-    id: string
-    characterId: string
-    spellId: string
-}
-
 export var emptyCharacter: Character = {
     id: null, 
     userId: "",

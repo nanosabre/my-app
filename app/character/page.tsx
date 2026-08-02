@@ -9,7 +9,7 @@ import equipment from "./equipment";
 import story from "./story";
 import sheet from "./sheet";
 import { useState } from "react";
-import { Character, emptyCharacter } from "@/types/characterTypes";
+import { CalculatedState, Character, emptyCalculatedState, emptyCharacter } from "@/types/characterTypes";
 import "./page.css";
 
 
@@ -20,6 +20,7 @@ const tabs = ["background", "talents", "attributes", "spells", "equipment", "sto
 export default function Home() {
     const [currentTab, setCurrentTab] = useState("background");
     const [characterData, setCharacterData] = useState<Character>(emptyCharacter)
+    const [calculatedState, setCalculatedState] = useState<CalculatedState>(emptyCalculatedState);
 
     function moveTab(tab:string) {
       let place = tabs.indexOf(tab);
@@ -70,9 +71,9 @@ export default function Home() {
             </TabsList>
             <TabsContent value="background">{background(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="talents">{talents(characterData,setCharacterData)}</TabsContent>
-            <TabsContent value="attributes">{attributes(characterData,setCharacterData, currentTab)}</TabsContent>
-            <TabsContent value="spells">{spells()}</TabsContent>
-            <TabsContent value="equipment">{equipment()}</TabsContent>
+            <TabsContent value="attributes">{attributes(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
+            <TabsContent value="spells">{spells(characterData, currentTab, calculatedState)}</TabsContent>
+            <TabsContent value="equipment">{equipment(characterData)}</TabsContent>
             <TabsContent value="story">{story()}</TabsContent>
             <TabsContent value="sheet">{sheet()}</TabsContent>
         </Tabs>

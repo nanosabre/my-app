@@ -1,207 +1,215 @@
-import { emptySpell, Spell } from "@/types/spellTypes";
+import { emptySpell, Spell, SpellDAO } from "@/types/spellTypes";
 import { useEffect, useState } from "react";
 import { Toggle } from "@/components/ui/toggle";
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import "./spells.css";
+import { CalculatedState, Character } from "@/types/characterTypes";
+import { useGetFilteredSpells } from "@/hooks/useGetFilteredSpells";
 
 
 const maxDomainSpells = 3;
 const maxKeystoneSpells = 1;
 const maxCapstoneSpells = 1;
 const maxSpells = 12;
-var currentDomainSpellCount = 0;
-var currentKeystoneSpellCount = 0;
-var currentCapstoneSpellCount = 0;
-
-
-
-function generateSpellList() {
-    var spells = [];
-    for (let i = 0; i < 50; i++) {
-        spells.push({...emptySpell});
-        spells[i].name = i.toString() + " Spell Name";
-        spells[i].manaCost = Math.round(i/10);
-        spells[i].actionCost = Math.round(i/15).toString() + " Actions";
-        spells[i].range = Math.round(i/3).toString() + "m";
-        spells[i].description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu ex ante. Phasellus ut sapien ac ipsum euismod hendrerit. Vestibulum congue interdum magna, ac aliquet odio posuere in. Integer pretium rhoncus faucibus. In porttitor bibendum neque scelerisque faucibus. Aliquam vitae blandit lorem. Vivamus dictum mollis nisi, sit amet tincidunt nunc congue et. Ut luctus rutrum nibh, non rhoncus nunc molestie in. Integer aliquet dictum mi nec fermentum.";
-        if (i % 3 == 0) {
-            spells[i].spellType = "Projection";
-        }
-        else if (i % 3 == 1) {
-            spells[i].spellType = "Hex";
-        }
-        else if (i % 3 == 2) {
-            spells[i].spellType = "Enchantment";
-        }
-        if (i % 4 == 0) {
-            spells[i].source = "Domain";
-        }
-        else if (i % 4 == 1) {
-            spells[i].source = "Covenant";
-        }
-        else if (i % 4 == 2) {
-            spells[i].source = "Covenant Keystone";
-        }
-        else if (i % 4 == 3) {
-            spells[i].source = "Covenant Capstone";
-        }
-    }
-    return spells;
+var spellCounts = {
+    domain: 0,
+    keystone1: 0,
+    keystone2: 0,
+    capstone1: 0,
+    capstone2: 0
 }
 
-const filterList = ["Domain", "Covenant", "Covenant Keystone", "Covenant Capstone"];
+export default function spells(character: Character, currentTab: string, calculatedState: CalculatedState) {
+    const [allFilters, setAllFilters] = useState<string[]>([]);
+    const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-function generateToggleStates(filterList:string[]) {
-    let states : boolean[] = [];
-    for (let i = 0; i < filterList.length; i++) {
-        states.push(false);
-    }
-    return states;
-}
+    const [currentSpellList, setCurrentSpellList] = useState<SpellDAO[]>([]);
+    const [availableSpellList, setAvailableSpellList] = useState<Spell[]>([]);
 
-const toggleList : boolean[] = generateToggleStates(filterList);
+    const [availableSpellsTable, setAvailableSpellsTable] = useState(buildAvailableSpellTable([]));
+    const [activeCurrentSpellsTable, setActiveCurrentDisplayTable] = useState(buildCurrentSpellTable());
 
-export default function spells() {
-    const [allFilters, setAllFitlers] = useState(filterList);
-    const [activeFilters, setActiveFilters] = useState(filterList);
-
-    const [currentSpellList, setCurrentSpellList] = useState<Spell[]>([]);
-    const [availableSpellList, setAvailableSpellList] = useState(generateSpellList());
-
-    const [availableSpellsTable, setAvailableSpellsTable] = useState(buildAvailableSpellTable(generateSpellList()));
-    const [activeCurrentSpellsTable, setActiveCurrentDisplayTable] = useState(buildCurrentSpellTable(currentSpellList));
-    
     const [filterChecks, setFilterChecks] = useState(new Map());
 
+    useEffect(() => {
+        if (currentTab === "spells")
+            useGetFilteredSpells(buildFilterList()).then(data => {
+                setAvailableSpellList(data.data.data.getFilteredSpells);
+            })
+    }, [character, currentTab])
 
+    useEffect(() => {
+        setCurrentSpellList((prev:any)=>[...prev].filter(sd=>allFilters.findIndex(f=>f===sd.spell.source)!=-1))
+    }, [availableSpellList])
 
-    function validSpell(spell:Spell) {
+    useEffect(() => {
+        updateAvailableSpellTable();
+        updateCurrentSpellTable();
+    }, [currentSpellList])
+
+    function buildFilterList() {
+        let result: string[] = []
+        if (character.talent1.caster) {
+            character.attributes1.forEach(a => result.push(a.name + " Spell"))
+            result.push(character.talent1.name + " Spell")
+            if (character.attributes1.length >= 2)
+                result.push(character.talent1.name + " Keystone")
+            if (character.attributes1.length == 4)
+                result.push(character.talent1.name + " Capstone")
+        }
+        if (character.talent2.caster) {
+            character.attributes2.forEach(a => result.push(a.name + " Spell"))
+            result.push(character.talent2.name + " Spell")
+            if (character.attributes2.length >= 2)
+                result.push(character.talent2.name + " Keystone")
+            if (character.attributes2.length == 4)
+                result.push(character.talent2.name + " Capstone")
+        }
+        setAllFilters(result);
+        setActiveFilters(result);
+        return result;
+    }
+
+    function validSpell(spell: Spell) {
         let spellSource = spell.source;
-        if (currentSpellList.includes(spell)) {
+        if (currentSpellList.find(sd => sd.spell.name === spell.name)) {
             return (false);
         }
-        if (spellSource == "Domain") {
-            return (maxDomainSpells > currentDomainSpellCount);
+        if (spellSource.includes("Domain")) {
+            return (maxDomainSpells > spellCounts.domain);
         }
-        else if (spellSource == "Covenant Keystone") {
-            return (maxKeystoneSpells > currentKeystoneSpellCount);
+        else if (spellSource === character.talent1.name + " Keystone") {
+            return (maxKeystoneSpells > spellCounts.keystone1);
         }
-        else if (spellSource == "Covenant Capstone") {
-            return (maxCapstoneSpells > currentCapstoneSpellCount);
+        else if (spellSource === character.talent2.name + " Keystone") {
+            return (maxKeystoneSpells > spellCounts.keystone2);
+        }
+        else if (spellSource === character.talent1.name + " Capstone") {
+            return (maxCapstoneSpells > spellCounts.capstone1);
+        }
+        else if (spellSource === character.talent2.name + " Capstone") {
+            return (maxCapstoneSpells > spellCounts.capstone2);
         }
         else {
             return (maxSpells > currentSpellList.length);
         }
     }
 
-    function buildAvailableSpellTable(spellList: Spell[]) {
+    function buildAvailableSpellTable(spellList:Spell[]) {
         return (
-        <div className="availableTable">
-            {spellList.map((spell: Spell) => (
-                <div key={spell.name} className={(validSpell(spell)) ? ("cell") : ("disabledCell")}>
-                    <div onClick={()=>{addSpell(spell)}} className={(validSpell(spell)) ? ("w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]") : ("w-[30px] bg-[#cccccc] hover:bg-[#cc0000]")}>
-                        +
+            <div className="availableTable">
+                {spellList.map((spell: Spell) => (
+                    <div key={spell.name} className={(validSpell(spell)) ? ("cell") : ("disabledCell")}>
+                        <div onClick={() => { addSpell(spell) }} className={(validSpell(spell)) ? ("w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]") : ("w-[30px] bg-[#cccccc] hover:bg-[#cc0000]")}>
+                            +
+                        </div>
+                        <Accordion>
+                            <AccordionItem>
+                                <AccordionTrigger>
+                                    <div className="cellContentName">{spell.name}</div>
+                                    <div className="cellContentMedium">{spell.manaCost} Mana</div>
+                                    <div className="cellContentMedium">{spell.actionCost}</div>
+                                    <div className="cellContentShort">{spell.range}</div>
+                                    <div className="cellContentLong">{spell.spellType}</div>
+                                    <div className="cellContentLong">{spell.source}</div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="cellDescription">
+                                        {spell.description}
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                        {(activeFilters.length == 0) ? ("No Filters Selected") : ("")}
                     </div>
-                    <Accordion>
-                        <AccordionItem>
-                            <AccordionTrigger>
-                                <div className="cellContentName">{spell.name}</div>
-                                <div className="cellContentMedium">{spell.manaCost} Mana</div>
-                                <div className="cellContentMedium">{spell.actionCost}</div>
-                                <div className="cellContentShort">{spell.range}</div>
-                                <div className="cellContentLong">{spell.spellType}</div>
-                                <div className="cellContentLong">{spell.source}</div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <div className="cellDescription">
-                                    {spell.description}
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                    {(activeFilters.length == 0) ? ("No Filters Selected"):("")}
-                </div>
                 ))}
-        </div>)
+            </div>)
     }
 
-    function buildCurrentSpellTable(spellList: Spell[]) {
+    function buildCurrentSpellTable() {
         return (
-        <div className="currentTable">
-            {spellList.map((spell: Spell) => (
-                <div className="cell" key={spell.name}>
-                    <div onClick={()=>{removeSpell(spell)}} className="w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]">
-                        -
+            <div className="currentTable">
+                {currentSpellList.map((spelld: SpellDAO) => (
+                    <div className="cell" key={spelld.spell.name}>
+                        <div onClick={() => { removeSpell(spelld) }} className="w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]">
+                            -
+                        </div>
+                        <Accordion>
+                            <AccordionItem>
+                                <AccordionTrigger>
+                                    <div className="cellContentName" >{spelld.spell.name}</div>
+                                    <div className="cellContentMedium">{spelld.spell.manaCost} Mana</div>
+                                    <div className="cellContentMedium">{spelld.spell.actionCost}</div>
+                                    <div className="cellContentShort">{spelld.spell.range}</div>
+                                    <div className="cellContentLong">{spelld.spell.spellType}</div>
+                                    <div className="cellContentLong">{spelld.spell.source}</div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="cellDescription">
+                                        {spelld.spell.description}
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
                     </div>
-                    <Accordion>
-                        <AccordionItem>
-                            <AccordionTrigger>
-                                <div className="cellContentName" >{spell.name}</div>
-                                <div className="cellContentMedium">{spell.manaCost} Mana</div>
-                                <div className="cellContentMedium">{spell.actionCost}</div>
-                                <div className="cellContentShort">{spell.range}</div>
-                                <div className="cellContentLong">{spell.spellType}</div>
-                                <div className="cellContentLong">{spell.source}</div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <div className="cellDescription">
-                                    {spell.description}
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </div>
-                
+
                 ))}
-        </div>)
+            </div>)
     }
 
-    function addSpell(spell:Spell) {
-        if ((currentSpellList.indexOf(spell) == -1) && (validSpell(spell))) {
-            let temp = currentSpellList;
-            temp.push(spell);
+    //TODO on save check all inventory and spell items and make sure characterId is correct (might be done in back end?)
+    function addSpell(spell: Spell) {
+        if (currentSpellList.find(s => s.spell.name === spell.name) == undefined && (validSpell(spell))) {
+            let temp = [...currentSpellList];
+            let spelld: SpellDAO = { characterSpell: { id: "", characterId: character.id || "", spellId: spell.id }, spell: spell }
+            temp.push(spelld);
             setCurrentSpellList(temp);
-            if (spell.source == "Domain") {
-                currentDomainSpellCount += 1;
+            if (spelld.spell.source.includes("Domain")) {
+                spellCounts.domain += 1
             }
-            else if (spell.source == "Covenant Keystone") {
-                currentKeystoneSpellCount += 1;
+            else if (spelld.spell.source === character.talent1.name + " Keystone") {
+                spellCounts.keystone1 += 1
             }
-            else if (spell.source == "Covenant Capstone") {
-                currentCapstoneSpellCount += 1;
+            else if (spelld.spell.source === character.talent1.name + " Capstone") {
+                spellCounts.capstone1 += 1
             }
-            updateCurrentSpellTable();
-            updateAvailableSpellTable();
+            else if (spelld.spell.source === character.talent2.name + " Keystone") {
+                spellCounts.keystone2 += 1
+            }
+            else if (spelld.spell.source === character.talent2.name + " Capstone") {
+                spellCounts.capstone2 += 1
+            }
         }
     }
 
-    function removeSpell(spell:Spell) {
-        let index = currentSpellList.indexOf(spell);
-        if ( index != -1) {
-            let temp = currentSpellList;
-            temp.splice(index, 1);
-            setCurrentSpellList(temp);
-            if (spell.source == "Domain") {
-                currentDomainSpellCount -= 1;
-            }
-            else if (spell.source == "Covenant Keystone") {
-                currentKeystoneSpellCount -= 1;
-            }
-            else if (spell.source == "Covenant Capstone") {
-                currentCapstoneSpellCount -= 1;
-            }
-            updateCurrentSpellTable();
-            updateAvailableSpellTable();
+    function removeSpell(spelld: SpellDAO) {
+        let temp = currentSpellList.filter(s => s.spell.name != spelld.spell.name)
+        setCurrentSpellList(temp);
+        if (spelld.spell.source.includes("Domain")) {
+            spellCounts.domain -= 1
+        }
+        else if (spelld.spell.source === character.talent1.name + " Keystone") {
+            spellCounts.keystone1 -= 1
+        }
+        else if (spelld.spell.source === character.talent1.name + " Capstone") {
+            spellCounts.capstone1 -= 1
+        }
+        else if (spelld.spell.source === character.talent2.name + " Keystone") {
+            spellCounts.keystone2 -= 1
+        }
+        else if (spelld.spell.source === character.talent2.name + " Capstone") {
+            spellCounts.capstone2 -= 1
         }
     }
 
-    function filterAvailableSpells(e:boolean, filter:string) {
+    function filterAvailableSpells(e: boolean, filter: string) {
         if (activeFilters.length == allFilters.length) {
+            console.log(filterChecks);
             let temp = [filter]
             setActiveFilters(temp);
 
             let tempMap = new Map(filterChecks);
-            [...tempMap.keys()].forEach(key=>{tempMap.set(key, true)});
+            [...tempMap.keys()].forEach(key => { tempMap.set(key, true) });
             tempMap.set(filter, false);
             setFilterChecks(tempMap);
         }
@@ -228,15 +236,15 @@ export default function spells() {
                 setFilterChecks(tempMap);
             }
         }
-        
+
     }
 
-    useEffect(() => {updateAvailableSpellTable()},[activeFilters]);
+    useEffect(() => { updateAvailableSpellTable() }, [activeFilters]);
     useEffect(() => {
         let checks = new Map();
-        allFilters.forEach(filter=>checks.set(filter, false));
+        allFilters.forEach(filter => checks.set(filter, false));
         setFilterChecks(checks);
-    }, [])
+    }, [allFilters])
 
     function buildFilterButtons() {
         let temps = [];
@@ -253,16 +261,16 @@ export default function spells() {
     }
 
     function updateCurrentSpellTable() {
-        setActiveCurrentDisplayTable(buildCurrentSpellTable(currentSpellList));
+        setActiveCurrentDisplayTable(buildCurrentSpellTable());
     }
 
     function updateAvailableSpellTable() {
-        let filteredSpells : Spell[] = [];
+        let filteredSpells: Spell[] = [];
         for (let i = 0; i < availableSpellList.length; i++) {
             if (activeFilters.includes(availableSpellList[i].source)) {
                 filteredSpells.push(availableSpellList[i]);
             }
-        }
+        } 
         //setActiveAvailableSpells(filteredSpells);
         setAvailableSpellsTable(buildAvailableSpellTable(filteredSpells));
     }
@@ -270,37 +278,37 @@ export default function spells() {
     function resetFilters() {
         setActiveFilters(allFilters);
         let tempMap = new Map(filterChecks);
-        [...tempMap.keys()].forEach(key=>{tempMap.set(key, false)});
+        [...tempMap.keys()].forEach(key => { tempMap.set(key, false) });
         setFilterChecks(tempMap);
     }
 
     return (
-    <div className="spells">
-        <div className="currentHeader">
-            Chosen Spells
-        </div>
-        {activeCurrentSpellsTable}
-        <div className="info1">
-            Domain Spells : ({currentDomainSpellCount}/{maxDomainSpells}) <br/>
-            Class Spells: ({currentSpellList.length-currentDomainSpellCount-currentKeystoneSpellCount-currentCapstoneSpellCount}/{maxSpells-maxDomainSpells-maxKeystoneSpells-maxCapstoneSpells}) <br/>
-            Keystone Spells: ({currentKeystoneSpellCount}/{maxKeystoneSpells}) <br/>
-            Capstone Spells: ({currentCapstoneSpellCount}/{maxCapstoneSpells})
-
-        </div>
-        <div className="info2">
-            Long Description
-        </div>
-        <div className="filter">
-            Filters: 
-            <div className="showAll" onClick={() => (resetFilters())}>
-                    All
+        <div className="spells">
+            <div className="currentHeader">
+                Chosen Spells
             </div>
-            {buildFilterButtons()}
+            {activeCurrentSpellsTable}
+            <div className="info1">
+                Domain Spells : ({spellCounts.domain}/{maxDomainSpells}) <br />
+                Class Spells: ({currentSpellList.length - spellCounts.domain - spellCounts.keystone1 - spellCounts.keystone2 - spellCounts.capstone1 - spellCounts.capstone2}/{maxSpells - maxDomainSpells - maxKeystoneSpells - maxCapstoneSpells}) <br />
+                Keystone Spells: ({spellCounts.keystone1 + spellCounts.keystone2}/{(character.talent1.caster ? maxKeystoneSpells : 0) + (character.talent2.caster ? maxKeystoneSpells : 0)}) <br />
+                Capstone Spells: ({spellCounts.capstone1 + spellCounts.capstone2}/{(character.talent1.caster ? maxCapstoneSpells : 0) + (character.talent2.caster ? maxCapstoneSpells : 0)})
+
+            </div>
+            <div className="info2">
+                Long Description
+            </div>
+            <div className="filter">
+                Filters:
+                <div className="showAll" onClick={() => (resetFilters())}>
+                    All
+                </div>
+                {buildFilterButtons()}
+            </div>
+            {availableSpellsTable}
+            <div className="free">
+                Free
+            </div>
         </div>
-        {availableSpellsTable}
-        <div className="free">
-            Free
-        </div>
-    </div>
-)
+    )
 }
