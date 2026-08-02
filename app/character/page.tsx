@@ -70,7 +70,7 @@ export default function Home() {
             </TabsList>
             <TabsContent value="background">{background(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="talents">{talents(characterData,setCharacterData)}</TabsContent>
-            <TabsContent value="attributes">{attributes(characterData,setCharacterData)}</TabsContent>
+            <TabsContent value="attributes">{attributes(characterData,setCharacterData, currentTab)}</TabsContent>
             <TabsContent value="spells">{spells()}</TabsContent>
             <TabsContent value="equipment">{equipment()}</TabsContent>
             <TabsContent value="story">{story()}</TabsContent>

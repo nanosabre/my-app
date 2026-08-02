@@ -24,7 +24,7 @@ export interface Character {
 }
 
 export interface CalculatedState {
-    [key: string]: string | number | null | undefined,
+    [key: string]: string | number,
     characterId: string
     hitPointsMax: number
     hitPoints: number
@@ -47,6 +47,15 @@ export interface CalculatedState {
     wounds: number
     woundsMax: number
     movement: number
+    encumbrance: number
+}
+
+export interface limitedState {
+    [key: string]: string | number | null | undefined,
+    fitness: number
+    precision: number
+    focus: number
+    sense: number
 }
 
 export interface CharacterDAO {
@@ -81,16 +90,22 @@ export var emptyCharacter: Character = {
 
 }
 
-export var emptyCalculatedState = {
+
+const BASEENCUMB = 50;
+const HPBASE = 30;
+const MOVEBASE = 2;
+const MANABASE = 3;
+const SPELLCAPBASE = 2;
+const WOUNDBASE = 4;
+
+export var emptyCalculatedState: CalculatedState = {
     characterId: "",
-    tenacity: 10,
-    evasion: 10,
     armorMax: 0,
     armorMin: 0,
     armor: 0,
-    manaMax: 0,
-    manaPoints: 0,
-    spellCapacity: 0,
+    manaMax: MANABASE,
+    manaPoints: MANABASE,
+    spellCapacity: SPELLCAPBASE,
     fitness: 0,
     precision: 0,
     focus: 0,
@@ -99,9 +114,19 @@ export var emptyCalculatedState = {
     celerity: 0,
     subtlety: 0,
     awareness: 0,
-    hitPointsMax: 40,
-    hitPoints: 40,
+    tenacity: 0,
+    evasion: 0,
+    hitPointsMax: HPBASE,
+    hitPoints: HPBASE,
     wounds: 0,
-    woundsMax: 6,
-    movement: 6,
+    woundsMax: WOUNDBASE,
+    movement: MOVEBASE,
+    encumbrance: BASEENCUMB
+}
+
+export var emptyLimitedState: limitedState = {
+    fitness: 0,
+    precision: 0,
+    focus: 0,
+    sense: 0,
 }
