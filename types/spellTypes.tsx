@@ -14,6 +14,17 @@ export interface Spell {
     tags: string
 }
 
+export interface SpellCharacter {
+    id: string
+    characterId: string
+    spellId: string
+}
+
+export interface SpellDAO { 
+    characterSpell: SpellCharacter
+    spell: Spell
+}
+
 export var emptySpell = {
     id: "",
     name: "",

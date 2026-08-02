@@ -14,7 +14,41 @@ export interface Item {
     rarity: string
 }
 
-export var emptyItem = {
+export interface Inventory {
+    [key: string]: string | number | boolean | null | undefined,
+    id: string | null
+    characterId: string | null
+    itemId: string
+    equipped: boolean
+    quantity: number
+}
+
+export interface InventoryDAO {
+    inventory: Inventory
+    item: Item
+}
+export interface Pack {
+    id: string
+    name: string
+    background: string
+    currency: number
+    rations: number
+    salves: number
+    reagents: string
+    materials: string
+    innerwear: string
+    outerwear: string
+    items: string
+}
+
+export interface proficiencyDAO {
+    item: Item
+    mastery: boolean
+}
+
+
+
+export var emptyItem: Item = {
     id: "string",
     name: "string",
     itemType: "string",
@@ -30,21 +64,25 @@ export var emptyItem = {
     rarity: "string"
 }
 
-export interface Inventory {
-    [key: string]: string | number | boolean | null | undefined,
-    id: string
-    characterId: string | null
-    itemId: string
-    equipped: boolean
-    quantity: number
+export var emptyInventory: Inventory = {
+    id: null,
+    characterId: null,
+    itemId: "",
+    equipped: false,
+    quantity: 1
+
 }
 
-export interface InventoryDAO {
-    inventory: Inventory
-    item: Item
-}
-
-export interface proficiencyDAO {
-    item: Item
-    mastery: boolean
+export var emptyPack: Pack = {
+    id: "",
+    name: "",
+    background: "",
+    currency: 0,
+    rations: 0,
+    salves: 0,
+    reagents: "",
+    materials: "",
+    innerwear: "",
+    outerwear: "",
+    items: "",
 }
