@@ -1,10 +1,62 @@
-.headerBar {
-    font-size: 48px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: var(--accent);
-    background: var(--accent-bg);
-    border: 2px solid transparent;
-    transition: border-color 0.3s;
-    margin-bottom: 24px;
+.page {
+    display: grid;
+    grid-template-areas: "prev none next"
+    "tabs tabs tabs";
+    grid-template-columns: 100px auto 100px;
+    grid-template-rows: 40px auto;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.prevButton {
+    grid-area: prev;
+    text-align: center;
+    font-size: 28px;
+    border-radius: 10px;
+    background-color: rgb(175, 175, 175);
+    margin-left: 20px;
+}
+
+.prevButton:hover {
+    background-color: rgb(218, 218, 218);
+    cursor: pointer;
+}
+
+.nextButton {
+    grid-area: next;
+    text-align: center;
+    font-size: 28px;
+    border-radius: 10px;
+    background-color: rgb(175, 175, 175);
+    margin-right: 20px;
+}
+
+.nextButton:hover {
+    background-color: rgb(218, 218, 218);
+    cursor: pointer;
+}
+
+.tabsContainer {
+    grid-area: tabs;
+    width: calc(100vw - 130px);
+    height: calc(100vh - 240px);
+}
+
+.content {
+    font-size: 20px;
+    columns: 3;
+    column-fill: auto;
+    height: calc(100vh - 240px);
+}
+
+h1 {
+    font-size: 56px;
+}
+
+h2 {
+    font-size: 36px;
+}
+
+h3 {
+    font-size: 28px;
 }

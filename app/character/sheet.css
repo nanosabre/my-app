@@ -1,0 +1,198 @@
+.sheet {
+    display: grid;
+    grid-template-areas: "invPanel mainPanel spellPanel";
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid black;
+    text-align: center;
+    height: calc(100vh - 240px);
+    width: calc(100vw - 130px);
+    background-color: #eeeeee;
+}
+
+.sheet div.invPanel {
+    border: 1px solid black;
+    grid-area: invPanel;
+    display: grid;
+    grid-template-areas: "invTitle invTitle"
+    "currencies supplies"
+    "reagents materials"
+    "equip1 equip1"
+    "equip2 equip2"
+    "equip3 equip3"
+    "innerwear outerwear"
+    "itemFilter itemFilter"
+    "itemTable itemTable";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 2fr 2fr 2fr 2fr 2fr 3fr 1fr 5fr;
+}
+
+.invPanel div.invTitle {
+    grid-area: invTitle;
+    border: 1px solid black;
+}
+
+.invPanel div.currencies {
+    grid-area: currencies;
+    border: 1px solid black;
+}
+
+.invPanel div.supplies {
+    grid-area: supplies;
+    border: 1px solid black;
+}
+
+.invPanel div.reagents {
+    grid-area: reagents;
+    border: 1px solid black;
+}
+
+.invPanel div.materials {
+    grid-area: materials;
+    border: 1px solid black;
+}
+
+.invPanel div.equip1 {
+    grid-area: equip1;
+    border: 1px solid black;
+
+}
+
+.invPanel div.equip2 {
+    grid-area: equip2;
+    border: 1px solid black;
+}
+
+.invPanel div.equip3 {
+    grid-area: equip3;
+    border: 1px solid black;
+}
+
+.invPanel div.innerwear {
+    grid-area: innerwear;
+    border: 1px solid black;
+}
+
+.invPanel div.outerwear {
+    grid-area: outerwear;
+    border: 1px solid black;
+}
+
+.invPanel div.itemFilter {
+    grid-area: itemFilter;
+    border: 1px solid black;
+}
+
+.invPanel div.itemTable {
+    grid-area: itemTable;
+    border: 1px solid black;
+}
+
+.sheet div.mainPanel {
+    border: 1px solid black;
+    grid-area: mainPanel;
+    display: grid;
+    grid-template-areas: "name name name name name name"
+    "armor armor picture picture healthMana healthMana"
+    "skills skills skills conditions conditions conditions"
+    "fitness focus focus precision precision sense"
+    "talent1 talent1 talent1 talent2 talent2 talent2";
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 2fr;
+    grid-template-rows: 1fr 4fr 5fr 1fr 4fr;
+}
+
+.mainPanel div.mainName {
+    grid-area: name;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainArmor {
+    grid-area: armor;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainPicture {
+    grid-area: picture;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainHealthMana {
+    grid-area: healthMana;
+        border: 1px solid black;
+}
+
+.mainPanel div.mainSkills {
+    grid-area: skills;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainConditions {
+    grid-area: conditions;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainFitness {
+    grid-area: fitness;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainFocus {
+    grid-area: focus;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainPrecision {
+    grid-area: precision;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainSense {
+    grid-area: sense;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainTalent1 {
+    grid-area: talent1;
+    border: 1px solid black;
+}
+
+.mainPanel div.mainTalent2 {
+    grid-area: talent2;
+    border: 1px solid black;
+}
+
+.sheet div.spellPanel {
+    border: 1px solid black;
+    grid-area: spellPanel;
+    display: grid;
+    grid-template-areas: "spellTitle spellTitle"
+    "spellInfo1 spellInfo2"
+    "spellFilter spellFilter"
+    "spellTable spellTable";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 3fr 1fr 15fr;
+}
+
+.spellPanel div.spellTitle{
+    grid-area: spellTitle;
+    border: 1px solid black;
+}
+
+.spellPanel div.spellInfo1 {
+    grid-area: spellInfo1;
+    border: 1px solid black;
+}
+
+.spellPanel div.spellInfo2 {
+    grid-area: spellInfo2;
+    border: 1px solid black;
+}
+
+.spellPanel div.spellFilter {
+    grid-area: spellFilter;
+    border: 1px solid black;
+}
+
+.spellPanel div.spellTable {
+    grid-area: spellTable;
+    border: 1px solid black;
+}
