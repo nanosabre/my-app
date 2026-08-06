@@ -56,23 +56,31 @@ body {
 .main div.create {
     grid-area: create;
     font-size: 56px;
-    border-style: solid;
-    border: 1px solid black;
+    border-image: url("../spellblade/TextBorder.png");
+    border-image-slice: 25% 25%;
+    border-image-width: 100px 100px;
+    padding: 25px;
+    text-align: center;
 }
 
 .main div.play {
     grid-area: play;
     font-size: 56px;
-    border-style: solid;
-    border: 1px solid black;
+    border-image: url("../spellblade/TextBorder.png");
+    border-image-slice: 25% 25% fill;
+    border-image-width: 100px 100px;
+    padding: 25px;
+    text-align: center;
 }
 
 .main div.login {
     grid-area: login;
     font-size: 56px;
-    border-style: solid;
-    border: 1px solid black;
-    background-color: aliceblue;
+    border-image: url("../spellblade/TextBorder.png");
+    border-image-slice: 25% 25%;
+    border-image-width: 100px 100px;
+    padding: 25px;
+    text-align: center;
 }
 
 .main div.footerbar {

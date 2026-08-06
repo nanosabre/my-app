@@ -1,4 +1,5 @@
 import Image from "next/image";
+import "../spellblade/TextBorder.png";
 
 export default function Home() {
   return (

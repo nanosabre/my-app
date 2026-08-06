@@ -33,21 +33,159 @@
 
 .invPanel div.currencies {
     grid-area: currencies;
+    display: grid;
+    grid-template-areas: "head head head head head"
+    "total denom1 denom2 denom3 denom4";
+    grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 2fr 3fr;
+    border: 1px solid black;
+}
+
+.currencies div.currencyHead {
+    font-size: 28px;
+    grid-area: head;
+    display: grid;
+    grid-template-areas: "head head head head"
+    " ";
+    border: 1px solid black;
+}
+
+.currencies div.currencyTotal {
+    grid-area: total;
+    border: 1px solid black;
+}
+
+.currencies div.currencyDenom1 {
+    grid-area: denom1;
+    border: 1px solid black;
+}
+
+.currencies div.currencyDenom2 {
+    grid-area: denom2;
+    border: 1px solid black;
+}
+
+.currencies div.currencyDenom3 {
+    grid-area: denom3;
+    border: 1px solid black;
+}
+
+.currencies div.currencyDenom4 {
+    grid-area: denom4;
     border: 1px solid black;
 }
 
 .invPanel div.supplies {
     grid-area: supplies;
+    display: grid;
+    grid-template-areas: "head head head"
+    "food water salves";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 2fr 3fr;
+    border: 1px solid black;
+}
+
+.supplies div.suppliesHead {
+    font-size: 28px;
+    grid-area: head;
+    border: 1px solid black;
+}
+
+.supplies div.suppliesFood {
+    grid-area: food;
+    border: 1px solid black;
+}
+
+.supplies div.suppliesWater {
+    grid-area: water;
+    border: 1px solid black;
+}
+
+.supplies div.suppliesSalves {
+    grid-area: salves;
     border: 1px solid black;
 }
 
 .invPanel div.reagents {
     grid-area: reagents;
+    display: grid;
+    grid-template-areas: "head head head head head"
+    "ordinary common uncommon rare legendary";
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 2fr 3fr;
+    border: 1px solid black;
+}
+
+
+.reagents div.reagentsHead {
+    font-size: 28px;
+    grid-area: head;
+    border: 1px solid black;
+}
+
+.reagents div.reagentsOrdinary {
+    grid-area: ordinary;
+    border: 1px solid black;
+}
+
+.reagents div.reagentsCommon {
+    grid-area: common;
+    border: 1px solid black;
+}
+
+.reagents div.reagentsUncommon {
+    grid-area: uncommon;
+    border: 1px solid black;
+}
+
+.reagents div.reagentsRare {
+    grid-area: rare;
+    border: 1px solid black;
+}
+
+.reagents div.reagentsLegendary {
+    grid-area: legendary;
     border: 1px solid black;
 }
 
 .invPanel div.materials {
     grid-area: materials;
+    display: grid;
+    grid-template-areas: "head head head head head"
+    "ordinary common uncommon rare legendary";
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 2fr 3fr;
+    border: 1px solid black;
+}
+
+.materials div.materialsHead {
+    font-size: 28px;
+    grid-area: head;
+    border: 1px solid black;
+}
+
+.materials div.materialsOrdinary {
+    grid-area: ordinary;
+    border: 1px solid black;
+}
+
+.materials div.materialsCommon {
+    grid-area: common;
+    border: 1px solid black;
+}
+
+.materials div.materialsUncommon {
+    grid-area: uncommon;
+    border: 1px solid black;
+}
+
+.materials div.materialsRare {
+    grid-area: rare;
+    border: 1px solid black;
+}
+
+.materials div.materialsLegendary {
+    grid-area: legendary;
     border: 1px solid black;
 }
 

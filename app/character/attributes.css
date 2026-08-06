@@ -51,6 +51,7 @@
 .attributes div.talent1attributes {
     grid-area: talent1attributes;
     display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
     border: 1px solid rgb(31, 31, 31);
 }
 
@@ -84,14 +85,14 @@
 
 .keystoneActive {
     font-size: 24px;
-    border: 1px solid rgb(31, 31, 31);
     background-color: #cccbcb;
+    border: 1px solid rgb(31, 31, 31);
 }
 
 .capstoneActive {
     font-size: 24px;
-    border: 1px solid rgb(31, 31, 31);
     background-color: #cccbcb;
+    border: 1px solid rgb(31, 31, 31);
 }
 
 .attributes div.skillsTitle {
@@ -105,8 +106,6 @@
     font-size: 26px;
     grid-area: fitness;
     border: 1px solid rgb(31, 31, 31);
-    padding-left: 25px;
-    padding-right: 25px;
 }
 
 .attributes div.focus {
@@ -114,8 +113,6 @@
     font-size: 26px;
     grid-area: focus;
     border: 1px solid rgb(31, 31, 31);
-    padding-left: 25px;
-    padding-right: 25px;
 }
 
 .attributes div.precision {
@@ -123,16 +120,12 @@
     font-size: 26px;
     grid-area: precision;
     border: 1px solid rgb(31, 31, 31);
-    padding-left: 25px;
-    padding-right: 25px;
 }
 .attributes div.sense {
     line-height: 1.0;
     font-size: 26px;
     grid-area: sense;
     border: 1px solid rgb(31, 31, 31);
-    padding-left: 25px;
-    padding-right: 25px;
 }
 
 .attributes div.skills1 {
