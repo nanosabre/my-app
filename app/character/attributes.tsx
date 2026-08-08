@@ -10,7 +10,7 @@ import useCalculateState, { applyLimitedEffects } from "@/hooks/useCalculateStat
 import { Effect } from "@/types/stateTypes";
 import { useModifyEffect } from "@/hooks/operations/effectOperations";
 
-export default function attributes(character: Character, setCharacterData: Function, currentTab: string) {
+export default function attributes(character: Character, setCharacterData: Function, currentTab: string, setCalcState: Function) {
     const [attrib1Counter, setattrib1Counter] = useState(0);
     const [attrib2Counter, setattrib2Counter] = useState(0);
     const [attributeList, setAttrubuteList] = useState<Attribute[]>([]);
@@ -39,6 +39,8 @@ export default function attributes(character: Character, setCharacterData: Funct
                 setkeyBonuses(applyLimitedEffects(limitedEffects));
         }
     }, [currentTab, character])
+
+    useEffect(()=>setCalcState(calculatedState),[calculatedState]);
 
     useEffect(() => {
         setAttrubute1List(attributeList.filter(a => a.talentName === character.talent1.name))

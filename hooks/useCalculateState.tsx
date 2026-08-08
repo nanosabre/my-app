@@ -16,7 +16,7 @@ export default function useCalculateState( character: Character) {
     result.dexterity = Math.round(ABILITYMULT * (result.precision + result.fitness));
     result.celerity = Math.round(ABILITYMULT * (result.precision + result.focus));
     result.subtlety = Math.round(ABILITYMULT * (result.precision + result.sense));
-    result.Awareness = Math.round(ABILITYMULT * (result.sense + result.focus));
+    result.awareness = Math.round(ABILITYMULT * (result.sense + result.focus));
     result.evasion = Math.round(ABILITYMULT * (result.sense + result.fitness));
     result.tenacity = Math.round(ABILITYMULT * (result.focus + result.fitness));
     result.encumbrance += ENCUMBFITMULT * result.fitness;

@@ -38,6 +38,7 @@
     display: flex;
     grid-area: filter;
     border: 1px solid black;
+    flex-wrap: wrap;
 }
 
 .available div.filters {
