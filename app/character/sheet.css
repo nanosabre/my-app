@@ -4,7 +4,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     border: 1px solid black;
     text-align: center;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 180px);
     width: calc(100vw - 130px);
     background-color: #eeeeee;
 }
@@ -16,17 +16,17 @@
     grid-template-areas: "invTitle invTitle"
     "currencies supplies"
     "reagents materials"
-    "equip1 equip1"
-    "equip2 equip2"
-    "equip3 equip3"
+    "equip1 equip2"
     "innerwear outerwear"
     "itemFilter itemFilter"
     "itemTable itemTable";
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 2fr 2fr 2fr 2fr 2fr 3fr 1fr 5fr;
+    grid-template-rows: 0.5fr 1fr 1fr 3fr 1.5fr 0.5fr 4fr;
+        height: calc(100vh - 180px);
 }
 
 .invPanel div.invTitle {
+    font-size: 36px;
     grid-area: invTitle;
     border: 1px solid black;
 }
@@ -37,16 +37,15 @@
     grid-template-areas: "head head head head head"
     "total denom1 denom2 denom3 denom4";
     grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 2fr 3fr;
+    grid-template-rows: 1fr 1fr;
     border: 1px solid black;
+    line-height: 1;
 }
 
 .currencies div.currencyHead {
-    font-size: 28px;
+    font-size: 24px;
     grid-area: head;
     display: grid;
-    grid-template-areas: "head head head head"
-    " ";
     border: 1px solid black;
 }
 
@@ -81,12 +80,13 @@
     grid-template-areas: "head head head"
     "food water salves";
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 2fr 3fr;
+    grid-template-rows: 1fr 1fr;
     border: 1px solid black;
+    line-height: 1;
 }
 
 .supplies div.suppliesHead {
-    font-size: 28px;
+    font-size: 24px;
     grid-area: head;
     border: 1px solid black;
 }
@@ -109,27 +109,22 @@
 .invPanel div.reagents {
     grid-area: reagents;
     display: grid;
-    grid-template-areas: "head head head head head"
-    "ordinary common uncommon rare legendary";
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 2fr 3fr;
+    grid-template-areas: "head head head head"
+    "ordinary uncommon rare legendary";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     border: 1px solid black;
+    line-height: 1;
 }
 
-
 .reagents div.reagentsHead {
-    font-size: 28px;
+    font-size: 24px;
     grid-area: head;
     border: 1px solid black;
 }
 
 .reagents div.reagentsOrdinary {
     grid-area: ordinary;
-    border: 1px solid black;
-}
-
-.reagents div.reagentsCommon {
-    grid-area: common;
     border: 1px solid black;
 }
 
@@ -151,26 +146,22 @@
 .invPanel div.materials {
     grid-area: materials;
     display: grid;
-    grid-template-areas: "head head head head head"
-    "ordinary common uncommon rare legendary";
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 2fr 3fr;
+    grid-template-areas: "head head head head"
+    "ordinary uncommon rare legendary";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     border: 1px solid black;
+    line-height: 1;
 }
 
 .materials div.materialsHead {
-    font-size: 28px;
+    font-size: 24px;
     grid-area: head;
     border: 1px solid black;
 }
 
 .materials div.materialsOrdinary {
     grid-area: ordinary;
-    border: 1px solid black;
-}
-
-.materials div.materialsCommon {
-    grid-area: common;
     border: 1px solid black;
 }
 
@@ -192,36 +183,152 @@
 .invPanel div.equip1 {
     grid-area: equip1;
     border: 1px solid black;
-
+    display: grid;
+    grid-template-areas: "weaponName weaponName weaponName weaponName"
+    "attackName attackCost attackRange attackEffect"
+    "propertyName propertyEffect propertyEffect propertyEffect"
+    "propertyCost propertyEffect propertyEffect propertyEffect"
+    "special special special special";
+    grid-template-columns: 2fr 3fr 1fr 5fr;
+    grid-template-rows: 1.2fr 1fr 1fr 1fr 1fr;
 }
 
 .invPanel div.equip2 {
     grid-area: equip2;
     border: 1px solid black;
+    display: grid;
+    grid-template-areas: "weaponName weaponName weaponName weaponName"
+    "attackName attackCost attackRange attackEffect"
+    "propertyName propertyEffect propertyEffect propertyEffect"
+    "propertyCost propertyEffect propertyEffect propertyEffect"
+    "special special special special";
+    grid-template-columns: 2fr 3fr 1fr 5fr;
+    grid-template-rows: 1.2fr 1fr 1fr 1fr 1fr;
 }
 
-.invPanel div.equip3 {
-    grid-area: equip3;
+.weaponName {
+    font-size: 24px;
+    grid-area: weaponName;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponAttackName {
+    grid-area: attackName;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponAttackCost {
+    grid-area: attackCost;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponAttackRange {
+    grid-area: attackRange;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponAttackEffect {
+    grid-area: attackEffect;
+    border: 1px solid black;
+}
+
+.weaponPropertyName {
+    grid-area: propertyName;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponPropertyCost {
+    grid-area: propertyCost;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponPropertyEffect {
+    grid-area: propertyEffect;
+    border: 1px solid black;
+}
+
+.weaponSpecial {
+    grid-area: special;
     border: 1px solid black;
 }
 
 .invPanel div.innerwear {
     grid-area: innerwear;
     border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.innerwear div.innerName {
+    border: 1px solid black;
+    font-size: 24px;
+}
+
+.innerwear div.innerDesc {
+    border: 1px solid black;
 }
 
 .invPanel div.outerwear {
     grid-area: outerwear;
     border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.outerwear div.outerName {
+    border: 1px solid black;
+    font-size: 24px;
+}
+
+.outerwear div.outerDesc {
+    border: 1px solid black;
 }
 
 .invPanel div.itemFilter {
     grid-area: itemFilter;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 3fr 1fr 2fr 5fr;
+    font-size: 20px;
     border: 1px solid black;
 }
 
 .invPanel div.itemTable {
     grid-area: itemTable;
+    border: 1px solid black;
+    overflow-y: auto;
+    font-size: 20px;
+}
+
+.itemTable div.tableRow {
+    display: grid;
+    grid-template-columns: 3fr 1fr 2fr 5fr;
+    border: 1px solid black;
+    min-height: 40px;
+}
+
+.tableName {
+    font-size: 24px;
+    text-align: left;
+    border: 1px solid black;
+    padding-right: 5px;
+}
+
+.tableQTY {
+    border: 1px solid black;
+}
+
+.tableType {
+    border: 1px solid black;
+}
+
+.tableDesc {
     border: 1px solid black;
 }
 
@@ -251,6 +358,7 @@
 .mainPanel div.mainPicture {
     grid-area: picture;
     border: 1px solid black;
+    background-color: rgb(179, 179, 255);
 }
 
 .mainPanel div.mainHealthMana {
@@ -307,7 +415,7 @@
     "spellFilter spellFilter"
     "spellTable spellTable";
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 3fr 1fr 15fr;
+    grid-template-rows: 1fr 2fr 1fr 15fr;
 }
 
 .spellPanel div.spellTitle{

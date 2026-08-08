@@ -172,7 +172,7 @@ export default function attributes(character: Character, setCharacterData: Funct
                 </div>
                 <div className="talent1attributes">
                     {attribute1List.map((attribute: Attribute) => (
-                        <div key={attribute.name}>
+                        <div className="attributeContainer" key={attribute.name}>
                             {!(character.attributes1?.filter(a => attribute.name === a.name).length > 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib1Counter - attrib2Counter < 2)) ? (
                                 <div className="attributeNotSelected" onClick={() => { addAttribute(false, attribute) }}>
                                     {attribute.name} <br /> {attribute.description1}
@@ -197,7 +197,7 @@ export default function attributes(character: Character, setCharacterData: Funct
                 </div>
                 <div className="talent2attributes">
                     {attribute2List.map((attribute: Attribute) => (
-                        <div key={attribute.name}>
+                        <div className="attributeContainer" key={attribute.name}>
                             {!character.attributes2?.includes(attribute) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
                                 <div className="attributeNotSelected" onClick={() => { addAttribute(true, attribute) }}>
                                     {attribute.name} <br /> {attribute.description1}

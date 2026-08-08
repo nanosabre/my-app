@@ -71,39 +71,37 @@ export default function equipment() {
                 <div className="currencyHead">
                     Currencies
                 </div>
-                <div className="currencyTotal">Total<br/><div className="text-[36px]">1,234c</div></div>
-                <div className="currencyDenom1">Platinum<br/><div className="text-[28px]">1</div> </div>
-                <div className="currencyDenom2">Gold<br/><div className="text-[28px]">2</div> </div>
-                <div className="currencyDenom3">Silver<br/><div className="text-[28px]">3</div> </div>
-                <div className="currencyDenom4">Copper<br/><div className="text-[28px]">4</div> </div>
+                <div className="currencyTotal"><div className="text-[36px]">1,234c</div></div>
+                <div className="currencyDenom1"><div className="text-[28px]">1p</div> </div>
+                <div className="currencyDenom2"><div className="text-[28px]">2g</div> </div>
+                <div className="currencyDenom3"><div className="text-[28px]">3s</div> </div>
+                <div className="currencyDenom4"><div className="text-[28px]">4c</div> </div>
             </div>
             <div className="supplies">
                 <div className="suppliesHead">
                     Supplies
                 </div>
-                <div className="suppliesFood">Food<br/><div className="text-[28px]">1 Day</div></div>
-                <div className="suppliesWater">Water<br/><div className="text-[28px]">1 Day</div></div>
-                <div className="suppliesSalves">Salves<br/><div className="text-[28px]">3 Salves</div></div>
+                <div className="suppliesFood"><div className="text-[28px]">1 Food</div></div>
+                <div className="suppliesWater"><div className="text-[28px]">1 Water</div></div>
+                <div className="suppliesSalves"><div className="text-[28px]">3 Salves</div></div>
             </div>
             <div className="reagents">
                 <div className="reagentsHead">
                     Reagents
                 </div>
-                <div className="reagentsOrdinary">Ordinary<br/><div className="text-[24px]">16</div></div>
-                <div className="reagentsCommon">Common<br/><div className="text-[24px]">10</div> </div>
-                <div className="reagentsUncommon">Uncommon<br/><div className="text-[24px]">7</div> </div>
-                <div className="reagentsRare">Rare<br/><div className="text-[24px]">3</div></div>
-                <div className="reagentsLegendary">Legendary<br/><div className="text-[24px]">1</div> </div>
+                <div className="reagentsOrdinary"><div className="text-[24px]">16 (o)</div></div>
+                <div className="reagentsUncommon"><div className="text-[24px]">7 (u)</div> </div>
+                <div className="reagentsRare"><div className="text-[24px]">3 (r)</div></div>
+                <div className="reagentsLegendary"><div className="text-[24px]">1 (L)</div> </div>
             </div>
             <div className="materials">
                 <div className="materialsHead">
                     Materials
                 </div>
-                <div className="materialsOrdinary">Ordinary<br/><div className="text-[24px]">16</div></div>
-                <div className="materialsCommon">Common<br/><div className="text-[24px]">10</div> </div>
-                <div className="materialsUncommon">Uncommon<br/><div className="text-[24px]">7</div> </div>
-                <div className="materialsRare">Rare<br/><div className="text-[24px]">3</div></div>
-                <div className="materialsLegendary">Legendary<br/><div className="text-[24px]">1</div> </div>
+                <div className="materialsOrdinary"><div className="text-[24px]">16 (o)</div></div>
+                <div className="materialsUncommon"><div className="text-[24px]">7 (u)</div> </div>
+                <div className="materialsRare"><div className="text-[24px]">3 (r)</div></div>
+                <div className="materialsLegendary"><div className="text-[24px]">1 (L)</div> </div>
             </div>
             <div className="innerwear">
                 <div className="innerHead">Innerwear</div>
@@ -142,46 +140,76 @@ export default function equipment() {
         </div>
         <div className="proficiencies">
             <div className="prof1">
-                Proficiency 1 <br/>
-                <select className="" defaultValue="Choose a Starting Pack">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <div className="weaponHead">Proficiency 1</div>
+                <select className="weaponType" defaultValue="Choose a Weapon Type">
+                    <option value="1">Choose a Weapon Type</option>
+                    <option value="3">Light</option>
+                    <option value="2">Medium</option>
+                    <option value="4">Heavy</option>
                 </select>
-                <br/>
-                <select className="" defaultValue="Choose a Starting Pack">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <select className="weaponSelect" defaultValue="Choose a Weapon">
+                    <option value="1">Dagger</option>
+                    <option value="2">Katana</option>
+                    <option value="3">Great Axe</option>
+                    <option value="4">Longbow</option>
+                    <option value="5">Tower Shield</option>
                 </select>
+                <div className="weaponAttackName">Slash</div>
+                <div className="weaponAttackCost">2 Actions</div>
+                <div className="weaponAttackRange">2m</div>
+                <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
+                <div className="weaponPropertyName">Balanced</div>
+                <div className="weaponPropertyCost">FA</div>
+                <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
+                <div className="weaponSpecial">Special Properties: None</div>
             </div>
             <div className="prof2">
-                Proficiency 2 <br/>
-                <select className="" defaultValue="Choose a Starting Pack">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <div className="weaponHead">Proficiency 2</div>
+                <select className="weaponType" defaultValue="Choose a Weapon Type">
+                    <option value="1">Choose a Weapon Type</option>
+                    <option value="3">Light</option>
+                    <option value="2">Medium</option>
+                    <option value="4">Heavy</option>
                 </select>
-                <br/>
-                <select className="" defaultValue="Choose a Starting Pack">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <select className="weaponSelect" defaultValue="Choose a Weapon">
+                    <option value="1">Dagger</option>
+                    <option value="2">Katana</option>
+                    <option value="3">Great Axe</option>
+                    <option value="4">Longbow</option>
+                    <option value="5">Tower Shield</option>
                 </select>
+                <div className="weaponAttackName">Slash</div>
+                <div className="weaponAttackCost">2 Actions</div>
+                <div className="weaponAttackRange">2m</div>
+                <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
+                <div className="weaponPropertyName">Balanced</div>
+                <div className="weaponPropertyCost">FA</div>
+                <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
+                <div className="weaponSpecial">Special Properties: None</div>
             </div>
             <div className="prof3">
-                Proficiency 3 <br/>
-                <select className="" defaultValue="Choose a Starting Pack">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <div className="weaponHead">Proficiency 2</div>
+                <select className="weaponType" defaultValue="Choose a Weapon Type">
+                    <option value="1">Choose a Weapon Type</option>
+                    <option value="3">Light</option>
+                    <option value="2">Medium</option>
+                    <option value="4">Heavy</option>
                 </select>
-                <br/>
-                <select className="" defaultValue="Choose a Starting Pack">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <select className="weaponSelect" defaultValue="Choose a Weapon">
+                    <option value="1">Dagger</option>
+                    <option value="2">Katana</option>
+                    <option value="3">Great Axe</option>
+                    <option value="4">Longbow</option>
+                    <option value="5">Tower Shield</option>
                 </select>
+                <div className="weaponAttackName">Slash</div>
+                <div className="weaponAttackCost">2 Actions</div>
+                <div className="weaponAttackRange">2m</div>
+                <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
+                <div className="weaponPropertyName">Balanced</div>
+                <div className="weaponPropertyCost">FA</div>
+                <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
+                <div className="weaponSpecial">Special Properties: None</div>
             </div>
         </div>
         <div className="search">

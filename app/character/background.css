@@ -5,14 +5,14 @@
     grid-template-areas: "name ancestry faction";
     grid-template-columns: repeat(3, minmax(0, 1fr));
     background-color: #eeeeee;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 180px);
     width: calc(100vw - 130px);
     gap: 10px;
 }
 
 .background div.name {
     grid-area: name;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 180px);
     border: 1px solid black;
     display: flex;
     flex-direction: column;
@@ -37,7 +37,7 @@ input {
 .background div.ancestry {
     grid-area: ancestry;
     border-style: solid;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 180px);
     border: 1px solid rgb(85, 85, 85);
     display: flex;
     flex-direction: column;
