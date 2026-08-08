@@ -7,7 +7,9 @@ import Introduction from "./introduction";
 import BasicRules from "./basicRules";
 import Skills from "./skills";
 import HeroDice from "./heroDice";
+import Stealth from "./stealth";
 import Combat from "./combat";
+import Conditions from "./conditions";
 import WeaponsTools from "./weaponsTools";
 import Spellcasting from "./spellcasting";
 import ArmorDamage from "./armorDamage";
@@ -22,7 +24,7 @@ import Weapons from "./weapons";
 import Spells from "./spells";
 
 
-const tabs = ["Introduction", "Basic Rules", "Hero Dice", "Skills", "Combat", "Weapons and Tools", "Spellcasting", "Armor and Damage", "Wounds and Death", "Resting", "Down Time and Exploration", "Making a Character", "Talents and Attributes", "Ancestries", "Backgrounds", "Weapons List", "Spells List"];
+const tabs = ["Introduction", "Basic Rules", "Hero Dice", "Skills", "Stealth", "Combat", "Conditions", "Weapons and Tools", "Spellcasting", "Armor and Damage", "Wounds and Death", "Resting", "Down Time and Exploration", "Making a Character", "Talents and Attributes", "Ancestries", "Backgrounds", "Weapons List", "Spells List"];
 
 export default function Home() {
     const [currentTab, setCurrentTab] = useState("Introduction");
@@ -72,7 +74,9 @@ export default function Home() {
                   <TabsTrigger value="Basic Rules">Basic Rules</TabsTrigger>
                   <TabsTrigger value="Hero Dice">Hero Dice</TabsTrigger>
                   <TabsTrigger value="Skills">Skills</TabsTrigger>
+                  <TabsTrigger value="Stealth">Stealth</TabsTrigger>
                   <TabsTrigger value="Combat">Combat</TabsTrigger>
+                  <TabsTrigger value="Conditions">Conditions</TabsTrigger>
                   <TabsTrigger value="Weapons and Tools">Weapons and Tools</TabsTrigger>
                   <TabsTrigger value="Spellcasting">Spellcasting</TabsTrigger>
                   <TabsTrigger value="Armor and Damage">Armor and Damage</TabsTrigger>
@@ -89,8 +93,10 @@ export default function Home() {
               <TabsContent value="Introduction">{Introduction()}</TabsContent>
               <TabsContent value="Basic Rules">{BasicRules()}</TabsContent>
               <TabsContent value="Skills">{Skills()}</TabsContent>
+              <TabsContent value="Stealth">{Stealth()}</TabsContent>
               <TabsContent value="Hero Dice">{HeroDice()}</TabsContent>
               <TabsContent value="Combat">{Combat()}</TabsContent>
+              <TabsContent value="Conditions">{Conditions()}</TabsContent>
               <TabsContent value="Weapons and Tools">{WeaponsTools()}</TabsContent>
               <TabsContent value="Spellcasting">{Spellcasting()}</TabsContent>
               <TabsContent value="Armor and Damage">{ArmorDamage()}</TabsContent>

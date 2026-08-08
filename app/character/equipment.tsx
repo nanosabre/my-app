@@ -182,49 +182,80 @@ export default function equipment(character: Character) {
                 </div>
                 {makeInventoryRows()}
             </div>
-            <div className="proficiencies">
-                <div className="prof1">
-                    Proficiency 1 <br />
-                    <select className="" defaultValue="Choose a Starting Pack">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                    <br />
-                    <select className="" defaultValue="Choose a Starting Pack">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                </div>
-                <div className="prof2">
-                    Proficiency 2 <br />
-                    <select className="" defaultValue="Choose a Starting Pack">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                    <br />
-                    <select className="" defaultValue="Choose a Starting Pack">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                </div>
-                <div className="prof3">
-                    Proficiency 3 <br />
-                    <select className="" defaultValue="Choose a Starting Pack">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                    <br />
-                    <select className="" defaultValue="Choose a Starting Pack">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
-                </div>
+            {inventoryRows}
+        </div>
+        <div className="proficiencies">
+            <div className="prof1">
+                <div className="weaponHead">Proficiency 1</div>
+                <select className="weaponType" defaultValue="Choose a Weapon Type">
+                    <option value="1">Choose a Weapon Type</option>
+                    <option value="3">Light</option>
+                    <option value="2">Medium</option>
+                    <option value="4">Heavy</option>
+                </select>
+                <select className="weaponSelect" defaultValue="Choose a Weapon">
+                    <option value="1">Dagger</option>
+                    <option value="2">Katana</option>
+                    <option value="3">Great Axe</option>
+                    <option value="4">Longbow</option>
+                    <option value="5">Tower Shield</option>
+                </select>
+                <div className="weaponAttackName">Slash</div>
+                <div className="weaponAttackCost">2 Actions</div>
+                <div className="weaponAttackRange">2m</div>
+                <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
+                <div className="weaponPropertyName">Balanced</div>
+                <div className="weaponPropertyCost">FA</div>
+                <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
+                <div className="weaponSpecial">Special Properties: None</div>
+            </div>
+            <div className="prof2">
+                <div className="weaponHead">Proficiency 2</div>
+                <select className="weaponType" defaultValue="Choose a Weapon Type">
+                    <option value="1">Choose a Weapon Type</option>
+                    <option value="3">Light</option>
+                    <option value="2">Medium</option>
+                    <option value="4">Heavy</option>
+                </select>
+                <select className="weaponSelect" defaultValue="Choose a Weapon">
+                    <option value="1">Dagger</option>
+                    <option value="2">Katana</option>
+                    <option value="3">Great Axe</option>
+                    <option value="4">Longbow</option>
+                    <option value="5">Tower Shield</option>
+                </select>
+                <div className="weaponAttackName">Slash</div>
+                <div className="weaponAttackCost">2 Actions</div>
+                <div className="weaponAttackRange">2m</div>
+                <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
+                <div className="weaponPropertyName">Balanced</div>
+                <div className="weaponPropertyCost">FA</div>
+                <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
+                <div className="weaponSpecial">Special Properties: None</div>
+            </div>
+            <div className="prof3">
+                <div className="weaponHead">Proficiency 2</div>
+                <select className="weaponType" defaultValue="Choose a Weapon Type">
+                    <option value="1">Choose a Weapon Type</option>
+                    <option value="3">Light</option>
+                    <option value="2">Medium</option>
+                    <option value="4">Heavy</option>
+                </select>
+                <select className="weaponSelect" defaultValue="Choose a Weapon">
+                    <option value="1">Dagger</option>
+                    <option value="2">Katana</option>
+                    <option value="3">Great Axe</option>
+                    <option value="4">Longbow</option>
+                    <option value="5">Tower Shield</option>
+                </select>
+                <div className="weaponAttackName">Slash</div>
+                <div className="weaponAttackCost">2 Actions</div>
+                <div className="weaponAttackRange">2m</div>
+                <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
+                <div className="weaponPropertyName">Balanced</div>
+                <div className="weaponPropertyCost">FA</div>
+                <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
+                <div className="weaponSpecial">Special Properties: None</div>
             </div>
             <div className="search">
                 <div>

@@ -5,7 +5,7 @@
     text-align: center;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 180px);
     width: calc(100vw - 130px);
     background-color: #eeeeee;
     border: 1px solid black;
@@ -28,7 +28,7 @@ select {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 0.5fr 1fr 1fr 2fr 1fr 8fr;
     border: 1px solid black;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 180px);
 }
 
 .inventory div.startPack {
@@ -129,9 +129,9 @@ select {
     line-height: 1.2;
     font-size: 20px;
     display: grid;
-    grid-template-areas: "head head head head head"
-    "ordinary common uncommon rare legendary";
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: "head head head head"
+    "ordinary uncommon rare legendary";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 2fr 3fr;
     border: 1px solid black;
 }
@@ -144,11 +144,6 @@ select {
 
 .reagents div.reagentsOrdinary {
     grid-area: ordinary;
-    border: 1px solid black;
-}
-
-.reagents div.reagentsCommon {
-    grid-area: common;
     border: 1px solid black;
 }
 
@@ -172,9 +167,9 @@ select {
     line-height: 1.2;
     font-size: 20px;
     display: grid;
-    grid-template-areas: "head head head head head"
-    "ordinary common uncommon rare legendary";
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: "head head head head"
+    "ordinary uncommon rare legendary";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 2fr 3fr;
     border: 1px solid black;
 }
@@ -187,11 +182,6 @@ select {
 
 .materials div.materialsOrdinary {
     grid-area: ordinary;
-    border: 1px solid black;
-}
-
-.materials div.materialsCommon {
-    grid-area: common;
     border: 1px solid black;
 }
 
@@ -300,21 +290,121 @@ select {
 }
 
 .equipment div.proficiencies {
-    font-size: 32px;
-    display: grid;
     grid-area: proficiencies;
+    font-size: 28px;
+    display: grid;
     border: 1px solid black;
+    text-align: left;
+    grid-template-areas: "prof1"
+    "prof2"
+    "prof3";
+    grid-template-rows: 1fr 1fr 1fr;
 }
 
 .proficiencies div.prof1 {
+    grid-area: prof1;
+    font-size: 20px;
     border: 1px solid black;
+    display: grid;
+    grid-template-areas: "head head head head"
+    "type type type weapon"
+    "attackName attackCost attackRange attackEffect"
+    "propertyName propertyEffect propertyEffect propertyEffect"
+    "propertyCost propertyEffect propertyEffect propertyEffect"
+    "special special special special";
+    grid-template-columns: 3fr 3fr 1fr 5fr;
+    grid-template-rows: 3fr 2fr 2fr 2fr 2fr 2fr;
 }
 
 .proficiencies div.prof2 {
+    grid-area: prof2;
+    font-size: 20px;
     border: 1px solid black;
+    display: grid;
+    grid-template-areas: "head head head head"
+    "type type type weapon"
+    "attackName attackCost attackRange attackEffect"
+    "propertyName propertyEffect propertyEffect propertyEffect"
+    "propertyCost propertyEffect propertyEffect propertyEffect"
+    "special special special special";
+    grid-template-columns: 3fr 3fr 1fr 5fr;
+    grid-template-rows: 3fr 2fr 2fr 2fr 2fr 2fr;
 }
 
 .proficiencies div.prof3 {
+    grid-area: prof3;
+    font-size: 20px;
+    border: 1px solid black;
+    display: grid;
+    grid-template-areas: "head head head head"
+    "type type type weapon"
+    "attackName attackCost attackRange attackEffect"
+    "propertyName propertyEffect propertyEffect propertyEffect"
+    "propertyCost propertyEffect propertyEffect propertyEffect"
+    "special special special special";
+    grid-template-columns: 3fr 3fr 1fr 5fr;
+    grid-template-rows: 3fr 2fr 2fr 2fr 2fr 2fr;
+}
+
+.weaponHead {
+    grid-area: head;
+    font-size: 28px;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponType {
+    grid-area: type;
+    border: 1px solid black;
+}
+
+.weaponSelect {
+    grid-area: weapon;
+    border: 1px solid black;
+}
+
+.weaponAttackName {
+    grid-area: attackName;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponAttackCost {
+    grid-area: attackCost;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponAttackRange {
+    grid-area: attackRange;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponAttackEffect {
+    grid-area: attackEffect;
+    border: 1px solid black;
+}
+
+.weaponPropertyName {
+    grid-area: propertyName;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponPropertyCost {
+    grid-area: propertyCost;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.weaponPropertyEffect {
+    grid-area: propertyEffect;
+    border: 1px solid black;
+}
+
+.weaponSpecial {
+    grid-area: special;
     border: 1px solid black;
 }
 

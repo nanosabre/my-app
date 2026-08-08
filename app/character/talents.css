@@ -1,7 +1,7 @@
 .talents {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 180px);
     width: calc(100vw - 130px);
     background-color: #eeeeee;
 }
