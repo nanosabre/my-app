@@ -22,6 +22,7 @@ import Ancestries from "./ancestries";
 import Backgrounds from "./backgrounds";
 import Weapons from "./weapons";
 import Spells from "./spells";
+import appHeader from "@/components/appHeader";
 
 
 const tabs = ["Introduction", "Basic Rules", "Hero Dice", "Skills", "Stealth", "Combat", "Conditions", "Weapons and Tools", "Spellcasting", "Armor and Damage", "Wounds and Death", "Resting", "Down Time and Exploration", "Making a Character", "Talents and Attributes", "Ancestries", "Backgrounds", "Weapons List", "Spells List"];
@@ -52,15 +53,7 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-left justify-left bg-zinc-50 font-sans dark:bg-black">
       <main className="main">
-        <div className="headerBar">
-          <ul>
-            <li><a href="/">Spellblade TTRPG</a></li>
-            <li><a href="/mycharacters">My Characters</a></li>
-            <li><a href="/mygames">My Games</a></li>
-            <li><a href="#rules">Rules</a></li>
-          </ul>
-          <div className="account">Sign Out <br/> fakeemail@gmail.com </div>
-        </div>
+        {appHeader()}
         <div className="page">
           <div className="prevButton" onClick={()=>{prevTab()}}>
               Prev

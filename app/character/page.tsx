@@ -13,6 +13,7 @@ import { CalculatedState, Character, emptyCalculatedState, emptyCharacter } from
 import { InventoryDAO } from "@/types/itemTypes";
 import "./page.css";
 import { SpellDAO } from "@/types/spellTypes";
+import appHeader from "@/components/appHeader";
 
 
   //create an empty character, for now.   this will be the master data that everything will update or reference
@@ -47,15 +48,7 @@ export default function Home() {
 
   return (
     <main className="main">
-        <div className="headerBar">
-          <ul>
-            <li><a href="/">Spellblade TTRPG</a></li>
-            <li><a href="/mycharacters">My Characters</a></li>
-            <li><a href="/mygames">My Games</a></li>
-            <li><a href="/rules">Rules</a></li>
-          </ul>
-          <div className="account">Sign In</div>
-        </div>
+        {appHeader()}
       <div className="page">
         <div className="prevButton" onClick={()=>{prevTab()}}>
             Prev

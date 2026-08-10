@@ -1,21 +1,16 @@
+'use client';
 import Image from "next/image";
 import "../spellblade/TextBorder.png";
+import appHeader from "@/components/appHeader";
+import { signIn } from "next-auth/react";
 
 export default function Home() {
   return (
     <main className="main">
-      <div className="headerBar">
-        <ul>
-          <li><a href="#Home">Spellblade TTRPG</a></li>
-          <li><a href="/mycharacters">My Characters</a></li>
-          <li><a href="/mygames">My Games</a></li>
-          <li><a href="/rules">Rules</a></li>
-        </ul>
-        <div className="account">Sign Out <br/> fakeemail@gmail.com </div>
-      </div>
+      {appHeader()}
 
       <div className="login">
-        <a href="#login">Log In</a>
+        <button onClick={() => signIn("cognito")}>Sign In</button>
       </div>
 
       <div className="create">
