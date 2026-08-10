@@ -116,8 +116,8 @@ export default function attributes(character: Character, setCharacterData: Funct
                 setattrib2Counter(0);
                 setCharacterData((prev: any) => ({
                     ...prev,
-                    attribute1: 0,
-                    attribute2: 0
+                    attributes1: [],
+                    attributes2: []
                 }))
             }
             setCharacterData((prev: any) => ({
