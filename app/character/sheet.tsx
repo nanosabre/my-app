@@ -1,60 +1,59 @@
 import { useState } from "react";
-import { emptyItem, Item } from "@/types/itemTypes";
+import { emptyItem, InventoryDAO, Item } from "@/types/itemTypes";
 import "./sheet.css";
+import { Character } from "@/types/characterTypes";
+import { SpellDAO } from "@/types/spellTypes";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
-const healthPotion = {...emptyItem};
-healthPotion.name = "Health Potion";
-healthPotion.itemType = "Potion";
-healthPotion.description = "Target creature restores 4d4 hit points.";
-const torch = {...emptyItem};
-torch.name = "Torch";
-torch.itemType = "Equipment";
-torch.description = "Equipment used to provide illumination for up to 15m when lit.";
-const rope = {...emptyItem};
-rope.name = "Rope";
-rope.itemType = "Equipment";
-rope.description = "Woven hemp that can be used to climb, secure an object, or restrain a creature. DC 15 Dexterity to escape.";
-const grapplingHook = {...emptyItem};
-grapplingHook.name = "Grappling Hook";
-grapplingHook.itemType = "Tool";
-grapplingHook.description = "A tool used to climb up to 8m.";
-const arrow1 = {...emptyItem};
-arrow1.name = "arrow1";
-arrow1.itemType = "ammunition";
-arrow1.description = "Ammunition for a bow or crossbow";
-const arrow2 = {...arrow1};
-arrow2.name = "arrow2"
-const arrow3 = {...arrow1};
-arrow3.name = "arrow3"
-const arrow4 = {...arrow1};
-arrow4.name = "arrow4"
-const arrow5 = {...arrow1};
-arrow5.name = "arrow5"
+const displayFilters = ["Supplies", "Currency"];
 
-const itemList = [healthPotion, torch, rope, grapplingHook, arrow1, arrow2, arrow3, arrow4, arrow5];
+export default function sheet(character : Character, characterInventory : InventoryDAO[], characterSpells : SpellDAO[]) {
 
-
-export default function sheet() {
-
-    const [inventory, setInventory] = useState(itemList);
-    const [inventoryDivs, setInventoryDivs] = useState(makeInventoryRows(inventory));
-
-    function makeInventoryRows(inventoryList: Item[]) {
+    function makeInventoryRows() {
         return (
             <div className="itemTable">
-                {inventoryList.map((item: Item) => (
-                    <div className="tableRow" key={item.name}>
-                        <div className="tableName">{item.name}</div>
-                        <div className="tableQTY">5</div>
-                        <div className="tableType">{item.itemType}</div>
-                        <div className="tableDesc">{item.description}</div>
+                {characterInventory.filter(i=>!displayFilters.includes(i.item.itemType)).map((item: InventoryDAO) => (
+                    <div className="itemTableRow" key={item.item.name}>
+                        <div className="itemTableName">{item.item.name}</div>
+                        <div className="itemTableQTY">{item.inventory.quantity}</div>
+                        <div className="itemTableType">{item.item.itemType}</div>
+                        <div className="itemTableDesc">{item.item.description}</div>
                     </div>
                 ))}
             </div>
         )
     }
 
-    const inventoryRows = makeInventoryRows(itemList);
+    function buildCurrentSpellTable() {
+        return (
+            <div className="spellTable">
+                {characterSpells.map((spelld: SpellDAO) => (
+                    <div className="cell" key={spelld.spell.name}>
+                        <Accordion>
+                            <AccordionItem>
+                                <AccordionTrigger>
+                                    <div className="cellContentName" >{spelld.spell.name}</div>
+                                    <div className="cellContentMedium">{spelld.spell.manaCost} Mana</div>
+                                    <div className="cellContentMedium">{spelld.spell.actionCost}</div>
+                                    <div className="cellContentShort">{spelld.spell.range}</div>
+                                    <div className="cellContentLong">{spelld.spell.spellType}</div>
+                                    <div className="cellContentLong">{spelld.spell.source}</div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <div className="cellDescription">
+                                        {spelld.spell.description}
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </div>
+
+                ))}
+            </div>)
+    }
+
+
+    const inventoryRows = makeInventoryRows();
     
     return (
     <div className="sheet">
@@ -195,9 +194,7 @@ export default function sheet() {
             <div className="spellFilter">
                 spell filter
             </div>
-            <div className="spellTable">
-                spell table
-            </div>
+            {buildCurrentSpellTable()}
         </div>
     </div>
 )

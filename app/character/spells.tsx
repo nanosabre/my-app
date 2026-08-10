@@ -10,7 +10,6 @@ import { useGetFilteredSpells } from "@/hooks/useGetFilteredSpells";
 const maxDomainSpells = 3;
 const maxKeystoneSpells = 1;
 const maxCapstoneSpells = 1;
-const maxSpells = 12;
 var spellCounts = {
     domain: 0,
     keystone1: 0,
@@ -19,7 +18,7 @@ var spellCounts = {
     capstone2: 0
 }
 
-export default function spells(character: Character, currentTab: string, calculatedState: CalculatedState) {
+export default function spells(character: Character, currentTab: string, calculatedState: CalculatedState, setCharacterSpells : Function) {
     const [allFilters, setAllFilters] = useState<string[]>([]);
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
@@ -30,6 +29,9 @@ export default function spells(character: Character, currentTab: string, calcula
     const [activeCurrentSpellsTable, setActiveCurrentDisplayTable] = useState(buildCurrentSpellTable());
 
     const [filterChecks, setFilterChecks] = useState(new Map());
+
+    const maxSpells = calculatedState.spellCapacity;
+
 
     useEffect(() => {
         if (currentTab === "spells")
@@ -164,6 +166,7 @@ export default function spells(character: Character, currentTab: string, calcula
             let spelld: SpellDAO = { characterSpell: { id: "", characterId: character.id || "", spellId: spell.id }, spell: spell }
             temp.push(spelld);
             setCurrentSpellList(temp);
+            setCharacterSpells(temp);
             if (spelld.spell.source.includes("Domain")) {
                 spellCounts.domain += 1
             }
@@ -185,6 +188,7 @@ export default function spells(character: Character, currentTab: string, calcula
     function removeSpell(spelld: SpellDAO) {
         let temp = currentSpellList.filter(s => s.spell.name != spelld.spell.name)
         setCurrentSpellList(temp);
+        setCharacterSpells(temp);
         if (spelld.spell.source.includes("Domain")) {
             spellCounts.domain -= 1
         }

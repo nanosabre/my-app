@@ -10,7 +10,9 @@ import story from "./story";
 import sheet from "./sheet";
 import { useState } from "react";
 import { CalculatedState, Character, emptyCalculatedState, emptyCharacter } from "@/types/characterTypes";
+import { InventoryDAO } from "@/types/itemTypes";
 import "./page.css";
+import { SpellDAO } from "@/types/spellTypes";
 
 
   //create an empty character, for now.   this will be the master data that everything will update or reference
@@ -21,6 +23,8 @@ export default function Home() {
     const [currentTab, setCurrentTab] = useState("background");
     const [characterData, setCharacterData] = useState<Character>(emptyCharacter)
     const [calculatedState, setCalculatedState] = useState<CalculatedState>(emptyCalculatedState);
+    const [characterInventory, setCharacterInventory] = useState<InventoryDAO[]>([]);
+    const [characterSpells, setCharacterSpells] = useState<SpellDAO[]>([]);
 
     function moveTab(tab:string) {
       let place = tabs.indexOf(tab);
@@ -72,10 +76,10 @@ export default function Home() {
             <TabsContent value="background">{background(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="talents">{talents(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="attributes">{attributes(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
-            <TabsContent value="spells">{spells(characterData, currentTab, calculatedState)}</TabsContent>
-            <TabsContent value="equipment">{equipment(characterData)}</TabsContent>
+            <TabsContent value="spells">{spells(characterData, currentTab, calculatedState, setCharacterSpells)}</TabsContent>
+            <TabsContent value="equipment">{equipment(characterData, setCharacterInventory)}</TabsContent>
             <TabsContent value="story">{story()}</TabsContent>
-            <TabsContent value="sheet">{sheet()}</TabsContent>
+            <TabsContent value="sheet">{sheet(characterData, characterInventory, characterSpells)}</TabsContent>
         </Tabs>
       </div>
       <div className="footerbar">

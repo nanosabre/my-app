@@ -73,6 +73,11 @@ export var emptyInventory: Inventory = {
 
 }
 
+export var emptyInventoryDAO: InventoryDAO = {
+    inventory: emptyInventory,
+    item: emptyItem
+}
+
 export var emptyPack: Pack = {
     id: "",
     name: "",
@@ -84,5 +89,5 @@ export var emptyPack: Pack = {
     materials: "",
     innerwear: "",
     outerwear: "",
-    items: "",
+    items: ""
 }
