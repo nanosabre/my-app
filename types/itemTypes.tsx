@@ -2,13 +2,14 @@ export interface Item {
     id: string
     name: string
     itemType: string
+    subtype: string
     equippable: boolean
     size: string
     weight: number
     description: string
     properties: string
-    attack1String: string
-    attack2String: string
+    attack: Attack
+    special: Special
     effectName: string
     baseCost: number
     rarity: string
@@ -46,19 +47,42 @@ export interface proficiencyDAO {
     mastery: boolean
 }
 
+export interface Attack {
+    name: string
+    action: number
+    range: string
+    damage: string
+    damageType: string
+}
 
+export interface Special {
+    name: string
+    action: number
+    description: string
+}
 
 export var emptyItem: Item = {
-    id: "string",
-    name: "string",
-    itemType: "string",
+    id: "",
+    name: "",
+    itemType: "",
+    subtype: "",
     equippable: false,
-    size: "string",
+    size: "",
     weight: 0,
-    description: "string",
-    properties: "string",
-    attack1String: "string",
-    attack2String: "string",
+    description: "",
+    properties: "",
+    attack: {
+        name: "",
+        action: 0,
+        range: "0m",
+        damage: "0d4",
+        damageType: "Pierce"
+        },
+    special: {
+        name: "",
+        action: 0,
+        description: ""
+        },
     effectName: "string",
     baseCost: 0,
     rarity: "string"

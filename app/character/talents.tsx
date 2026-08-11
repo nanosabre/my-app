@@ -15,7 +15,7 @@ export default function talents(character:Character,setCharacterData:Function) {
 
     useEffect(()=>{
         useGetTalentScreen().then((data)=>{
-            setTalentList(data.data.data.getTalentScreen.talents);
+            setTalentList(data.data.data.getTalentScreen.talents.sort((a: Talent, b: Talent) => a.caster === b.caster ? 0 : a.caster? -1 : 1));
             setEffectList(data.data.data.getTalentScreen.effects);
         })
     },[])

@@ -30,8 +30,6 @@ export default function spells(character: Character, currentTab: string, calcula
 
     const [filterChecks, setFilterChecks] = useState(new Map());
 
-    const maxSpells = calculatedState.spellCapacity;
-
 
     useEffect(() => {
         if (currentTab === "spells")
@@ -93,7 +91,7 @@ export default function spells(character: Character, currentTab: string, calcula
             return (maxCapstoneSpells > spellCounts.capstone2);
         }
         else {
-            return (maxSpells > currentSpellList.length);
+            return (calculatedState.spellCapacity > currentSpellList.filter(s=>![" Capstone", " Keystone", "Domain"].some(t=>s.spell.source.includes(t))).length);
         }
     }
 
@@ -294,7 +292,7 @@ export default function spells(character: Character, currentTab: string, calcula
             {activeCurrentSpellsTable}
             <div className="info1">
                 Domain Spells : ({spellCounts.domain}/{maxDomainSpells}) <br />
-                Class Spells: ({currentSpellList.length - spellCounts.domain - spellCounts.keystone1 - spellCounts.keystone2 - spellCounts.capstone1 - spellCounts.capstone2}/{maxSpells - maxDomainSpells - maxKeystoneSpells - maxCapstoneSpells}) <br />
+                Class Spells: ({currentSpellList.length - spellCounts.domain - spellCounts.keystone1 - spellCounts.keystone2 - spellCounts.capstone1 - spellCounts.capstone2}/{calculatedState.spellCapacity}) <br />
                 Keystone Spells: ({spellCounts.keystone1 + spellCounts.keystone2}/{(character.talent1.caster ? maxKeystoneSpells : 0) + (character.talent2.caster ? maxKeystoneSpells : 0)}) <br />
                 Capstone Spells: ({spellCounts.capstone1 + spellCounts.capstone2}/{(character.talent1.caster ? maxCapstoneSpells : 0) + (character.talent2.caster ? maxCapstoneSpells : 0)})
 

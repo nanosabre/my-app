@@ -70,7 +70,7 @@ export default function Home() {
             <TabsContent value="talents">{talents(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="attributes">{attributes(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
             <TabsContent value="spells">{spells(characterData, currentTab, calculatedState, setCharacterSpells)}</TabsContent>
-            <TabsContent value="equipment">{equipment(characterData, setCharacterInventory)}</TabsContent>
+            <TabsContent value="equipment">{equipment(characterData, setCharacterData, characterInventory, setCharacterInventory)}</TabsContent>
             <TabsContent value="story">{story()}</TabsContent>
             <TabsContent value="sheet">{sheet(characterData, characterInventory, characterSpells)}</TabsContent>
         </Tabs>

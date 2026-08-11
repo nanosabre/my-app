@@ -1,17 +1,19 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { emptyInventory, emptyItem, emptyPack, Inventory, InventoryDAO, Item, Pack } from "@/types/itemTypes";
+import { emptyInventory, emptyInventoryDAO, emptyItem, emptyPack, Inventory, InventoryDAO, Item, Pack } from "@/types/itemTypes";
 import "./equipment.css";
 import { useGetEquipmentScreen } from "@/hooks/useGetEquipmentScreen";
 import { Character } from "@/types/characterTypes";
+import { ammoQuantity, proficiencyTypes, weaponQuantity } from "@/types/Enums";
 
 const displayFilters = ["Supplies", "Currency"];
 
-export default function equipment(character: Character, setCharacterInventory : Function) {
+export default function equipment(character: Character, setCharacter: Function, inventory: InventoryDAO[], setInventory : Function) {
 
-    const [inventory, setInventory] = useState<InventoryDAO[]>([]);
-    const [inventoryDivs, setInventoryDivs] = useState(makeInventoryRows());
     const [packsList, setPacksList] = useState<Pack[]>([]);
     const [itemsList, setItemsList] = useState<Item[]>([]);
+    const [typeSelect, setTypeSelect] = useState<string[]>(["","",""]);
+
+    const [profData, setProfData] = useState<Item[]>([emptyItem, emptyItem, emptyItem]);
 
     useEffect(() => {
         useGetEquipmentScreen("").then(data => {
@@ -23,10 +25,19 @@ export default function equipment(character: Character, setCharacterInventory : 
             setInventory(result);
             setPacksList(equipmentScreen.packs);
             setItemsList(equipmentScreen.items);
+            let tempTypes: string[] = [];
+            character.proficiencies.forEach(prof=>tempTypes.push(prof));
+            setTypeSelect(tempTypes);
         })
     }, [])
 
     useEffect(()=>addPack(packsList.find(p=>p.background===character.background.parentTrait.name)?.name|| ""),[character.background])
+    useEffect(()=>{
+        setProfData(()=>{
+        let result: Item[] = []; 
+        character.proficiencies.forEach((p)=>result.push(itemsList.find(i=>i.name===p)||emptyItem));
+        return result;
+    })},[character.proficiencies])
 
     function makeInventoryRows() {
         return (
@@ -44,39 +55,34 @@ export default function equipment(character: Character, setCharacterInventory : 
     }
 
     function addPack(packName:String){
-        let result: InventoryDAO[] = [];
+        let result: InventoryDAO[] = inventory.filter(i=>proficiencyTypes.some(pt=>i.item.itemType.includes(pt)));
         let pack = packsList.find(p=>p.name===packName) || emptyPack; 
         let items = pack.items?.split("|").length >0 ? pack.items.split("|") : [];
         for(let j = 0;j<items.length-1;j+=2){
-            result.push(makeInventoryItem(items[j], Number(items[j+1])));
+            result.push(makeEquipInventoryItem(items[j], Number(items[j+1])));
         }
         result.push(makeEquipInventoryItem(pack.outerwear,1, true));
         result.push(makeEquipInventoryItem(pack.innerwear,1, true));
-        result.push(makeInventoryItem("Healing Salve", pack.salves));
-        result.push(makeInventoryItem("Food (kg)", pack.rations));
-        result.push(makeInventoryItem("Water (kg)", pack.rations));
-        result.push(makeInventoryItem("Gold", Math.floor(pack.currency/100 % 100)));
-        result.push(makeInventoryItem("Silver", Math.floor(pack.currency/10 % 10)));
-        result.push(makeInventoryItem("Copper", Math.floor(pack.currency % 10)));
+        result.push(makeEquipInventoryItem("Healing Salve", pack.salves));
+        result.push(makeEquipInventoryItem("Food (kg)", pack.rations));
+        result.push(makeEquipInventoryItem("Water (kg)", pack.rations));
+        result.push(makeEquipInventoryItem("Gold", Math.floor(pack.currency/100 % 100)));
+        result.push(makeEquipInventoryItem("Silver", Math.floor(pack.currency/10 % 10)));
+        result.push(makeEquipInventoryItem("Copper", Math.floor(pack.currency % 10)));
 
         let reagents = pack.reagents.split("|");
         let materials = pack.materials.split("|");
-        result.push(makeInventoryItem("Ordinary Reagent", Number(reagents[2])));
-        result.push(makeInventoryItem("Uncommon Reagent", Number(reagents[1])));
-        result.push(makeInventoryItem("Rare Reagent", Number(reagents[0])));
-        result.push(makeInventoryItem("Ordinary Crafting Material", Number(materials[2])));
-        result.push(makeInventoryItem("Uncommon Crafting Material", Number(materials[1])));
-        result.push(makeInventoryItem("Rare Crafting Material", Number(materials[0])));
+        result.push(makeEquipInventoryItem("Ordinary Reagent", Number(reagents[2])));
+        result.push(makeEquipInventoryItem("Uncommon Reagent", Number(reagents[1])));
+        result.push(makeEquipInventoryItem("Rare Reagent", Number(reagents[0])));
+        result.push(makeEquipInventoryItem("Ordinary Crafting Material", Number(materials[2])));
+        result.push(makeEquipInventoryItem("Uncommon Crafting Material", Number(materials[1])));
+        result.push(makeEquipInventoryItem("Rare Crafting Material", Number(materials[0])));
 
         setInventory(result);
-        setCharacterInventory(result);
     }
 
-    function makeInventoryItem(itemName: string, quantity: number){
-        return makeEquipInventoryItem(itemName, quantity, false);
-    }
-
-    function makeEquipInventoryItem(itemName: string, quantity: number, equipped: boolean){
+    function makeEquipInventoryItem(itemName: string, quantity: number, equipped: boolean = false){
         let item = itemsList.find(i=>i.name===itemName);
         return {inventory:{
                 ...emptyInventory, 
@@ -103,7 +109,59 @@ export default function equipment(character: Character, setCharacterInventory : 
         let temp = inventory.filter(i=>!(i.item.itemType===(inner?"Innerwear":"Outerwear")&& i.inventory.equipped));
         temp.push(makeEquipInventoryItem(e.currentTarget.value, 1, true));
         setInventory(temp);
-        setCharacterInventory(temp);
+    }
+
+    function handleProfItemChange(order: number, name: string){
+        let results: InventoryDAO[] = [...inventory]
+        let item = itemsList.find(i=>i.name===name) || emptyItem;
+        let quantity = weaponQuantity.get(item?.subtype) || 1;
+        results = modifyInventoryItem(name, results, quantity, order===0);
+        ammoQuantity.forEach((v, k, m)=>{if(item.properties?.includes(k)) results = modifyInventoryItem(k, results, v)});
+
+        let prevProf = character.proficiencies[order];
+        if(prevProf != "") {
+            let prevItem = results.find(i=>i.item.name===prevProf) || emptyInventoryDAO;
+            quantity = weaponQuantity.get(prevItem?.item.subtype) || 1;
+            results = modifyInventoryItem(prevProf, results, -quantity);
+            ammoQuantity.forEach((v, k, m)=>{if(prevItem?.item.properties?.includes(k)) results = modifyInventoryItem(k, results,  -v)});            
+        }
+        setCharacter((prev: Character)=>{let temp = [...prev.proficiencies]; temp[order]= name; return {...prev, proficiencies: temp};})
+        setInventory([...results]);
+    }
+
+    function modifyInventoryItem(name: string, results: InventoryDAO[], quantity: number = 1, equipped = false ){
+        let item = results.find(i=>i.item.name===name);
+        if(item){
+            if(item.inventory.quantity + quantity <= 0) {
+                return results.filter(i=>i!=item);
+            } else {
+                let index = results.indexOf(item);
+                results[index].inventory.quantity += quantity;
+            }
+        } else if (quantity > 0) {
+            results.push(makeEquipInventoryItem(name, quantity, equipped));
+        }
+        return results
+    }
+    
+    function handleProfTypeChange(order: number, name: string){
+        setTypeSelect(prev=>{prev[order]=name; return [...prev]})
+        let defaultItem = itemsList.find(i=>i.itemType.includes(name) && !character.proficiencies.toSpliced(order, 1).includes(i.name)) || emptyItem;
+        handleProfItemChange(order, defaultItem.name);
+    }
+
+    function makeProfTypeSelectors(order: number){
+        return(
+            <select className="weaponType" defaultValue={typeSelect[order]} onChange={e=>handleProfTypeChange(order, e.currentTarget.value)}>
+                <option value="Choose a Weapon Type">Choose a Weapon Type</option>
+                <option value="Light">Light</option>
+                <option value="Medium">Medium</option>
+                <option value="Heavy">Heavy</option>
+                <option value="Spellcasting">Spellcasting Tool</option>
+                <option value="Shield">Shield</option>
+                <option value="Ranged">Ranged</option>
+            </select>
+        )
     }
 
     return (
@@ -187,75 +245,54 @@ export default function equipment(character: Character, setCharacterInventory : 
             <div className="proficiencies">
                 <div className="prof1">
                     <div className="weaponHead">Proficiency 1</div>
-                    <select className="weaponType" defaultValue="Choose a Weapon Type">
-                        <option value="1">Choose a Weapon Type</option>
-                        <option value="3">Light</option>
-                        <option value="2">Medium</option>
-                        <option value="4">Heavy</option>
+                    {makeProfTypeSelectors(0)}
+                    <select className="weaponSelect" defaultValue={character.proficiencies[0]} onChange={e=>handleProfItemChange(0,e.currentTarget.value)}>
+                        {typeSelect[0]!="" && itemsList.filter(i=>i.itemType.includes(typeSelect[0]) && !character.proficiencies.toSpliced(0,1).includes(i.name)).map(item=>(
+                            <option key={item.name} value={item.name}>{item.name}</option>
+                        ))}
                     </select>
-                    <select className="weaponSelect" defaultValue="Choose a Weapon">
-                        <option value="1">Dagger</option>
-                        <option value="2">Katana</option>
-                        <option value="3">Great Axe</option>
-                        <option value="4">Longbow</option>
-                        <option value="5">Tower Shield</option>
-                    </select>
-                    <div className="weaponAttackName">Slash</div>
-                    <div className="weaponAttackCost">2 Actions</div>
-                    <div className="weaponAttackRange">2m</div>
-                    <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
-                    <div className="weaponPropertyName">Balanced</div>
-                    <div className="weaponPropertyCost">FA</div>
-                    <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
-                    <div className="weaponSpecial">Special Properties: None</div>
+                    <div className="weaponAttackName">{profData[0]?.attack?.name || ""}</div>
+                    <div className="weaponAttackCost">{profData[0]?.attack?.action || ""} Actions</div>
+                    <div className="weaponAttackRange">{profData[0]?.attack?.range || ""}m</div>
+                    <div className="weaponAttackEffect">{profData[0]?.attack?.damage || ""} {profData[0]?.attack?.damageType  || ""}</div>
+                    <div className="weaponPropertyName">{profData[0]?.special?.name || ""}</div>
+                    <div className="weaponPropertyCost">{profData[0]?.special?.action > 0 ? profData[0].special.action : "FA" }</div>
+                    <div className="weaponPropertyEffect">{profData[0]?.special?.description || ""}</div>
+                    <div className="weaponSpecial">Special Properties: { profData[0]?.properties ? profData[0]?.properties: "None"}</div>
                 </div>
                 <div className="prof2">
                     <div className="weaponHead">Proficiency 2</div>
-                    <select className="weaponType" defaultValue="Choose a Weapon Type">
-                        <option value="1">Choose a Weapon Type</option>
-                        <option value="3">Light</option>
-                        <option value="2">Medium</option>
-                        <option value="4">Heavy</option>
+                    {makeProfTypeSelectors(1)}
+                    <select className="weaponSelect" defaultValue={character.proficiencies[1]} onChange={e=>handleProfItemChange(1,e.currentTarget.value)}>
+                        {typeSelect[1]!="" && itemsList.filter(i=>i.itemType.includes(typeSelect[1])&& !character.proficiencies.toSpliced(1,1).includes(i.name)).map(item=>(
+                            <option key={item.name} value={item.name}>{item.name}</option>
+                        ))}
                     </select>
-                    <select className="weaponSelect" defaultValue="Choose a Weapon">
-                        <option value="1">Dagger</option>
-                        <option value="2">Katana</option>
-                        <option value="3">Great Axe</option>
-                        <option value="4">Longbow</option>
-                        <option value="5">Tower Shield</option>
-                    </select>
-                    <div className="weaponAttackName">Slash</div>
-                    <div className="weaponAttackCost">2 Actions</div>
-                    <div className="weaponAttackRange">2m</div>
-                    <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
-                    <div className="weaponPropertyName">Balanced</div>
-                    <div className="weaponPropertyCost">FA</div>
-                    <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
-                    <div className="weaponSpecial">Special Properties: None</div>
+                    <div className="weaponAttackName">{profData[1]?.attack?.name || ""}</div>
+                    <div className="weaponAttackCost">{profData[1]?.attack?.action || ""} Actions</div>
+                    <div className="weaponAttackRange">{profData[1]?.attack?.range || ""}m</div>
+                    <div className="weaponAttackEffect">{profData[1]?.attack?.damage || ""} {profData[1]?.attack?.damageType  || ""}</div>
+                    <div className="weaponPropertyName">{profData[1]?.special?.name || ""}</div>
+                    <div className="weaponPropertyCost">{profData[1]?.special?.action > 0 ? profData[1].special.action : "FA" }</div>
+                    <div className="weaponPropertyEffect">{profData[1]?.special?.description || ""}</div>
+                    <div className="weaponSpecial">Special Properties: { profData[1]?.properties ? profData[1]?.properties: "None"}</div>
                 </div>
                 <div className="prof3">
-                    <div className="weaponHead">Proficiency 2</div>
-                    <select className="weaponType" defaultValue="Choose a Weapon Type">
-                        <option value="1">Choose a Weapon Type</option>
-                        <option value="3">Light</option>
-                        <option value="2">Medium</option>
-                        <option value="4">Heavy</option>
+                    <div className="weaponHead">Proficiency 3</div>
+                    {makeProfTypeSelectors(2)}
+                    <select className="weaponSelect" defaultValue={character.proficiencies[2]} onChange={e=>handleProfItemChange(2,e.currentTarget.value)}>
+                        {typeSelect[2]!="" && itemsList.filter(i=>i.itemType.includes(typeSelect[2])&& !character.proficiencies.toSpliced(2,1).includes(i.name)).map(item=>(
+                            <option key={item.name} value={item.name}>{item.name}</option>
+                        ))}
                     </select>
-                    <select className="weaponSelect" defaultValue="Choose a Weapon">
-                        <option value="1">Dagger</option>
-                        <option value="2">Katana</option>
-                        <option value="3">Great Axe</option>
-                        <option value="4">Longbow</option>
-                        <option value="5">Tower Shield</option>
-                    </select>
-                    <div className="weaponAttackName">Slash</div>
-                    <div className="weaponAttackCost">2 Actions</div>
-                    <div className="weaponAttackRange">2m</div>
-                    <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
-                    <div className="weaponPropertyName">Balanced</div>
-                    <div className="weaponPropertyCost">FA</div>
-                    <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
-                    <div className="weaponSpecial">Special Properties: None</div>
+                    <div className="weaponAttackName">{profData[2]?.attack?.name || ""}</div>
+                    <div className="weaponAttackCost">{profData[2]?.attack?.action || ""} Actions</div>
+                    <div className="weaponAttackRange">{profData[2]?.attack?.range || ""}m</div>
+                    <div className="weaponAttackEffect">{profData[2]?.attack?.damage || ""} {profData[2]?.attack?.damageType  || ""}</div>
+                    <div className="weaponPropertyName">{profData[2]?.special?.name || ""}</div>
+                    <div className="weaponPropertyCost">{profData[2]?.special?.action > 0 ? profData[2].special.action : "FA" }</div>
+                    <div className="weaponPropertyEffect">{profData[2]?.special?.description || ""}</div>
+                    <div className="weaponSpecial">Special Properties: { profData[2]?.properties ? profData[2]?.properties: "None"}</div>
                 </div>
             </div>
             <div className="search">

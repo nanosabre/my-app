@@ -4,7 +4,7 @@ import { Attribute, emptyTalent, Talent } from "./talentTypes"
 
 //defines the character type for the whole app 
 export interface Character {
-    [key: string]: string | number | null | undefined | Attribute[] | AncestryInner | BackgroundInner | Talent | CharacterState,
+    [key: string]: string | number | null | undefined | Attribute[] | AncestryInner | BackgroundInner | Talent | CharacterState | string[],
     id: string | null,
     userId: string,
     name: string,
@@ -19,7 +19,7 @@ export interface Character {
     basePrecision: number,
     baseFocus: number,
     baseSense: number,
-    proficiencies: string,
+    proficiencies: string[],
     state: CharacterState
 }
 
@@ -79,7 +79,7 @@ export var emptyCharacter: Character = {
     baseFocus: 0,
     baseSense: 0,
     size: "Medium",
-    proficiencies: "null,null,null",
+    proficiencies: ["","",""],
     state: emptyCharacterState
 
 }
