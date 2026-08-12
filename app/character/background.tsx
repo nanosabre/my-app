@@ -11,7 +11,6 @@ export default function background(character:Character,setCharacterData:Function
     const [backgroundSelection, setBackgroundSelection] = useState(false);
     const [ancVariantList, setAncVariantList] = useState(<div></div>);
     const [backVariantList, setBackVariantList] = useState(<div></div>);
-    const [characterName, setCharacterName] = useState("");
     const [ancestryList, setAncestryList] = useState<Ancestry[]>([]);
     const [backgroundList, setBackgroundList] = useState<Background[]>([]);
     const [traitsList, setTraitsList] = useState<Trait[]>([]);
@@ -162,7 +161,7 @@ export default function background(character:Character,setCharacterData:Function
     return (
     <div className="background">
         <div className="name">
-            <input className="nameBox" type="text" placeholder="Character Name" value={characterName} onChange={(e)=>(setCharacterName(e.currentTarget.value))}/>
+            <input className="nameBox" type="text" placeholder="Character Name" value={character.name} onChange={(e)=>(setCharacterData((prev:Character)=>({...prev, name: e.target.value})))}/>
             <div className="image">
                 
             </div>

@@ -5,10 +5,16 @@ export const useCharacterById = async (characterId: String) => {
     let data = JSON.stringify({
         query: `query Query($characterId: String) {
             fullCharacterById(characterId: $characterId) {
-                character {name attributeLevel talent1 talent2 ancestryTrait ancestryName baseFitness basePrecision baseFocus baseSense proficiencies}
-                inventory { inventory {equipped proficiency quantity} item {name itemType size equippable size weight description1 description2 description3 attack1String attack2String attack3String effectName baseCost rarity}}
-                attributes { name talentName flag description }
-                talents { name abilities description hpBonus prioritySkills role complexity keystone capstone}
+                character { id name baseFitness basePrecision baseFocus baseSense proficiencies size
+                    attributes1 { id name talentName description1 description2} 
+                    attributes2 { id name talentName description1 description2}
+                    talent1 { id name ability1 ability2 description hpBonus prioritySkills role complexity keystone capstone caster } 
+                    talent2 { id name ability1 ability2 description hpBonus prioritySkills role complexity keystone capstone caster }
+                    ancestry { id name parent source trait1 trait2 size description} 
+                    background { id name source parentTrait childTrait deity description tags}}
+                inventory { 
+                    inventory { id equipped proficiency quantity} 
+                    items { id name itemType subtype size equippable size weight description attack {name action range damage damageType} special {name action description} properties baseCost rarity}}
                 }
             }`,
         variables: { "characterId": characterId }

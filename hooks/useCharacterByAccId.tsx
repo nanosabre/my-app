@@ -6,7 +6,7 @@ export const useCharacterByAccId = async (userId: String) => {
         method: 'post',
         url: process.env.NEXT_PUBLIC_BACKEND_URI,
         data: {
-            query: 'query Query($userId: String) { charactersByUserId(userId: $userId) {id userId name attributeLevel attribute1 attribute2 talent1 talent2 ancestryTrait ancestryName baseFitness basePrecision baseFocus baseSense size}}',
+            query: 'query Query($userId: String) { charactersByUserId(userId: $userId) {id userId name attributeLevel attributes1 attributes2 talent1 talent2 ancestryTrait ancestryName baseFitness basePrecision baseFocus baseSense size}}',
             variables: {
                 userId
             }

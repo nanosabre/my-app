@@ -8,12 +8,14 @@ import spells from "./spells";
 import equipment from "./equipment";
 import story from "./story";
 import sheet from "./sheet";
-import { useState } from "react";
-import { CalculatedState, Character, emptyCalculatedState, emptyCharacter } from "@/types/characterTypes";
+import { useEffect, useState } from "react";
+import { CalculatedState, Character, CharacterDAO, emptyCalculatedState, emptyCharacter } from "@/types/characterTypes";
 import { InventoryDAO } from "@/types/itemTypes";
 import "./page.css";
 import { SpellDAO } from "@/types/spellTypes";
 import appHeader from "@/components/appHeader";
+import { useCharacterSave } from "@/hooks/useCharacterSave";
+import { useSession } from "next-auth/react";
 
 
   //create an empty character, for now.   this will be the master data that everything will update or reference
@@ -26,6 +28,10 @@ export default function Home() {
     const [calculatedState, setCalculatedState] = useState<CalculatedState>(emptyCalculatedState);
     const [characterInventory, setCharacterInventory] = useState<InventoryDAO[]>([]);
     const [characterSpells, setCharacterSpells] = useState<SpellDAO[]>([]);
+
+    const { data: session, status } = useSession();
+
+    useEffect(()=>setCharacterData(prev=>({...prev, userId: session?.user.id})),[session]);
 
     function moveTab(tab:string) {
       let place = tabs.indexOf(tab);
@@ -46,12 +52,26 @@ export default function Home() {
       }
     }
 
+    function handleSave(){
+      if(status==="authenticated"){
+        useCharacterSave(characterData, characterInventory, characterSpells).then(data=>{
+          let characterDAO = data.data.data.saveCharacter;
+          setCharacterData(prev=>({...prev, id: characterDAO.character}));
+          setCharacterInventory(characterDAO.inventory);
+          setCharacterSpells(characterDAO.spells);
+        });
+      }
+    }
+
   return (
     <main className="main">
         {appHeader()}
       <div className="page">
         <div className="prevButton" onClick={()=>{prevTab()}}>
             Prev
+        </div>
+        <div className="saveButton" onClick={handleSave}>
+          Save
         </div>
         <div className="nextButton" onClick={()=>{nextTab()}}>
             Next

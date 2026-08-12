@@ -247,7 +247,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     <div className="weaponHead">Proficiency 1</div>
                     {makeProfTypeSelectors(0)}
                     <select className="weaponSelect" defaultValue={character.proficiencies[0]} onChange={e=>handleProfItemChange(0,e.currentTarget.value)}>
-                        {typeSelect[0]!="" && itemsList.filter(i=>i.itemType.includes(typeSelect[0]) && !character.proficiencies.toSpliced(0,1).includes(i.name)).map(item=>(
+                        {typeSelect[0]!="" && itemsList.filter(i=>i.itemType.includes(typeSelect[0]) && !character.proficiencies?.toSpliced(0,1).includes(i.name)).map(item=>(
                             <option key={item.name} value={item.name}>{item.name}</option>
                         ))}
                     </select>

@@ -161,7 +161,7 @@ export default function spells(character: Character, currentTab: string, calcula
     function addSpell(spell: Spell) {
         if (currentSpellList.find(s => s.spell.name === spell.name) == undefined && (validSpell(spell))) {
             let temp = [...currentSpellList];
-            let spelld: SpellDAO = { characterSpell: { id: "", characterId: character.id || "", spellId: spell.id }, spell: spell }
+            let spelld: SpellDAO = { spellCharacter: { id: null, characterId: character.id || "", spellId: spell.id }, spell: spell }
             temp.push(spelld);
             setCurrentSpellList(temp);
             setCharacterSpells(temp);
