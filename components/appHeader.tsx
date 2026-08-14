@@ -1,9 +1,7 @@
 import { signIn, useSession } from "next-auth/react";
 import SignOutButton from "./signoutButton";
 
-export default function appHeader(){
-    
-  const { data: session, status } = useSession();
+export default function appHeader(session : any, status : any){
 
     return (
     <div className="headerBar">

@@ -55,6 +55,7 @@ export default function Home() {
     function handleSave(){
       if(status==="authenticated"){
         useCharacterSave(characterData, characterInventory, characterSpells).then(data=>{
+          console.log(data);
           let characterDAO = data.data.data.saveCharacter;
           setCharacterData(prev=>({...prev, id: characterDAO.character}));
           setCharacterInventory(characterDAO.inventory);
@@ -65,7 +66,7 @@ export default function Home() {
 
   return (
     <main className="main">
-        {appHeader()}
+        {appHeader(session, status)}
       <div className="page">
         <div className="prevButton" onClick={()=>{prevTab()}}>
             Prev

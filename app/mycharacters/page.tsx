@@ -5,6 +5,7 @@ import { useCharacterByAccId } from "@/hooks/useCharacterByAccId";
 import { Character } from "@/types/characterTypes";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import "./page.css";
 
 export default function characterSelect() {
 
@@ -37,10 +38,9 @@ export default function characterSelect() {
 
 
   return (
-
     <div className="flex flex-col flex-1 items-left justify-left bg-zinc-50 font-sans dark:bg-black">
       <main className="main">
-        {appHeader()}
+        {appHeader(session, status)}
         <div className="characterList">
           <Table>
             <TableHeader>

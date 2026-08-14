@@ -23,12 +23,16 @@ import Backgrounds from "./backgrounds";
 import Weapons from "./weapons";
 import Spells from "./spells";
 import appHeader from "@/components/appHeader";
+import { useSession } from "next-auth/react";
 
 
 const tabs = ["Introduction", "Basic Rules", "Hero Dice", "Skills", "Stealth", "Combat", "Conditions", "Weapons and Tools", "Spellcasting", "Armor and Damage", "Wounds and Death", "Resting", "Down Time and Exploration", "Making a Character", "Talents and Attributes", "Ancestries", "Backgrounds", "Weapons List", "Spells List"];
 
+
+
 export default function Home() {
     const [currentTab, setCurrentTab] = useState("Introduction");
+    const { data: session, status } = useSession({ required: true });
 
     function moveTab(tab:string) {
       let place = tabs.indexOf(tab);
@@ -53,7 +57,7 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-left justify-left bg-zinc-50 font-sans dark:bg-black">
       <main className="main">
-        {appHeader()}
+        {appHeader(session, status)}
         <div className="page">
           <div className="prevButton" onClick={()=>{prevTab()}}>
               Prev
