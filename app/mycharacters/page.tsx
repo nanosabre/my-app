@@ -6,6 +6,7 @@ import { Character } from "@/types/characterTypes";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import "./page.css";
+import { useDeleteCharacter } from "@/hooks/useDeleteCharacter";
 
 export default function characterSelect() {
 
@@ -60,7 +61,7 @@ export default function characterSelect() {
             <TableBody>
               {/* dynamically stuffs each character into a table.  needs to be changed to a set of cards or sum */}
               {characterLoad && characterList?.map((character) => (
-                <TableRow key={character.name}>
+                <TableRow key={character.id}>
                   <TableCell><a href={"/character/sheet?id=" + character.id}>{character.name}</a></TableCell>
                   <TableCell>{character.attributeLevel}</TableCell>
                   <TableCell>{character.talent1.name}</TableCell>
@@ -71,6 +72,7 @@ export default function characterSelect() {
                   <TableCell>{character.basePrecision}</TableCell>
                   <TableCell>{character.baseFocus}</TableCell>
                   <TableCell>{character.baseSense}</TableCell>
+                  <TableCell><button onClick={()=>useDeleteCharacter(character.id || "")}>Delete</button></TableCell>
                 </TableRow>
               ))}
 
