@@ -6,7 +6,17 @@ export const useCharacterByAccId = async (userId: String) => {
         method: 'post',
         url: process.env.NEXT_PUBLIC_BACKEND_URI,
         data: {
-            query: 'query Query($userId: String) { charactersByUserId(userId: $userId) {id userId name attributeLevel attributes1 attributes2 talent1 talent2 ancestryTrait ancestryName baseFitness basePrecision baseFocus baseSense size}}',
+            query: `query Query($userId: String) { charactersByUserId(userId: $userId) 
+                { id name baseFitness basePrecision baseFocus baseSense size
+                    attributes1 { name talentName } 
+                    attributes2 { name talentName }
+                    talent1 { name caster } 
+                    talent2 { name caster }
+                    ancestry { name source }
+                    background { name source deity }
+                }
+
+                }}`,
             variables: {
                 userId
             }

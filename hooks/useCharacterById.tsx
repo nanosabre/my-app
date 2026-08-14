@@ -10,13 +10,28 @@ export const useCharacterById = async (characterId: String) => {
                     attributes2 { id name talentName description1 description2}
                     talent1 { id name ability1 ability2 description hpBonus prioritySkills role complexity keystone capstone caster } 
                     talent2 { id name ability1 ability2 description hpBonus prioritySkills role complexity keystone capstone caster }
-                    ancestry { id name parent source trait1 trait2 size description} 
-                    background { id name source parentTrait childTrait deity description tags}}
-                inventory { 
-                    inventory { id equipped proficiency quantity} 
-                    items { id name itemType subtype size equippable size weight description attack {name action range damage damageType} special {name action description} properties baseCost rarity}}
+                    ancestry { id name parent source size description
+                        trait1 {id name traitType description tags} 
+                        trait2 {id name traitType description tags}} 
+                    background { id name source deity description tags
+                        parentTrait {id name traitType description tags} 
+                        childTrait {id name traitType description tags}}
+                    state { hitPoints armor wounds manaPoints 
+                        activeEffects { id name description charProperty effectType conditionalCheck effect }
+                        inactiveEffects { id name description charProperty effectType conditionalCheck effect }}
                 }
-            }`,
+                inventory { 
+                    inventory { id characterId itemId equipped proficiency quantity} 
+                    items { id name itemType subtype size equippable size weight description properties baseCost rarity
+                        attack {name action range damage damageType} 
+                        special {name action description}
+                    }
+                }
+                spells { 
+                    spellCharacter {id characterId spellId} 
+                    spell { id name spellType source actionCost manaCost range duration description effectAmount effectConditional effectType tags}
+                }
+        }}`,
         variables: { "characterId": characterId }
     });
 

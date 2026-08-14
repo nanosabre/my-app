@@ -6,9 +6,9 @@ export const useGetFilteredSpells = async (sources: string[]) => {
     const axios = require('axios');
     let data = JSON.stringify({
         query: `query Query ($sources: [String]){
-   getFilteredSpells(sources: $sources) {
-    id name spellType source actionCost manaCost range duration description effectAmount effectConditional effectType tags
-   }
+        getFilteredSpells(sources: $sources) {
+            id name spellType source actionCost manaCost range duration description effectAmount effectConditional effectType tags
+        }
 }`,
         variables: {"sources": sources}
     });

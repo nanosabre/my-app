@@ -6,7 +6,9 @@ export const getAllSpells = async () => {
     const axios = require('axios');
     let data = JSON.stringify({
         query: `query Query {
-               getAllSpells  
+                getAllSpells  {
+                    id name spellType source actionCost manaCost range duration description effectAmount effectConditional effectType tags
+                }
             }`,
         variables: {}
     });

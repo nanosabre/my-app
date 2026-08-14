@@ -6,13 +6,13 @@ export const useGetBackgroundScreen = async (source: string) => {
     const axios = require('axios');
     let data = JSON.stringify({
         query: `query Query ($source: String){
-   getBackgroundScreen (source: $source) {
-    ancestries { name description parent source trait1 trait2 size }
-    backgrounds { name description source parentTrait childTrait deity }
-    traits { name traitType description tags}
-    effects { name description charProperty effectType conditionalCheck effect}
-   }
-}`,
+            getBackgroundScreen (source: $source) {
+                ancestries { name description parent source trait1 trait2 size }
+                backgrounds { name description source parentTrait childTrait deity }
+                traits { name traitType description tags}
+                effects { name description charProperty effectType conditionalCheck effect}
+            }
+        }`,
         variables: {"source": source}
     });
 
