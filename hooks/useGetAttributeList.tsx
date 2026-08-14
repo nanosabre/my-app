@@ -1,27 +1,24 @@
+import { Character } from "@/types/characterTypes";
+import { InventoryDAO } from "@/types/itemTypes";
+import { SpellDAO } from "@/types/spellTypes";
 import axios from "axios";
 
 //calls the endpoint to save the character
 export const useGetAttributeList = async () => {
 
-    const axios = require('axios');
-    let data = JSON.stringify({
-        query: `query Query {
-               getAttributeList  {
-    name talentName description1 description2
-   }
-            }`,
-        variables: {}
-    });
-
-    let config = {
+    let result = await axios({
         method: 'post',
-        maxBodyLength: Infinity,
         url: process.env.NEXT_PUBLIC_BACKEND_URI,
         headers: {
             'Content-Type': 'application/json'
         },
-        data: data
-    };
+        data: {
+            query: `query Query{ getAttributeList {
+                    id name talentName description1 description2
+            }}`,
+            variables: {}
+        }
+    });
 
-    return await axios.request(config);
+    return result
 }

@@ -8,7 +8,10 @@ export const useGetEquipmentScreen = async (characterId: string) => {
         query: `query Query ($characterId: String){
    getEquipmentScreen (characterId: $characterId) {
     inventory { id characterId itemId equipped quantity}
-    items { id name itemType subtype size equippable size weight description attack {name action range damage damageType} special {name action description} properties baseCost rarity}
+    items { id name itemType subtype size equippable size weight description properties baseCost rarity
+        attack {name action range damage damageType} 
+        special {name action description}
+    }
     packs { id name background currency rations salves reagents materials innerwear outerwear items}
    }
 }`,
