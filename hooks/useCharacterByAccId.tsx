@@ -14,8 +14,6 @@ export const useCharacterByAccId = async (userId: String) => {
                     talent2 { name caster }
                     ancestry { name source }
                     background { name source deity }
-                }
-
                 }}`,
             variables: {
                 userId
