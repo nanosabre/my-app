@@ -8,17 +8,20 @@ import { ammoQuantity, proficiencyTypes, weaponQuantity } from "@/types/Enums";
 const displayFilters = ["Supplies", "Currency"];
 
 export default function equipment(character: Character, setCharacter: Function, inventory: InventoryDAO[], setInventory : Function) {
-
+    //master lists
     const [packsList, setPacksList] = useState<Pack[]>([]);
     const [itemsList, setItemsList] = useState<Item[]>([]);
+    //item types selected for proficiencies
     const [typeSelect, setTypeSelect] = useState<string[]>(["","",""]);
-
+    //the weapon card data for proficiencies, display only
     const [profData, setProfData] = useState<Item[]>([emptyItem, emptyItem, emptyItem]);
 
+    //API call for screen data.
     useEffect(() => {
         useGetEquipmentScreen("").then(data => {
             let equipmentScreen = data.data.data.getEquipmentScreen;
             let result: InventoryDAO[] = []
+            //pairs character inventory entries with associated Item details
             equipmentScreen.inventory.forEach((inv:Inventory)=>
                 result.push({inventory: inv, item: equipmentScreen.items.find((item:Item)=>item.id===inv.itemId)})
             )
@@ -30,8 +33,9 @@ export default function equipment(character: Character, setCharacter: Function, 
             setTypeSelect(tempTypes);
         })
     }, [])
-
+    //when the character background changes, update the pack data to an associated pack
     useEffect(()=>addPack(packsList.find(p=>p.background===character.background.parentTrait.name)?.name|| ""),[character.background])
+    //when the proficiencies are updated, update the associated item data for display
     useEffect(()=>{
         setProfData(()=>{
         let result: Item[] = []; 
@@ -54,13 +58,16 @@ export default function equipment(character: Character, setCharacter: Function, 
         )
     }
 
+    //on pack select, clear the inventory (except weapons) then add pack items
     function addPack(packName:String){
         let result: InventoryDAO[] = inventory.filter(i=>proficiencyTypes.some(pt=>i.item.itemType.includes(pt)));
         let pack = packsList.find(p=>p.name===packName) || emptyPack; 
+        //process non-standard items from the string
         let items = pack.items?.split("|").length >0 ? pack.items.split("|") : [];
         for(let j = 0;j<items.length-1;j+=2){
             result.push(makeEquipInventoryItem(items[j], Number(items[j+1])));
         }
+        //process in standard items
         result.push(makeEquipInventoryItem(pack.outerwear,1, true));
         result.push(makeEquipInventoryItem(pack.innerwear,1, true));
         result.push(makeEquipInventoryItem("Healing Salve", pack.salves));
@@ -70,6 +77,7 @@ export default function equipment(character: Character, setCharacter: Function, 
         result.push(makeEquipInventoryItem("Silver", Math.floor(pack.currency/10 % 10)));
         result.push(makeEquipInventoryItem("Copper", Math.floor(pack.currency % 10)));
 
+        //process reagents and materials from string.  rarity goes high->low
         let reagents = pack.reagents.split("|");
         let materials = pack.materials.split("|");
         result.push(makeEquipInventoryItem("Ordinary Reagent", Number(reagents[2])));
@@ -82,6 +90,7 @@ export default function equipment(character: Character, setCharacter: Function, 
         setInventory(result);
     }
 
+    //creates an inventoryDAO item from arguments.  emptyInventory is preloaded with default values
     function makeEquipInventoryItem(itemName: string, quantity: number, equipped: boolean = false){
         let item = itemsList.find(i=>i.name===itemName);
         return {inventory:{
@@ -111,39 +120,55 @@ export default function equipment(character: Character, setCharacter: Function, 
         setInventory(temp);
     }
 
+    //when a proficiency is changed...
     function handleProfItemChange(order: number, name: string){
         let results: InventoryDAO[] = [...inventory]
         let item = itemsList.find(i=>i.name===name) || emptyItem;
-        let quantity = weaponQuantity.get(item?.subtype) || 1;
-        results = modifyInventoryItem(name, results, quantity, order===0);
-        ammoQuantity.forEach((v, k, m)=>{if(item.properties?.includes(k)) results = modifyInventoryItem(k, results, v)});
+        results = modifyProficiencyItems(item, results, order===0, true);
 
+        //remove old proficiencies using same method as above
         let prevProf = character.proficiencies[order];
+        //if there was a previous Proficiency.  else dont bother.
         if(prevProf != "") {
             let prevItem = results.find(i=>i.item.name===prevProf) || emptyInventoryDAO;
-            quantity = weaponQuantity.get(prevItem?.item.subtype) || 1;
-            results = modifyInventoryItem(prevProf, results, -quantity);
-            ammoQuantity.forEach((v, k, m)=>{if(prevItem?.item.properties?.includes(k)) results = modifyInventoryItem(k, results,  -v)});            
+            results = modifyProficiencyItems(prevItem.item, results, false, false);
         }
         setCharacter((prev: Character)=>{let temp = [...prev.proficiencies]; temp[order]= name; return {...prev, proficiencies: temp};})
         setInventory([...results]);
     }
 
+    function modifyProficiencyItems(item: Item, results: InventoryDAO[], equip = false,  add: boolean ){
+        //set quantity based on weaponQuantity map, default to 1
+        let quantity = weaponQuantity.get(item?.subtype) || 1;
+        //invert quantity if we are removing
+        quantity = add ? quantity : -quantity
+        results = modifyInventoryItem(item.name, results, quantity, equip);
+        //add any ammos associated, based on ammoQuantity map
+        ammoQuantity.forEach((v, k)=>{if(item.properties?.includes(k)) results = modifyInventoryItem(k, results, add ? v : -v)});
+        return results
+    }
+
+    //add, delete, or modify the quantity of an inventory item
     function modifyInventoryItem(name: string, results: InventoryDAO[], quantity: number = 1, equipped = false ){
         let item = results.find(i=>i.item.name===name);
+        //if item exists...
         if(item){
+            //case 1: if new quantity is 0 or less, delete it
             if(item.inventory.quantity + quantity <= 0) {
                 return results.filter(i=>i!=item);
             } else {
+            //case 2: else modify quantity
                 let index = results.indexOf(item);
                 results[index].inventory.quantity += quantity;
             }
+        //case 3: else add new item
         } else if (quantity > 0) {
             results.push(makeEquipInventoryItem(name, quantity, equipped));
         }
         return results
     }
     
+    //when the proficiency type changes, also set the proficiency to the default value
     function handleProfTypeChange(order: number, name: string){
         setTypeSelect(prev=>{prev[order]=name; return [...prev]})
         let defaultItem = itemsList.find(i=>i.itemType.includes(name) && !character.proficiencies.toSpliced(order, 1).includes(i.name)) || emptyItem;
@@ -171,6 +196,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     <div className="startHead"> Inventory: </div>
                     {makePackSelector()}
                 </div>
+                {/*painstakingly display every quantity*/}
                 <div className="currency">
                     <div className="currencyHead">
                         Currencies
@@ -247,6 +273,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     <div className="weaponHead">Proficiency 1</div>
                     {makeProfTypeSelectors(0)}
                     <select className="weaponSelect" defaultValue={character.proficiencies[0]} onChange={e=>handleProfItemChange(0,e.currentTarget.value)}>
+                        {/*if a proficiency type is selected, build the select list to only include items of the type, and dont include any other weapons selected by other proficiencies */}
                         {typeSelect[0]!="" && itemsList.filter(i=>i.itemType.includes(typeSelect[0]) && !character.proficiencies?.toSpliced(0,1).includes(i.name)).map(item=>(
                             <option key={item.name} value={item.name}>{item.name}</option>
                         ))}

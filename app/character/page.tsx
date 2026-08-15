@@ -33,8 +33,8 @@ export default function Home() {
 
     useEffect(()=>setCharacterData(prev=>({...prev, userId: session?.user.id})),[session]);
 
+    //sets current tab when navigating from tabs menu
     function moveTab(tab:string) {
-      let place = tabs.indexOf(tab);
       setCurrentTab(tab);
     }
 
@@ -52,12 +52,15 @@ export default function Home() {
       }
     }
 
+    //saves the character via the backend
     function handleSave(){
       if(status==="authenticated"){
         useCharacterSave(characterData, characterInventory, characterSpells).then(data=>{
           console.log(data);
           let characterDAO = data.data.data.saveCharacter;
+          //updates the character data to have the newly generated ID
           setCharacterData(prev=>({...prev, id: characterDAO.character.id}));
+          //updates the inventory and spells to also have their newly generated IDs, plus the characterId
           setCharacterInventory(characterDAO.inventory);
           setCharacterSpells(characterDAO.spells);
         });

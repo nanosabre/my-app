@@ -1,6 +1,7 @@
 import "./story.css";
 
 export default function story() {
+    //nothing here yet
     return (
         <div className="story">
             <textarea className="appearance" placeholder="Describe your character's appearance and impression."></textarea>

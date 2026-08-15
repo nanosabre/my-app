@@ -1,4 +1,4 @@
-import { emptySpell, Spell, SpellDAO } from "@/types/spellTypes";
+import { Spell, SpellDAO } from "@/types/spellTypes";
 import { useEffect, useState } from "react";
 import { Toggle } from "@/components/ui/toggle";
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
@@ -6,10 +6,11 @@ import "./spells.css";
 import { CalculatedState, Character } from "@/types/characterTypes";
 import { useGetFilteredSpells } from "@/hooks/useGetFilteredSpells";
 
-
+//constant values.  may need to be removed to enums file.
 const maxDomainSpells = 3;
 const maxKeystoneSpells = 1;
 const maxCapstoneSpells = 1;
+//the running count for each special spell type
 var spellCounts = {
     domain: 0,
     keystone1: 0,
@@ -19,18 +20,25 @@ var spellCounts = {
 }
 
 export default function spells(character: Character, currentTab: string, calculatedState: CalculatedState, setCharacterSpells : Function) {
+    //filters for the filter display
     const [allFilters, setAllFilters] = useState<string[]>([]);
+    //currently active filters
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
+    //spells the character actually has
     const [currentSpellList, setCurrentSpellList] = useState<SpellDAO[]>([]);
+    //spells the character can have
     const [availableSpellList, setAvailableSpellList] = useState<Spell[]>([]);
 
+    //table elements for the above lists
     const [availableSpellsTable, setAvailableSpellsTable] = useState(buildAvailableSpellTable([]));
     const [activeCurrentSpellsTable, setActiveCurrentDisplayTable] = useState(buildCurrentSpellTable());
 
+    //map of each filter and if it is active or not.
     const [filterChecks, setFilterChecks] = useState(new Map());
 
 
+    //get data from API, but only when on the spells tab
     useEffect(() => {
         if (currentTab === "spells")
             useGetFilteredSpells(buildFilterList()).then(data => {
@@ -38,7 +46,9 @@ export default function spells(character: Character, currentTab: string, calcula
             })
     }, [character, currentTab])
 
+    //whenever the available spell list is refreshed, filter out any spells the character can no longer have
     useEffect(() => {
+        //filters out any spell that doesn't have a source included in the filter list.
         setCurrentSpellList((prev:any)=>[...prev].filter(sd=>allFilters.findIndex(f=>f===sd.spell.source)!=-1))
     }, [availableSpellList])
 
