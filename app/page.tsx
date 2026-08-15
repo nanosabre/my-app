@@ -2,15 +2,14 @@
 import Image from "next/image";
 import "../spellblade/TextBorder.png";
 import appHeader from "@/components/appHeader";
-import { signIn } from "next-auth/react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function Home() {
-    const { data: session, status } = useSession();
-
+      const { data: session, status } = useSession();
+  
   return (
     <main className="main">
-      {appHeader(session, status)}
+      {appHeader( session, status)}
 
       <div className="login">
         <button onClick={() => signIn("cognito")}>Sign In</button>

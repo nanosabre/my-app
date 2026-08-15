@@ -9,7 +9,7 @@ import equipment from "./equipment";
 import story from "./story";
 import sheet from "./sheet";
 import { useEffect, useState } from "react";
-import { CalculatedState, Character, CharacterDAO, emptyCalculatedState, emptyCharacter } from "@/types/characterTypes";
+import { CalculatedState, Character, emptyCalculatedState, emptyCharacter } from "@/types/characterTypes";
 import { InventoryDAO } from "@/types/itemTypes";
 import "./page.css";
 import { SpellDAO } from "@/types/spellTypes";
@@ -33,8 +33,8 @@ export default function Home() {
 
     useEffect(()=>setCharacterData(prev=>({...prev, userId: session?.user.id})),[session]);
 
+    //sets current tab when navigating from tabs menu
     function moveTab(tab:string) {
-      let place = tabs.indexOf(tab);
       setCurrentTab(tab);
     }
 
@@ -52,12 +52,15 @@ export default function Home() {
       }
     }
 
+    //saves the character via the backend
     function handleSave(){
       if(status==="authenticated"){
         useCharacterSave(characterData, characterInventory, characterSpells).then(data=>{
           console.log(data);
           let characterDAO = data.data.data.saveCharacter;
-          setCharacterData(prev=>({...prev, id: characterDAO.character}));
+          //updates the character data to have the newly generated ID
+          setCharacterData(prev=>({...prev, id: characterDAO.character.id}));
+          //updates the inventory and spells to also have their newly generated IDs, plus the characterId
           setCharacterInventory(characterDAO.inventory);
           setCharacterSpells(characterDAO.spells);
         });

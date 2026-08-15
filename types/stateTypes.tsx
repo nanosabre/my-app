@@ -9,8 +9,6 @@ export interface Effect {
 }
 
 export interface CharacterState {
-    id: string
-    characterId: string
     hitPoints: number
     armor: number
     manaPoints: number
@@ -102,8 +100,6 @@ export var emptyBackgroundInner: BackgroundInner = {
 }
 
 export var emptyCharacterState: CharacterState = {
-    id: "",
-    characterId:"",
     hitPoints: 40,
     armor: 0,
     wounds: 0,

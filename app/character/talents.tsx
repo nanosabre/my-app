@@ -7,6 +7,7 @@ import { Effect } from "@/types/stateTypes";
 import { useModifyEffect } from "@/hooks/operations/effectOperations";
 
 export default function talents(character:Character,setCharacterData:Function) {
+    //switch flipped on first talent select
     const [talentSelection, setTalentSelection] = useState(true);
     const [readySelection, setReadySelection] = useState(false);
     const [showSelected, setShowSelected] = useState(false);
@@ -23,35 +24,45 @@ export default function talents(character:Character,setCharacterData:Function) {
     const setTalent = (e:Talent)=> {
         let effects = effectList.filter(e=>e.name.includes(e.name));
         let state = character.state;
+        //if removing talent 1
         if (e.name == character.talent1.name) {
+            //remove the associated effects
             state.activeEffects = state.activeEffects.filter(ae=>!ae.name.includes(character.talent1.name));
             state.inactiveEffects = state.inactiveEffects.filter(ie=>!ie.name.includes(character.talent1.name));
+            //update the characterData
             setCharacterData((prev: any) => ({
             ...prev,
-            attributes1: 0,
+            attributes1: [],
             talent1: "",
             state: {...state}
             }))
+            //set talent1 indicator
             setTalentSelection(true);
         }
+        //if removing talent 2
         else if (e.name == character.talent2.name) {
             state.activeEffects = state.activeEffects.filter(ae=>!ae.name.includes(character.talent2.name));
             state.inactiveEffects = state.inactiveEffects.filter(ie=>!ie.name.includes(character.talent2.name));
+            //update the characterData
             setCharacterData((prev: any) => ({
             ...prev,
-            attribute2: 0,
+            attributes2: [],
             talent2: "",
             state: {...state}
             }))
+            //set talent 2 indicator
             setReadySelection(false);
         }
+        //if adding first talent
         else if (talentSelection) {
+            //add any associated effects.
             state = effects.length > 0 ? useModifyEffect(character.state, false, ...effects) : character.state;
             setCharacterData((prev: any) => ({
             ...prev,
             talent1: e,
             state: {...state}
             }))
+            //set talent 1 indicator
             setTalentSelection(false);
         }
         else if (!readySelection) {
@@ -61,6 +72,7 @@ export default function talents(character:Character,setCharacterData:Function) {
             talent2: e,
             state: {...state}
             }))
+            //set talent 2 indicator
             setReadySelection(true);
         }
 
@@ -68,7 +80,7 @@ export default function talents(character:Character,setCharacterData:Function) {
 
     function buildTalentCards() {
         return(<div className="talentChoices">
-            {talentList.map((talent:Talent)=>(
+            {talentList.map((talent:Talent)=>( //selector view
                 <button key={talent.name} className={((!talentSelection)&&(readySelection)) ? ("disabledTalentCard"): ("talentCard")} onClick={()=>{ setTalent(talent)}}>
                     {!((character.talent1.name === talent.name)||(character.talent2.name === talent.name)) ? (
                         <div className="cardGrid">
@@ -91,7 +103,7 @@ export default function talents(character:Character,setCharacterData:Function) {
                                 Splash
                             </div>
                         </div>
-                    ): (<div className="cardBack">
+                    ): /* selected version */ (<div className="cardBack"> 
                             <div className="cardBackName">
                                 {talent.name}
                             </div>
@@ -116,7 +128,7 @@ export default function talents(character:Character,setCharacterData:Function) {
                     View Details
                 </div>
             </div>
-        ): (
+        ): ( //details view
         <div className="selected">
             <div className="viewTalent1">
                 <div className="selectedName">
@@ -146,6 +158,7 @@ export default function talents(character:Character,setCharacterData:Function) {
                 <div className="selectedAtts">
                     Attributes:
                 </div>
+                {/*TODO*/}
                 <div className="selectedAttributes"> 
                     <div className="att1">
                         <u>Cleric</u> <br/> Guidance | Cure Wounds | Revive | Silence | Dissuade

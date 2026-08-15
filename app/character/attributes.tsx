@@ -10,24 +10,30 @@ import useCalculateState, { applyLimitedEffects } from "@/hooks/useCalculateStat
 import { Effect } from "@/types/stateTypes";
 import { useModifyEffect } from "@/hooks/operations/effectOperations";
 
+const maxLevel = 8;
+
 export default function attributes(character: Character, setCharacterData: Function, currentTab: string, setCalcState: Function) {
-    const [attrib1Counter, setattrib1Counter] = useState(0);
-    const [attrib2Counter, setattrib2Counter] = useState(0);
+    //master list
     const [attributeList, setAttributeList] = useState<Attribute[]>([]);
+    //lists of possible attributes for each talent
     const [attribute1List, setAttribute1List] = useState<Attribute[]>([]);
-    const [attribute2List, setAttrubite2List] = useState<Attribute[]>([]);
+    const [attribute2List, setAttribute2List] = useState<Attribute[]>([]);
+    //the fully calculated state of the character
     const [calculatedState, setCalculatedState] = useState<CalculatedState>(emptyCalculatedState);
+    //display only bonuses
     const [ancestryBonuses, setAncestryBonuses] = useState({ ...emptyLimitedState });
     const [keyBonuses, setkeyBonuses] = useState({ ...emptyLimitedState });
+    //remaining points for point buy
+    var points = (6 - character.baseFitness - character.baseFocus - character.basePrecision - character.baseSense + character.attributeLevel);
 
-    var points = (6 - character.baseFitness - character.baseFocus - character.basePrecision - character.baseSense - (-character.attributeLevel));
-
+    //gets attribute data from API
     useEffect(() => {
         useGetAttributeList().then(data => {
             setAttributeList(data.data.data.getAttributeList);
         })
     }, [])
 
+    //any time this tab is currently selected, and there is a change to the active effects, recalculate the state and bonuses
     useEffect(() => {
         if (currentTab === "attributes") {
             setCalculatedState(useCalculateState(character));
@@ -38,23 +44,25 @@ export default function attributes(character: Character, setCharacterData: Funct
             if (limitedEffects.length > 0)
                 setkeyBonuses(applyLimitedEffects(limitedEffects));
         }
-    }, [currentTab, character])
+    }, [currentTab, character.state.activeEffects])
 
+    //anytime the tab's calculated state changes, update the master state.  needs to be removed
     useEffect(() => setCalcState(calculatedState), [calculatedState]);
 
+    //when the talent changes, update the attribute select lists
     useEffect(() => {
-        setAttribute1List(attributeList.filter(a => a.talentName === character.talent1.name))
-        setattrib1Counter(0)
+        setAttribute1List(attributeList.filter(a => a.talentName === character.talent1.name) || [])
     }, [character.talent1])
 
     useEffect(() => {
-        setAttrubite2List(attributeList.filter(a => a.talentName === character.talent2.name))
-        setattrib2Counter(0)
+        setAttribute2List(attributeList.filter(a => a.talentName === character.talent2.name) || [])
     }, [character.talent2])
 
     function activateKeystone(talent: Talent) {
+        //if this talent has an associated keystone, then fin the keystone effect
         if (!character.state.activeEffects.find(e => e.name.includes(talent.name + " Keystone"))) {
             let effect = character.state.inactiveEffects.find(e => e.name.includes(talent.name + " Keystone"))
+            //if the effect is found, add it to the list.
             if (effect)
                 setCharacterData((prev: any) => ({
                     ...prev,
@@ -64,8 +72,10 @@ export default function attributes(character: Character, setCharacterData: Funct
     }
 
     function deactivateKeystone(talent: Talent) {
+        //if this talent has an associated keystone effect, find the effect
         if (!character.state.inactiveEffects.find(e => e.name.includes(talent.name + " Keystone"))) {
             let effect = character.state.activeEffects.find(e => e.name.includes(talent.name + " Keystone"))
+            // if the effect is found, remove it
             if (effect)
                 setCharacterData((prev: any) => ({
                     ...prev,
@@ -74,15 +84,13 @@ export default function attributes(character: Character, setCharacterData: Funct
         }
     }
 
-    //todo skill value recalculation on ancestry+talent change
-
+    //when attribute is selected, add it to the respective list, then check for keystones
     function addAttribute(talent: boolean, attribute: Attribute) {
         if (!talent) {
             setCharacterData((prev: any) => ({
                 ...prev,
                 attributes1: character.attributes1?.concat(attribute)
             }))
-            setattrib1Counter(attrib1Counter + 1);
             if (character.attributes1.length + 1 >= 2) activateKeystone(character.talent1);
         }
         else {
@@ -90,11 +98,10 @@ export default function attributes(character: Character, setCharacterData: Funct
                 ...prev,
                 attributes2: character.attributes2?.concat(attribute)
             }))
-            setattrib2Counter(attrib2Counter + 1);
             if (character.attributes2.length + 1 >= 2) activateKeystone(character.talent2);
         }
     }
-
+    //when attribute is selected, remove it from the respective list, then check for keystones
     function removeAttribute(talent: boolean, attribute: Attribute) {
         if (!talent) {
             setCharacterData((prev: any) => ({
@@ -102,7 +109,6 @@ export default function attributes(character: Character, setCharacterData: Funct
                 attributes1: character.attributes1.filter(a => a.name != attribute.name)
             }))
             if (character.attributes1.length - 1 < 2) deactivateKeystone(character.talent1);
-            setattrib1Counter(attrib1Counter - 1);
         }
         else {
             setCharacterData((prev: any) => ({
@@ -110,42 +116,33 @@ export default function attributes(character: Character, setCharacterData: Funct
                 attributes2: character.attributes2.filter(a => a.name != attribute.name)
             }))
             if (character.attributes2.length - 1 < 2) deactivateKeystone(character.talent2);
-            setattrib2Counter(attrib2Counter - 1);
         }
     }
 
     function setCharacterLevel(e: number) {
-        if (e < attrib1Counter + attrib2Counter) {
-            setattrib1Counter(0);
-            setattrib2Counter(0);
+        //if the new level is less than the number of attributes selects, then reset both attribute lists
+        if (e < character.attributes1.length + character.attributes2.length) {
             setCharacterData((prev: any) => ({
                 ...prev,
                 attributes1: [],
                 attributes2: []
             }))
         }
+        //set the level here.
         setCharacterData((prev: any) => ({
             ...prev,
             attributeLevel: e
         }))
     }
-
-    const increaseSkill = (e: any) => {
-        let name = character[e];
-        if (typeof name == "number") {
+    //whenever a skill is changed via point buy. value is negative if reducing  
+    const handleSkillChange = (e: string, value: number) => {
+        //get current value of associated skill
+        let skill = character[e];
+        //type of check to remove warnings
+        if (typeof skill == "number") {
             setCharacterData((prev: any) => ({
                 ...prev,
-                [e]: name + 1
-            }))
-        }
-    }
-
-    const decreaseSkill = (e: any) => {
-        let name = character[e];
-        if (typeof name == "number") {
-            setCharacterData((prev: any) => ({
-                ...prev,
-                [e]: name - 1
+                [e]: skill + value
             }))
         }
     }
@@ -161,15 +158,8 @@ export default function attributes(character: Character, setCharacterData: Funct
                 </div>
                 <div className="levelSelect">
                     <select defaultValue={character?.attributeLevel?.toString()} onChange={(e) => { setCharacterLevel(Number(e.currentTarget.value)) }}>
-                        <option value="0" className="text-[32px]">0</option>
-                        <option value="1" className="text-[32px]">1</option>
-                        <option value="2" className="text-[32px]">2</option>
-                        <option value="3" className="text-[32px]">3</option>
-                        <option value="4" className="text-[32px]">4</option>
-                        <option value="5" className="text-[32px]">5</option>
-                        <option value="6" className="text-[32px]">6</option>
-                        <option value="7" className="text-[32px]">7</option>
-                        <option value="8" className="text-[32px]">8</option>
+                        {/*creates an array of the same size as the max level, the uses a map function and index to generate the level select options.*/ }
+                        {[...Array(maxLevel+1)].map((x,i)=><option key={i} value={i} className="text-[32px]">{i}</option>)}
                     </select>
                 </div>
             </div>
@@ -179,7 +169,7 @@ export default function attributes(character: Character, setCharacterData: Funct
             <div className="talent1attributes">
                 {attribute1List.map((attribute: Attribute) => (
                     <div className="attributeContainer" key={attribute.name}>
-                        {!(character.attributes1?.filter(a => attribute.name === a.name).length > 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib1Counter - attrib2Counter < 2)) ? (
+                        {!(character.attributes1?.filter(a => attribute.name === a.name).length > 0) ? ((((character.attributes1.length + character.attributes2.length < character.attributeLevel) && (character.attributes1.length - character.attributes2.length < 2)) ? (
                             <div className="attributeNotSelected" onClick={() => { addAttribute(false, attribute) }}>
                                 {attribute.name} <br /> {attribute.description1}
                             </div>) : (
@@ -194,17 +184,17 @@ export default function attributes(character: Character, setCharacterData: Funct
                 ))}
             </div>
             <div className="talent1stones">
-                <div className={(attrib1Counter < 2) ? ("keystone") : ("keystoneActive")}>
+                <div className={(character.attributes1.length < 2) ? ("keystone") : ("keystoneActive")}>
                     <u>{character.talent1.name} Keystone</u> <br /> {character.talent1.keystone}
                 </div>
-                <div className={(attrib1Counter < 4) ? ("capstone") : ("capstoneActive")}>
+                <div className={(character.attributes1.length < 4) ? ("capstone") : ("capstoneActive")}>
                     <u>{character.talent1.name} Capstone</u> <br /> {character.talent1.capstone}
                 </div>
             </div>
             <div className="talent2attributes">
                 {attribute2List.map((attribute: Attribute) => (
                     <div className="attributeContainer" key={attribute.name}>
-                        {!character.attributes2?.includes(attribute) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
+                        {!(character.attributes2?.filter(a => attribute.name === a.name).length > 0) ? ((((character.attributes1.length + character.attributes2.length < character.attributeLevel) && (character.attributes2.length - character.attributes1.length < 2)) ? (
                             <div className="attributeNotSelected" onClick={() => { addAttribute(true, attribute) }}>
                                 {attribute.name} <br /> {attribute.description1}
                             </div>) : (
@@ -219,10 +209,10 @@ export default function attributes(character: Character, setCharacterData: Funct
                 ))}
             </div>
             <div className="talent2stones">
-                <div className={(attrib2Counter < 2) ? ("keystone") : ("keystoneActive")}>
+                <div className={(character.attributes2.length < 2) ? ("keystone") : ("keystoneActive")}>
                     <u> {character.talent2.name} Keystone</u> <br /> {character.talent2.keystone}
                 </div>
-                <div className={(attrib2Counter < 4) ? ("capstone") : ("capstoneActive")}>
+                <div className={(character.attributes2.length < 4) ? ("capstone") : ("capstoneActive")}>
                     <u>{character.talent2.name} Capstone</u> <br /> {character.talent2.capstone}
                 </div>
             </div>
@@ -232,9 +222,9 @@ export default function attributes(character: Character, setCharacterData: Funct
             <div className="fitness">
                 Fitness
                 <ButtonGroup className="w-full">
-                    <Button size="icon" onClick={() => { decreaseSkill("baseFitness") }} disabled={character.baseFitness == 0}><Minus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseFitness", -1) }} disabled={character.baseFitness == 0}><Minus /></Button>
                     <div className="w-full border-1 border-black text-[20px]">{character?.baseFitness}</div>
-                    <Button size="icon" onClick={() => { increaseSkill("baseFitness") }} disabled={(character.baseFitness == 6) || (points <= 0)}><Plus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseFitness", 1) }} disabled={(character.baseFitness == 6) || (points <= 0)}><Plus /></Button>
                 </ButtonGroup>
                 +
                 <div className="w-full border-1 border-black text-[20px]"> Ancestry: {ancestryBonuses.fitness}</div>
@@ -247,9 +237,9 @@ export default function attributes(character: Character, setCharacterData: Funct
             <div className="focus">
                 Focus
                 <ButtonGroup className="w-full">
-                    <Button size="icon" onClick={() => { decreaseSkill("baseFocus") }} disabled={character.baseFocus == 0}><Minus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseFocus", -1) }} disabled={character.baseFocus == 0}><Minus /></Button>
                     <div className="w-full border-1 border-black text-[20px]">{character?.baseFocus}</div>
-                    <Button size="icon" onClick={() => { increaseSkill("baseFocus") }} disabled={(character.baseFocus == 6) || (points <= 0)}><Plus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseFocus", 1) }} disabled={(character.baseFocus == 6) || (points <= 0)}><Plus /></Button>
                 </ButtonGroup>
                 +
                 <div className="w-full border-1 border-black text-[20px]"> Ancestry: {ancestryBonuses.focus}</div>
@@ -261,9 +251,9 @@ export default function attributes(character: Character, setCharacterData: Funct
             <div className="precision">
                 Precision
                 <ButtonGroup className="w-full">
-                    <Button size="icon" onClick={() => { decreaseSkill("basePrecision") }} disabled={character.basePrecision == 0}><Minus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("basePrecision", -1) }} disabled={character.basePrecision == 0}><Minus /></Button>
                     <div className="w-full border-1 border-black text-[20px]">{character?.basePrecision}</div>
-                    <Button size="icon" onClick={() => { increaseSkill("basePrecision") }} disabled={(character.basePrecision == 6) || (points <= 0)}><Plus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("basePrecision", 1) }} disabled={(character.basePrecision == 6) || (points <= 0)}><Plus /></Button>
                 </ButtonGroup>
                 +
                 <div className="w-full border-1 border-black text-[20px]"> Ancestry: {ancestryBonuses.precision}</div>
@@ -275,9 +265,9 @@ export default function attributes(character: Character, setCharacterData: Funct
             <div className="sense">
                 Sense
                 <ButtonGroup className="w-full">
-                    <Button size="icon" onClick={() => { decreaseSkill("baseSense") }} disabled={character.baseSense == 0}><Minus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseSense", -1) }} disabled={character.baseSense == 0}><Minus /></Button>
                     <div className="w-full border-1 border-black text-[20px]">{character?.baseSense}</div>
-                    <Button size="icon" onClick={() => { increaseSkill("baseSense") }} disabled={(character.baseSense == 6) || (points <= 0)}><Plus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseSense", 1) }} disabled={(character.baseSense == 6) || (points <= 0)}><Plus /></Button>
                 </ButtonGroup>
                 +
                 <div className="w-full border-1 border-black text-[20px]"> Ancestry: {ancestryBonuses.sense}</div>
