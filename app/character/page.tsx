@@ -16,11 +16,11 @@ import { SpellDAO } from "@/types/spellTypes";
 import appHeader from "@/components/appHeader";
 import { useCharacterSave } from "@/hooks/useCharacterSave";
 import { useSession } from "next-auth/react";
-
+import skills from "./skills";
 
   //create an empty character, for now.   this will be the master data that everything will update or reference
 
-const tabs = ["background", "talents", "attributes", "spells", "equipment", "story", "sheet"];
+const tabs = ["background", "talents", "attributes", "skills", "spells", "equipment", "story", "sheet"];
 
 export default function Home() {
     const [currentTab, setCurrentTab] = useState("background");
@@ -82,6 +82,7 @@ export default function Home() {
                 <TabsTrigger value="background">Background</TabsTrigger>
                 <TabsTrigger value="talents">Talents</TabsTrigger>
                 <TabsTrigger value="attributes">Attributes</TabsTrigger>
+                <TabsTrigger value="skills">Skills</TabsTrigger>
                 <TabsTrigger value="spells">Spells</TabsTrigger>
                 <TabsTrigger value="equipment">Equipment</TabsTrigger>
                 <TabsTrigger value="story">Story</TabsTrigger>
@@ -90,6 +91,7 @@ export default function Home() {
             <TabsContent value="background">{background(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="talents">{talents(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="attributes">{attributes(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
+            <TabsContent value="skills">{skills(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
             <TabsContent value="spells">{spells(characterData, currentTab, calculatedState, setCharacterSpells)}</TabsContent>
             <TabsContent value="equipment">{equipment(characterData, setCharacterData, characterInventory, setCharacterInventory)}</TabsContent>
             <TabsContent value="story">{story()}</TabsContent>

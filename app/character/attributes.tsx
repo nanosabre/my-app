@@ -13,9 +13,9 @@ import { useModifyEffect } from "@/hooks/operations/effectOperations";
 export default function attributes(character: Character, setCharacterData: Function, currentTab: string, setCalcState: Function) {
     const [attrib1Counter, setattrib1Counter] = useState(0);
     const [attrib2Counter, setattrib2Counter] = useState(0);
-    const [attributeList, setAttrubuteList] = useState<Attribute[]>([]);
-    const [attribute1List, setAttrubute1List] = useState<Attribute[]>([]);
-    const [attribute2List, setAttrubute2List] = useState<Attribute[]>([]);
+    const [attributeList, setAttributeList] = useState<Attribute[]>([]);
+    const [attribute1List, setAttribute1List] = useState<Attribute[]>([]);
+    const [attribute2List, setAttrubite2List] = useState<Attribute[]>([]);
     const [calculatedState, setCalculatedState] = useState<CalculatedState>(emptyCalculatedState);
     const [ancestryBonuses, setAncestryBonuses] = useState({ ...emptyLimitedState });
     const [keyBonuses, setkeyBonuses] = useState({ ...emptyLimitedState });
@@ -24,7 +24,7 @@ export default function attributes(character: Character, setCharacterData: Funct
 
     useEffect(() => {
         useGetAttributeList().then(data => {
-            setAttrubuteList(data.data.data.getAttributeList);
+            setAttributeList(data.data.data.getAttributeList);
         })
     }, [])
 
@@ -43,12 +43,12 @@ export default function attributes(character: Character, setCharacterData: Funct
     useEffect(() => setCalcState(calculatedState), [calculatedState]);
 
     useEffect(() => {
-        setAttrubute1List(attributeList.filter(a => a.talentName === character.talent1.name))
+        setAttribute1List(attributeList.filter(a => a.talentName === character.talent1.name))
         setattrib1Counter(0)
     }, [character.talent1])
 
     useEffect(() => {
-        setAttrubute2List(attributeList.filter(a => a.talentName === character.talent2.name))
+        setAttrubite2List(attributeList.filter(a => a.talentName === character.talent2.name))
         setattrib2Counter(0)
     }, [character.talent2])
 

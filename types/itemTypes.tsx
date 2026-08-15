@@ -115,3 +115,7 @@ export var emptyPack: Pack = {
     outerwear: "",
     items: ""
 }
+
+export function getInventoryItemQTY(inventory : InventoryDAO[], itemName : string) {
+    return (inventory.find(i=>i.item.name===itemName)?.inventory.quantity || 0);
+}

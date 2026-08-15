@@ -14,14 +14,11 @@
     grid-area: invPanel;
     display: grid;
     grid-template-areas: "invTitle invTitle"
-    "currencies supplies"
-    "reagents materials"
-    "equip1 equip2"
-    "innerwear outerwear"
+    "inventoryCollapsible inventoryCollapsible"
     "itemFilter itemFilter"
     "itemTable itemTable";
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 0.5fr 1fr 1fr 3fr 1.5fr 0.5fr 4fr;
+    grid-template-rows: 0.5fr auto 0.5fr 4fr;
     height: calc(100vh - 180px);
 }
 
@@ -31,19 +28,30 @@
     border: 1px solid black;
 }
 
-.invPanel div.currencies {
+.invPanel div.inventoryCollapsible {
+    grid-area: inventoryCollapsible;
+    display: grid;
+    grid-template-areas: "currencies supplies"
+    "reagents materials"
+    "equip1 equip2"
+    "innerwear outerwear"
+    "expandInventory expandInventory";
+    grid-template-columns: 1fr 1fr;
+    min-height: min-content;
+}
+
+.inventoryCollapsible div.currencies {
     grid-area: currencies;
     display: grid;
     grid-template-areas: "head head head head head"
     "total denom1 denom2 denom3 denom4";
-    grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     border: 1px solid black;
-    line-height: 1;
+    font-size: 24px;
 }
 
 .currencies div.currencyHead {
-    font-size: 24px;
     grid-area: head;
     display: grid;
     border: 1px solid black;
@@ -74,7 +82,7 @@
     border: 1px solid black;
 }
 
-.invPanel div.supplies {
+.inventoryCollapsible div.supplies {
     grid-area: supplies;
     display: grid;
     grid-template-areas: "head head head"
@@ -82,11 +90,10 @@
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     border: 1px solid black;
-    line-height: 1;
+    font-size: 24px;
 }
 
 .supplies div.suppliesHead {
-    font-size: 24px;
     grid-area: head;
     border: 1px solid black;
 }
@@ -106,7 +113,7 @@
     border: 1px solid black;
 }
 
-.invPanel div.reagents {
+.inventoryCollapsible div.reagents {
     grid-area: reagents;
     display: grid;
     grid-template-areas: "head head head head"
@@ -114,11 +121,10 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     border: 1px solid black;
-    line-height: 1;
+    font-size: 24px;
 }
 
 .reagents div.reagentsHead {
-    font-size: 24px;
     grid-area: head;
     border: 1px solid black;
 }
@@ -143,7 +149,7 @@
     border: 1px solid black;
 }
 
-.invPanel div.materials {
+.inventoryCollapsible div.materials {
     grid-area: materials;
     display: grid;
     grid-template-areas: "head head head head"
@@ -151,11 +157,10 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     border: 1px solid black;
-    line-height: 1;
+    font-size: 24px;
 }
 
 .materials div.materialsHead {
-    font-size: 24px;
     grid-area: head;
     border: 1px solid black;
 }
@@ -180,7 +185,7 @@
     border: 1px solid black;
 }
 
-.invPanel div.equip1 {
+.inventoryCollapsible div.equip1 {
     grid-area: equip1;
     border: 1px solid black;
     display: grid;
@@ -193,7 +198,7 @@
     grid-template-rows: 1.2fr 1fr 1fr 1fr 1fr;
 }
 
-.invPanel div.equip2 {
+.inventoryCollapsible div.equip2 {
     grid-area: equip2;
     border: 1px solid black;
     display: grid;
@@ -290,6 +295,16 @@
     border: 1px solid black;
 }
 
+.invPanel div.expandInventory {
+    grid-area: expandInventory;
+    font-size: 15px;
+    border: 1px solid black;
+}
+
+.expandInventory:hover {
+    background-color: #9e9e9e;
+}
+
 .invPanel div.itemFilter {
     grid-area: itemFilter;
     text-align: center;
@@ -329,6 +344,9 @@
 }
 
 .itemTableDesc {
+    padding-left: 5px;
+    text-align: left;
+    font-size: 18px;
     border: 1px solid black;
 }
 

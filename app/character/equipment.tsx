@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { emptyInventory, emptyInventoryDAO, emptyItem, emptyPack, Inventory, InventoryDAO, Item, Pack } from "@/types/itemTypes";
+import { emptyInventory, emptyInventoryDAO, emptyItem, emptyPack, Inventory, InventoryDAO, Item, Pack, getInventoryItemQTY } from "@/types/itemTypes";
 import "./equipment.css";
 import { useGetEquipmentScreen } from "@/hooks/useGetEquipmentScreen";
 import { Character } from "@/types/characterTypes";
@@ -175,37 +175,37 @@ export default function equipment(character: Character, setCharacter: Function, 
                     <div className="currencyHead">
                         Currencies
                     </div>
-                    <div className="currencyTotal">Total<br /><div className="text-[36px]">{(inventory.find(i=>i.item.name==="Gold")?.inventory.quantity || 0)*100 + (inventory.find(i=>i.item.name==="Silver")?.inventory.quantity || 0)*10 + (inventory.find(i=>i.item.name==="Copper")?.inventory.quantity || 0)}</div></div>
-                    <div className="currencyDenom1">Platinum<br /><div className="text-[28px]">1</div> </div>
-                    <div className="currencyDenom2">Gold<br /><div className="text-[28px]">{inventory.find(i=>i.item.name==="Gold")?.inventory.quantity || 0}</div> </div>
-                    <div className="currencyDenom3">Silver<br /><div className="text-[28px]">{inventory.find(i=>i.item.name==="Silver")?.inventory.quantity || 0}</div> </div>
-                    <div className="currencyDenom4">Copper<br /><div className="text-[28px]">{inventory.find(i=>i.item.name==="Copper")?.inventory.quantity || 0}</div> </div>
+                    <div className="currencyTotal">{getInventoryItemQTY(inventory, "Platinum")*1000+getInventoryItemQTY(inventory, "Gold")*100+getInventoryItemQTY(inventory, "Silver")*10+getInventoryItemQTY(inventory, "Copper")}c</div>
+                    <div className="currencyDenom1">{getInventoryItemQTY(inventory, "Platinum")}p</div>
+                    <div className="currencyDenom2">{getInventoryItemQTY(inventory, "Gold")}g</div>
+                    <div className="currencyDenom3">{getInventoryItemQTY(inventory, "Silver")}s</div>
+                    <div className="currencyDenom4">{getInventoryItemQTY(inventory, "Coppper")}c</div>
                 </div>
                 <div className="supplies">
                     <div className="suppliesHead">
                         Supplies
                     </div>
-                    <div className="suppliesFood">Food<br /><div className="text-[28px]">{inventory.find(i=>i.item.name==="Food (kg)")?.inventory.quantity || 0} days</div></div>
-                    <div className="suppliesWater">Water<br /><div className="text-[28px]">{inventory.find(i=>i.item.name==="Water (kg)")?.inventory.quantity || 0} days</div></div>
-                    <div className="suppliesSalves">Salves<br /><div className="text-[28px]">{inventory.find(i=>i.item.name==="Healing Salve")?.inventory.quantity || 0} Salves</div></div>
+                        <div className="suppliesFood">{getInventoryItemQTY(inventory, "Food (kg)")} Food</div>
+                        <div className="suppliesWater">{getInventoryItemQTY(inventory, "Water (kg)")} Water</div>
+                        <div className="suppliesSalves">{getInventoryItemQTY(inventory, "Healing Salve")} Salves</div>
                 </div>
                 <div className="reagents">
                     <div className="reagentsHead">
                         Reagents
                     </div>
-                    <div className="reagentsOrdinary">Ordinary<br /><div className="text-[24px]">{inventory.find(i=>i.item.name==="Ordinary Reagent")?.inventory.quantity || 0}</div></div>
-                    <div className="reagentsUncommon">Uncommon<br /><div className="text-[24px]">{inventory.find(i=>i.item.name==="Uncommon Reagent")?.inventory.quantity || 0}</div> </div>
-                    <div className="reagentsRare">Rare<br /><div className="text-[24px]">{inventory.find(i=>i.item.name==="Rare Reagent")?.inventory.quantity || 0}</div></div>
-                    <div className="reagentsLegendary">Legendary<br /><div className="text-[24px]">{inventory.find(i=>i.item.name==="Legendary Reagent")?.inventory.quantity || 0}</div> </div>
+                        <div className="reagentsOrdinary">{getInventoryItemQTY(inventory, "Ordinary Reagent")} O</div>
+                        <div className="reagentsUncommon">{getInventoryItemQTY(inventory, "Uncommon Reagent Reagent")} U</div>
+                        <div className="reagentsRare">{getInventoryItemQTY(inventory, "Rare Reagent")} R</div>
+                        <div className="reagentsLegendary">{getInventoryItemQTY(inventory, "Legendary Reagent")} L</div>
                 </div>
                 <div className="materials">
                     <div className="materialsHead">
                         Materials
                     </div>
-                    <div className="materialsOrdinary">Ordinary<br /><div className="text-[24px]">{inventory.find(i=>i.item.name==="Ordinary Crafting Material")?.inventory.quantity || 0}</div></div>
-                    <div className="materialsUncommon">Uncommon<br /><div className="text-[24px]">{inventory.find(i=>i.item.name==="Uncommon Crafting Material")?.inventory.quantity || 0}</div> </div>
-                    <div className="materialsRare">Rare<br /><div className="text-[24px]">{inventory.find(i=>i.item.name==="Rare Crafting Material")?.inventory.quantity || 0}</div></div>
-                    <div className="materialsLegendary">Legendary<br /><div className="text-[24px]">{inventory.find(i=>i.item.name==="Legendary Crafting Material")?.inventory.quantity || 0}</div> </div>
+                        <div className="materialsOrdinary">{getInventoryItemQTY(inventory, "Ordinary Materials")} O</div>
+                        <div className="materialsUncommon">{getInventoryItemQTY(inventory, "Uncommon Material")} U</div>
+                        <div className="materialsRare">{getInventoryItemQTY(inventory, "Rare Material")} R</div>
+                        <div className="materialsLegendary">{getInventoryItemQTY(inventory, "Legendary Material")} L</div>
                 </div>
                 <div className="innerwear">
                     <div className="innerHead">Innerwear</div>

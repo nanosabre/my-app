@@ -131,9 +131,6 @@ export default function spells(character: Character, currentTab: string, calcula
             <div className="currentTable">
                 {currentSpellList.map((spelld: SpellDAO) => (
                     <div className="cell" key={spelld.spell.name}>
-                        <div onClick={() => { removeSpell(spelld) }} className="w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]">
-                            -
-                        </div>
                         <Accordion>
                             <AccordionItem>
                                 <AccordionTrigger>
@@ -151,6 +148,9 @@ export default function spells(character: Character, currentTab: string, calcula
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
+                        <div onClick={() => { removeSpell(spelld) }} className="w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]">
+                            -
+                        </div>
                     </div>
 
                 ))}
@@ -292,13 +292,11 @@ export default function spells(character: Character, currentTab: string, calcula
             {activeCurrentSpellsTable}
             <div className="info1">
                 Domain Spells : ({spellCounts.domain}/{maxDomainSpells}) <br />
-                Class Spells: ({currentSpellList.length - spellCounts.domain - spellCounts.keystone1 - spellCounts.keystone2 - spellCounts.capstone1 - spellCounts.capstone2}/{calculatedState.spellCapacity}) <br />
-                Keystone Spells: ({spellCounts.keystone1 + spellCounts.keystone2}/{(character.talent1.caster ? maxKeystoneSpells : 0) + (character.talent2.caster ? maxKeystoneSpells : 0)}) <br />
-                Capstone Spells: ({spellCounts.capstone1 + spellCounts.capstone2}/{(character.talent1.caster ? maxCapstoneSpells : 0) + (character.talent2.caster ? maxCapstoneSpells : 0)})
-
+                Class Spells: ({currentSpellList.length - spellCounts.domain - spellCounts.keystone1 - spellCounts.keystone2 - spellCounts.capstone1 - spellCounts.capstone2}/{calculatedState.spellCapacity})
             </div>
             <div className="info2">
-                Long Description
+                Keystone Spells: ({spellCounts.keystone1 + spellCounts.keystone2}/{(character.talent1.caster ? maxKeystoneSpells : 0) + (character.talent2.caster ? maxKeystoneSpells : 0)}) <br />
+                Capstone Spells: ({spellCounts.capstone1 + spellCounts.capstone2}/{(character.talent1.caster ? maxCapstoneSpells : 0) + (character.talent2.caster ? maxCapstoneSpells : 0)})
             </div>
             <div className="filter">
                 Filters:

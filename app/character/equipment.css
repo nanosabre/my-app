@@ -49,19 +49,18 @@ select {
 }
 
 .inventory div.currency {
-    line-height: 1.2;
-    font-size: 20px;
+    font-size: 24px;
     grid-area: currency;
     display: grid;
     grid-template-areas: "head head head head head"
     "total denom1 denom2 denom3 denom4";
-    grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 2fr 3fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     border: 1px solid black;
 }
 
 .currency div.currencyHead {
-    font-size: 28px;
+    font-size: 24px;
     grid-area: head;
     border: 1px solid black;
 }
@@ -94,17 +93,16 @@ select {
 .inventory div.supplies {
     grid-area: supplies;
     line-height: 1.2;
-    font-size: 20px;
+    font-size: 24px;
     display: grid;
     grid-template-areas: "head head head"
     "food water salves";
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 2fr 3fr;
+    grid-template-rows: 1fr 1fr;
     border: 1px solid black;
 }
 
 .supplies div.suppliesHead {
-    font-size: 28px;
     grid-area: head;
     border: 1px solid black;
 }
@@ -127,12 +125,12 @@ select {
 .inventory div.reagents {
     grid-area: reagents;
     line-height: 1.2;
-    font-size: 20px;
+    font-size: 24px;
     display: grid;
     grid-template-areas: "head head head head"
     "ordinary uncommon rare legendary";
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 2fr 3fr;
+    grid-template-rows: 1fr 1fr;
     border: 1px solid black;
 }
 
@@ -165,12 +163,12 @@ select {
 .inventory div.materials {
     grid-area: materials;
     line-height: 1.2;
-    font-size: 20px;
+    font-size: 24px;
     display: grid;
     grid-template-areas: "head head head head"
     "ordinary uncommon rare legendary";
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 2fr 3fr;
+    grid-template-rows: 1fr 1fr;
     border: 1px solid black;
 }
 
@@ -220,6 +218,7 @@ select {
 }
 
 .innerwear div.innerDesc {
+    font-size: 20px;
     flex: 4;
     border: 1px solid black;
 }
@@ -244,6 +243,7 @@ select {
 }
 
 .outerwear div.outerDesc {
+    font-size: 20px;
     flex: 4;
     border: 1px solid black;
 }
