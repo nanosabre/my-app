@@ -38,17 +38,17 @@ export default function attributes(character: Character, setCharacterData: Funct
             if (limitedEffects.length > 0)
                 setkeyBonuses(applyLimitedEffects(limitedEffects));
         }
-    }, [currentTab, character])
+    }, [currentTab, character.state.activeEffects])
 
     useEffect(() => setCalcState(calculatedState), [calculatedState]);
 
     useEffect(() => {
-        setAttrubute1List(attributeList.filter(a => a.talentName === character.talent1.name))
+        setAttrubute1List(attributeList.filter(a => a.talentName === character.talent1.name) || [])
         setattrib1Counter(0)
     }, [character.talent1])
 
     useEffect(() => {
-        setAttrubute2List(attributeList.filter(a => a.talentName === character.talent2.name))
+        setAttrubute2List(attributeList.filter(a => a.talentName === character.talent2.name) || [])
         setattrib2Counter(0)
     }, [character.talent2])
 
@@ -204,7 +204,7 @@ export default function attributes(character: Character, setCharacterData: Funct
             <div className="talent2attributes">
                 {attribute2List.map((attribute: Attribute) => (
                     <div className="attributeContainer" key={attribute.name}>
-                        {!character.attributes2?.includes(attribute) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
+                        {!(character.attributes2?.filter(a => attribute.name === a.name).length > 0) ? ((((attrib1Counter + attrib2Counter < character.attributeLevel) && (attrib2Counter - attrib1Counter < 2)) ? (
                             <div className="attributeNotSelected" onClick={() => { addAttribute(true, attribute) }}>
                                 {attribute.name} <br /> {attribute.description1}
                             </div>) : (

@@ -28,7 +28,7 @@ export default function talents(character:Character,setCharacterData:Function) {
             state.inactiveEffects = state.inactiveEffects.filter(ie=>!ie.name.includes(character.talent1.name));
             setCharacterData((prev: any) => ({
             ...prev,
-            attributes1: 0,
+            attributes1: [],
             talent1: "",
             state: {...state}
             }))
@@ -39,7 +39,7 @@ export default function talents(character:Character,setCharacterData:Function) {
             state.inactiveEffects = state.inactiveEffects.filter(ie=>!ie.name.includes(character.talent2.name));
             setCharacterData((prev: any) => ({
             ...prev,
-            attribute2: 0,
+            attribute2: [],
             talent2: "",
             state: {...state}
             }))
