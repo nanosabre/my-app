@@ -217,7 +217,9 @@ export default function spells(character: Character, currentTab: string, calcula
         }
     }
 
+    //applies filter 
     function filterAvailableSpells(e: boolean, filter: string) {
+        //if all filters are active, clicking one of the filters deactivates all others
         if (activeFilters.length == allFilters.length) {
             console.log(filterChecks);
             let temp = [filter]
@@ -228,6 +230,7 @@ export default function spells(character: Character, currentTab: string, calcula
             tempMap.set(filter, false);
             setFilterChecks(tempMap);
         }
+        //activate a filter
         else if (e) {
             if (activeFilters.indexOf(filter) == -1) {
                 let temp = [...activeFilters];
@@ -239,6 +242,7 @@ export default function spells(character: Character, currentTab: string, calcula
                 setFilterChecks(tempMap);
             }
         }
+        //deactivate
         else {
             let index = activeFilters.indexOf(filter);
             if (index != -1) {
@@ -254,13 +258,16 @@ export default function spells(character: Character, currentTab: string, calcula
 
     }
 
+    //when the filters change, rebuild the table
     useEffect(() => { updateAvailableSpellTable() }, [activeFilters]);
+    //when the filters update, update the associated map
     useEffect(() => {
         let checks = new Map();
         allFilters.forEach(filter => checks.set(filter, false));
         setFilterChecks(checks);
     }, [allFilters])
 
+    //create the buttons for each filter
     function buildFilterButtons() {
         let temps = [];
         for (let i = 0; i < allFilters.length; i++) {
@@ -275,6 +282,7 @@ export default function spells(character: Character, currentTab: string, calcula
         return temps;
     }
 
+    //updates the spell tables
     function updateCurrentSpellTable() {
         setActiveCurrentDisplayTable(buildCurrentSpellTable());
     }
@@ -286,10 +294,10 @@ export default function spells(character: Character, currentTab: string, calcula
                 filteredSpells.push(availableSpellList[i]);
             }
         } 
-        //setActiveAvailableSpells(filteredSpells);
         setAvailableSpellsTable(buildAvailableSpellTable(filteredSpells));
     }
 
+    //see tin
     function resetFilters() {
         setActiveFilters(allFilters);
         let tempMap = new Map(filterChecks);
