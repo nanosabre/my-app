@@ -129,7 +129,7 @@ export default function talents(character:Character,setCharacterData:Function) {
                             <div className="cardDamageType">
                                 {["Covenant", "Elemental"].includes(talent.name) &&
                                 <div className="damage Selector">
-                                    <input className="" type="text" placeholder="Medium Name" disabled={talent.name!="Elemental"}></input>
+                                    <input className="" type="text" placeholder="Medium Name" defaultValue={character.elementName} disabled={talent.name!="Elemental"}></input>
                                     <select 
                                         onChange={ e=> handleChangeDamageType(e.currentTarget.value, talent.name)} 
                                         defaultValue={talent.name==="Covenant"? character.patronDamageType: character.elementDamageType}>
