@@ -21,7 +21,7 @@ export default function background(character:Character,setCharacterData:Function
     const [ancestryList, setAncestryList] = useState<Ancestry[]>([]);
     const [backgroundList, setBackgroundList] = useState<Background[]>([]);
     const [traitsList, setTraitsList] = useState<Trait[]>([]);
-    const [effectList, setEffectList] = useState<Effect[]>([])
+    const [effectList, setEffectList] = useState<Effect[]>([]);
     
 
     //gets all data from backend for screen

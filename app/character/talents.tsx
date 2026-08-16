@@ -80,6 +80,23 @@ export default function talents(character:Character,setCharacterData:Function) {
 
     function buildTalentCards() {
         return(<div className="talentChoices">
+            <div className="covDamageSelect">
+                <select>
+                    <option>Necrotic</option>
+                    <option>Poison</option>
+                    <option>Shatter</option>
+                </select>
+            </div>
+            <div className="elemTypeText">
+                <input placeholder="Material Type"/>
+            </div>
+            <div className="elemDamageSelect">
+                <select>
+                    <option>Necrotic</option>
+                    <option>Poison</option>
+                    <option>Shatter</option>
+                </select>
+            </div>
             {talentList.map((talent:Talent)=>( //selector view
                 <button key={talent.name} className={((!talentSelection)&&(readySelection)) ? ("disabledTalentCard"): ("talentCard")} onClick={()=>{ setTalent(talent)}}>
                     {!((character.talent1.name === talent.name)||(character.talent2.name === talent.name)) ? (

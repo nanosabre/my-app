@@ -15,11 +15,51 @@
 
 .talents div.talentChoices {
     display: grid;
+    position: relative;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: repeat(3, minmax(0, 1fr));
     height: calc(100vh - 330px);
     width: calc(100vw - 130px);
     gap: 5px;
+}
+
+.talentChoices div.covDamageSelect {
+    position: absolute;
+    z-index: 10;
+    top: 0px;
+    left: calc((100vw - 130px)/8 - 5px);
+    width: calc((100vw - 130px)/8);
+    height: 25px;
+}
+
+select {
+    width: calc((100vw - 130px)/8);
+    height: 25px;
+}
+
+input {
+    width: calc((100vw - 130px)/8);
+    height: 25px;
+    font-size: 20px;
+}
+
+.talentChoices div.elemDamageSelect {
+    position: absolute;
+    z-index: 10;
+    top: 25px;
+    left: calc(3*(100vw - 130px)/8 - 3px);
+    width: calc((100vw - 130px)/8);
+    height: 25px;
+}
+
+.talentChoices div.elemTypeText {
+    position: absolute;
+    z-index: 10;
+    top: 0px;
+    left: calc(3*(100vw - 130px)/8 - 3px);
+    width: calc((100vw - 130px)/8);
+    height: 25px;
+    background-color: rgb(179, 179, 255);
 }
 
 .talentCard { 
@@ -41,7 +81,7 @@
     border: 1px solid #1d1d1d;
 }
 
- div.cardGrid {
+.talentCard div.cardGrid {
     display: grid;
     grid-template-areas: "name name name icon"
     "type type splash splash"
@@ -92,6 +132,7 @@
 
 .cardBack {
     display: subgrid;
+    grid-area: 1 / 1;
     grid-area: "backName backIcon";
     grid-template-columns: 400px auto;
     grid-template-rows: auto auto;
@@ -281,3 +322,4 @@
     background-color: #1d1d1d;
     cursor: pointer;
 }
+

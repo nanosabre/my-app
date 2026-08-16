@@ -4,6 +4,7 @@ import "./equipment.css";
 import { useGetEquipmentScreen } from "@/hooks/useGetEquipmentScreen";
 import { Character } from "@/types/characterTypes";
 import { ammoQuantity, proficiencyTypes, weaponQuantity } from "@/types/Enums";
+import { Effect } from "@/types/stateTypes";
 
 const displayFilters = ["Supplies", "Currency"];
 
@@ -15,6 +16,7 @@ export default function equipment(character: Character, setCharacter: Function, 
     const [typeSelect, setTypeSelect] = useState<string[]>(["","",""]);
     //the weapon card data for proficiencies, display only
     const [profData, setProfData] = useState<Item[]>([emptyItem, emptyItem, emptyItem]);
+    const [effectList, setEffectList] = useState<Effect[]>([]);
 
     //API call for screen data.
     useEffect(() => {
@@ -67,6 +69,11 @@ export default function equipment(character: Character, setCharacter: Function, 
         for(let j = 0;j<items.length-1;j+=2){
             result.push(makeEquipInventoryItem(items[j], Number(items[j+1])));
         }
+        //remove inner+outerwear
+        let innerwear = inventory.filter(i=>!(i.item.itemType===("Innerwear") && i.inventory.equipped))[0];
+        let outerwear = inventory.filter(i=>!(i.item.itemType===("Outerwear") && i.inventory.equipped))[0];
+        let updatedEffectList = character.state.activeEffects.filter(i=>(i.name !== innerwear.item.effectName && i.name !== outerwear.item.effectName));
+
         //process in standard items
         result.push(makeEquipInventoryItem(pack.outerwear,1, true));
         result.push(makeEquipInventoryItem(pack.innerwear,1, true));
