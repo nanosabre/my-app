@@ -1,6 +1,6 @@
 import { Effect, CharacterState } from "../../types/stateTypes";
 
-//add, remove, activate, and/or deactivate 
+//add, activate, and/or deactivate.  to remove an effect completely, see RemoveEffect
 export function useModifyEffect(state: CharacterState, active: boolean, ...effects: Effect[]) {
     var result = {...state};
     for (const effect of effects) {
@@ -43,4 +43,12 @@ function useDeactivateEffect(state: CharacterState, effect: Effect) {
     result.inactiveEffects.push(effect);
     result.activeEffects = result.activeEffects.filter(ae => ae.name != effect.name);
     return result
+}
+
+export function removeEffect(state: CharacterState, name:string){
+    return {
+        ...state,
+        activeEffects: state.activeEffects.filter(ae=>ae.name!=name),
+        inactiveEffects: state.inactiveEffects.filter(ie=>ie.name!=name),
+    }; 
 }
