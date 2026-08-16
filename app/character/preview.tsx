@@ -239,6 +239,8 @@ export default function preveiw(character : Character, characterState : Calculat
                 {character.attributes1[1]?.name || ""} <br/>
                 {character.attributes1[2]?.name || ""} <br/>
                 {character.attributes1[3]?.name || ""}
+                {character.talent1.name==="Covenant" ? character.patronDamageType : ""}
+                {character.talent1.name==="Elemental" ? character.elementDamageType : ""}
 
             </div>
             <div className="mainTalent2">
@@ -247,6 +249,9 @@ export default function preveiw(character : Character, characterState : Calculat
                 {character.attributes2[1]?.name || ""} <br/>
                 {character.attributes2[2]?.name || ""} <br/>
                 {character.attributes2[3]?.name || ""}
+                {character.talent2.name==="Covenant" ? character.patronDamageType : ""}
+                {character.talent2.name==="Elemental" ? character.elementName+": " : ""}
+                {character.talent2.name==="Elemental" ? character.elementDamageType : ""}
             </div>
         </div>
         <div className="spellPanel">

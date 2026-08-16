@@ -32,12 +32,17 @@
     height: 25px;
 }
 
-select {
+.covSelect {
     width: calc((100vw - 130px)/8);
     height: 25px;
 }
 
-input {
+.elemSelect {
+    width: calc((100vw - 130px)/8);
+    height: 25px;
+}
+
+.elemInput {
     width: calc((100vw - 130px)/8);
     height: 25px;
     font-size: 20px;
@@ -62,7 +67,7 @@ input {
     background-color: rgb(179, 179, 255);
 }
 
-.talentCard { 
+.talentCard {
     display: grid;
     text-align: center;
     background-color: #eeeeee;
@@ -81,7 +86,7 @@ input {
     border: 1px solid #1d1d1d;
 }
 
-.talentCard div.cardGrid {
+.cardGrid {
     display: grid;
     grid-template-areas: "name name name icon"
     "type type splash splash"
@@ -132,7 +137,6 @@ input {
 
 .cardBack {
     display: subgrid;
-    grid-area: 1 / 1;
     grid-area: "backName backIcon";
     grid-template-columns: 400px auto;
     grid-template-rows: auto auto;

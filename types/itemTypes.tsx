@@ -83,9 +83,9 @@ export var emptyItem: Item = {
         action: 0,
         description: ""
         },
-    effectName: "string",
+    effectName: "",
     baseCost: 0,
-    rarity: "string"
+    rarity: ""
 }
 
 export var emptyInventory: Inventory = {
@@ -138,9 +138,9 @@ export var uanrmedItem: Item = {
         action: 1,
         description: "Grab a target"
         },
-    effectName: "string",
+    effectName: "",
     baseCost: 0,
-    rarity: "string"
+    rarity: ""
 }
 
 export var unarmedInventory: Inventory = {

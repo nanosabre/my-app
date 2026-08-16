@@ -5,10 +5,11 @@ import { useGetEquipmentScreen } from "@/hooks/useGetEquipmentScreen";
 import { Character } from "@/types/characterTypes";
 import { ammoQuantity, proficiencyTypes, weaponQuantity } from "@/types/Enums";
 import { Effect } from "@/types/stateTypes";
+import { useModifyEffect } from "@/hooks/operations/effectOperations";
 
 const displayFilters = ["Supplies", "Currency"];
 
-export default function equipment(character: Character, setCharacter: Function, inventory: InventoryDAO[], setInventory : Function) {
+export default function equipment(character: Character, setCharacter: Function, inventory: InventoryDAO[], setInventory : Function, effectList : Effect[]) {
     //master lists
     const [packsList, setPacksList] = useState<Pack[]>([]);
     const [itemsList, setItemsList] = useState<Item[]>([]);
@@ -16,7 +17,6 @@ export default function equipment(character: Character, setCharacter: Function, 
     const [typeSelect, setTypeSelect] = useState<string[]>(["","",""]);
     //the weapon card data for proficiencies, display only
     const [profData, setProfData] = useState<Item[]>([emptyItem, emptyItem, emptyItem]);
-    const [effectList, setEffectList] = useState<Effect[]>([]);
 
     //API call for screen data.
     useEffect(() => {
@@ -62,17 +62,22 @@ export default function equipment(character: Character, setCharacter: Function, 
 
     //on pack select, clear the inventory (except weapons) then add pack items
     function addPack(packName:String){
-        let result: InventoryDAO[] = inventory.filter(i=>proficiencyTypes.some(pt=>i.item.itemType.includes(pt)));
-        let pack = packsList.find(p=>p.name===packName) || emptyPack; 
+        let result: InventoryDAO[] = inventory.filter(i=>profData.some(pt=>i.item.subtype==pt.subtype));
+        for (let j = 0;j<result.length;j++){
+            result[j].inventory.quantity = (weaponQuantity.get(result[j].item.subtype) || 1);
+        }
+        let pack = packsList.find(p=>p.name===packName) || emptyPack;
         //process non-standard items from the string
         let items = pack.items?.split("|").length >0 ? pack.items.split("|") : [];
         for(let j = 0;j<items.length-1;j+=2){
-            result.push(makeEquipInventoryItem(items[j], Number(items[j+1])));
+            let duplicate = result.filter(i=>(i.item.name===items[j]));
+            if (duplicate.length > 0) {
+                result.filter(i=>(i.item.name===items[j]))[0].inventory.quantity = (weaponQuantity.get(items[j]) || 1) + Number(items[j+1]);
+            }
+            else {
+                result.push(makeEquipInventoryItem(items[j], Number(items[j+1])));
+            }
         }
-        //remove inner+outerwear
-        let innerwear = inventory.filter(i=>!(i.item.itemType===("Innerwear") && i.inventory.equipped))[0];
-        let outerwear = inventory.filter(i=>!(i.item.itemType===("Outerwear") && i.inventory.equipped))[0];
-        let updatedEffectList = character.state.activeEffects.filter(i=>(i.name !== innerwear.item.effectName && i.name !== outerwear.item.effectName));
 
         //process in standard items
         result.push(makeEquipInventoryItem(pack.outerwear,1, true));
@@ -100,6 +105,18 @@ export default function equipment(character: Character, setCharacter: Function, 
     //creates an inventoryDAO item from arguments.  emptyInventory is preloaded with default values
     function makeEquipInventoryItem(itemName: string, quantity: number, equipped: boolean = false){
         let item = itemsList.find(i=>i.name===itemName);
+        let effects = [...effectList];
+        if (effects.filter(i=>i.name==item?.name).length > 0){
+            let newState = useModifyEffect(character.state, true, effects.filter(i=>i.name==item?.name)[0]);
+            setCharacter(
+                (prev : Character)=>({
+                    ...prev,
+                    state: newState
+                })
+            );
+            console.log(newState);
+        }
+
         return {inventory:{
                 ...emptyInventory, 
                 characterId: character.id, 

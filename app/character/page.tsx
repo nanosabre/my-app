@@ -18,6 +18,8 @@ import { useCharacterSave } from "@/hooks/useCharacterSave";
 import { useSession } from "next-auth/react";
 import skills from "./skills";
 import useCalculateState from "@/hooks/useCalculateState";
+import { useGetEffects } from "@/hooks/useGetEffectsList";
+import { Effect } from "@/types/stateTypes";
 
   //create an empty character, for now.   this will be the master data that everything will update or reference
 
@@ -29,8 +31,15 @@ export default function Home() {
     const [calculatedState, setCalculatedState] = useState<CalculatedState>(emptyCalculatedState);
     const [characterInventory, setCharacterInventory] = useState<InventoryDAO[]>([]);
     const [characterSpells, setCharacterSpells] = useState<SpellDAO[]>([]);
-
+    const [effectList, setEffectList] = useState<Effect[]>([]);
+    
     const { data: session, status } = useSession();
+
+    useEffect(()=>{
+      useGetEffects().then(data=>{
+        setEffectList(data.data.data.getEffectList);
+      })
+  },[]);
 
     useEffect(()=>setCharacterData(prev=>({...prev, userId: session?.user.id})),[session]);
 
@@ -101,7 +110,7 @@ export default function Home() {
             <TabsContent value="attributes">{attributes(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
             <TabsContent value="skills">{skills(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
             <TabsContent value="spells">{spells(characterData, currentTab, calculatedState, setCharacterSpells)}</TabsContent>
-            <TabsContent value="equipment">{equipment(characterData, setCharacterData, characterInventory, setCharacterInventory)}</TabsContent>
+            <TabsContent value="equipment">{equipment(characterData, setCharacterData, characterInventory, setCharacterInventory, effectList)}</TabsContent>
             <TabsContent value="story">{story()}</TabsContent>
             <TabsContent value="preview">{preview(characterData, calculatedState, characterInventory, characterSpells)}</TabsContent>
         </Tabs>

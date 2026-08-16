@@ -91,26 +91,27 @@ export default function talents(character:Character,setCharacterData:Function) {
         if(talent==="Covenant")
             setCharacterData((prev: Character)=>({...prev, patronDamageType: value}))
         else
-            setCharacterData((prev: Character)=>({...prev, elementalDamageType: value}));
+            setCharacterData((prev: Character)=>({...prev, elementDamageType: value}));
     }
 
     function buildTalentCards() {
         return(<div className="talentChoices">
-            <div className="covDamageSelect">
-                <select>
-                    <option>Necrotic</option>
-                    <option>Poison</option>
-                    <option>Shatter</option>
+            <div className="covDamageSelect" hidden={character.talent1.name!="Covenant" && character.talent2.name!="Covenant"}>
+                <select className="covSelect"
+                    onChange={ e=> handleChangeDamageType(e.currentTarget.value, "Covenant")} 
+                    defaultValue={character.patronDamageType}>
+                        {buildDamageTypeSelector("Soul")}
+                        {buildDamageTypeSelector("Elemental")}
                 </select>
             </div>
-            <div className="elemTypeText">
-                <input placeholder="Material Type"/>
+            <div className="elemTypeText" hidden={character.talent1.name!="Elemental" && character.talent2.name!="Elemental"}>
+                <input className="elemInput" placeholder="Material Type" defaultValue={character.elementName} onChange={(e)=>(setCharacterData((prev:Character)=>({...prev, elementName: e.target.value})))}/>
             </div>
-            <div className="elemDamageSelect">
-                <select>
-                    <option>Necrotic</option>
-                    <option>Poison</option>
-                    <option>Shatter</option>
+            <div className="elemDamageSelect" hidden={character.talent1.name!="Elemental" && character.talent2.name!="Elemental"}>
+                <select className="elemSelect"
+                    onChange={ e=> handleChangeDamageType(e.currentTarget.value, "Elemental")} 
+                    defaultValue={character.elementDamageType}>
+                        {buildDamageTypeSelector("Elemental")}
                 </select>
             </div>
             {talentList.map((talent:Talent)=>( //selector view
@@ -142,17 +143,6 @@ export default function talents(character:Character,setCharacterData:Function) {
                             </div>
                             <div className="cardDesc">
                                 {talent.description}
-                            </div>
-                            <div className="cardDamageType">
-                                {["Covenant", "Elemental"].includes(talent.name) &&
-                                <div className="damage Selector">
-                                    <input className="" type="text" placeholder="Medium Name" defaultValue={character.elementName} disabled={talent.name!="Elemental"}></input>
-                                    <select 
-                                        onChange={ e=> handleChangeDamageType(e.currentTarget.value, talent.name)} 
-                                        defaultValue={talent.name==="Covenant"? character.patronDamageType: character.elementDamageType}>
-                                            {buildDamageTypeSelector(talent.name==="Covenant"? "Soul": "Elemental")}
-                                    </select>
-                                </div>}
                             </div>
                     </div>)}
                 </button>

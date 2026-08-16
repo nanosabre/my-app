@@ -195,7 +195,7 @@
     "propertyCost propertyEffect propertyEffect propertyEffect"
     "special special special special";
     grid-template-columns: 2fr 3fr 1fr 5fr;
-    grid-template-rows: 1.2fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1.2fr 1.5fr 1fr 1fr 1fr;
 }
 
 .inventoryCollapsible div.equip2 {
@@ -208,7 +208,7 @@
     "propertyCost propertyEffect propertyEffect propertyEffect"
     "special special special special";
     grid-template-columns: 2fr 3fr 1fr 5fr;
-    grid-template-rows: 1.2fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1.2fr 1.5fr 1fr 1fr 1fr;
 }
 
 .weaponName {
