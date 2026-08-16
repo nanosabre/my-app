@@ -22,7 +22,8 @@ export interface Character {
     proficiencies: string[],
     state: CharacterState,
     patronDamageType: string,
-    elementDamageType: string
+    elementDamageType: string,
+    elementName: string
 }
 
 export interface CalculatedState {
@@ -84,7 +85,8 @@ export var emptyCharacter: Character = {
     proficiencies: ["","",""],
     state: emptyCharacterState,
     patronDamageType: "",
-    elementDamageType: ""
+    elementDamageType: "",
+    elementName: ""
 
 }
 
