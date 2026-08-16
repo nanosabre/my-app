@@ -20,7 +20,9 @@ export interface Character {
     baseFocus: number,
     baseSense: number,
     proficiencies: string[],
-    state: CharacterState
+    state: CharacterState,
+    patronDamageType: string,
+    elementDamageType: string
 }
 
 export interface CalculatedState {
@@ -80,7 +82,9 @@ export var emptyCharacter: Character = {
     baseSense: 0,
     size: "Medium",
     proficiencies: ["","",""],
-    state: emptyCharacterState
+    state: emptyCharacterState,
+    patronDamageType: "",
+    elementDamageType: ""
 
 }
 

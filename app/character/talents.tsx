@@ -5,6 +5,7 @@ import { Talent } from "@/types/talentTypes";
 import { useGetTalentScreen } from "@/hooks/useGetTalentScreen";
 import { Effect } from "@/types/stateTypes";
 import { useModifyEffect } from "@/hooks/operations/effectOperations";
+import { DamageTypes } from "@/types/Enums";
 
 export default function talents(character:Character,setCharacterData:Function) {
     //switch flipped on first talent select
@@ -78,6 +79,21 @@ export default function talents(character:Character,setCharacterData:Function) {
 
     }
 
+    function buildDamageTypeSelector(damageType: string){
+        return (
+            DamageTypes.filter(d=>d.type===damageType).map(d=>(
+                <option key={d.name} value={d.name}>{d.name}</option>
+            ))
+        )
+    }
+
+    function handleChangeDamageType(value: string, talent: string){
+        if(talent==="Covenant")
+            setCharacterData((prev: Character)=>({...prev, patronDamageType: value}))
+        else
+            setCharacterData((prev: Character)=>({...prev, elementalDamageType: value}));
+    }
+
     function buildTalentCards() {
         return(<div className="talentChoices">
             {talentList.map((talent:Talent)=>( //selector view
@@ -109,6 +125,15 @@ export default function talents(character:Character,setCharacterData:Function) {
                             </div>
                             <div className="cardDesc">
                                 {talent.description}
+                            </div>
+                            <div className="cardDamageType">
+                                {["Covenant", "Elemental"].includes(talent.name) &&
+                                <div className="damage Selector">
+                                    <input className="" type="text" placeholder="Medium Name" disabled={talent.name!="Elemental"}></input>
+                                    <select onChange={ e=> handleChangeDamageType(e.currentTarget.value, talent.name)}>
+                                        {buildDamageTypeSelector(talent.name==="Covenant"? "Soul": "Elemental")}
+                                    </select>
+                                </div>}
                             </div>
                     </div>)}
                 </button>
