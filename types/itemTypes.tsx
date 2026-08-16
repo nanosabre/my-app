@@ -116,6 +116,48 @@ export var emptyPack: Pack = {
     items: ""
 }
 
+export var uanrmedItem: Item = {
+    id: "",
+    name: "Unarmed",
+    itemType: "None",
+    subtype: "None",
+    equippable: false,
+    size: "Light",
+    weight: 0,
+    description: "",
+    properties: "Free Hand",
+    attack: {
+        name: "Strike",
+        action: 1,
+        range: "1m",
+        damage: "1d4 + Fitness",
+        damageType: "Bludgeon"
+        },
+    special: {
+        name: "Grapple",
+        action: 1,
+        description: "Grab a target"
+        },
+    effectName: "string",
+    baseCost: 0,
+    rarity: "string"
+}
+
+export var unarmedInventory: Inventory = {
+    id: null,
+    characterId: null,
+    itemId: "",
+    equipped: false,
+    quantity: 1
+
+}
+
+export var unarmedInventoryDAO: InventoryDAO = {
+    inventory: unarmedInventory,
+    item: uanrmedItem
+}
+
+
 export function getInventoryItemQTY(inventory : InventoryDAO[], itemName : string) {
     return (inventory.find(i=>i.item.name===itemName)?.inventory.quantity || 0);
 }

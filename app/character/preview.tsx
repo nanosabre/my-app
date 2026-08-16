@@ -1,15 +1,22 @@
-import { useState } from "react";
-import { emptyItem, InventoryDAO, Item, getInventoryItemQTY, emptyInventory, emptyInventoryDAO } from "@/types/itemTypes";
-import "./sheet.css";
-import { Character } from "@/types/characterTypes";
+import { useEffect, useState } from "react";
+import { emptyItem, InventoryDAO, Item, getInventoryItemQTY, emptyInventory, emptyInventoryDAO, unarmedInventoryDAO } from "@/types/itemTypes";
+import "./preview.css";
+import { CalculatedState, Character } from "@/types/characterTypes";
 import { SpellDAO } from "@/types/spellTypes";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { proficiencyTypes } from "@/types/Enums";
 
 const displayFilters = ["Supplies", "Currency"];
 
-export default function sheet(character : Character, characterInventory : InventoryDAO[], characterSpells : SpellDAO[]) {
+export default function preveiw(character : Character, characterState : CalculatedState ,characterInventory : InventoryDAO[], characterSpells : SpellDAO[]) {
     const [expandInventory, setExpandInventory] = useState(false);
+    const [equippedItem1, setEquippedItem1] = useState(getEquippedWeapon()[0]);
+    const [equippedItem2, setEquippedItem2] = useState((getEquippedWeapon()[1] || unarmedInventoryDAO));
+
+    useEffect(()=>{
+        setEquippedItem1(getEquippedWeapon()[0]);
+        setEquippedItem2((getEquippedWeapon()[1] || unarmedInventoryDAO));
+    },[characterInventory]);
 
     function makeInventoryRows() {
         return (
@@ -57,20 +64,35 @@ export default function sheet(character : Character, characterInventory : Invent
 
     function getEquippedWeapon() {
         let inventoryDAOs = characterInventory.filter(i=>i.inventory.equipped==true);
-        let items = [];
-        for (let i = 0; i < inventoryDAOs.length; i++) {
-            
+        let items = inventoryDAOs.filter((e)=>proficiencyTypes.some((f)=>e.item.itemType.includes(f)));
+        if (items.length == 0) {
+            return [unarmedInventoryDAO];
         }
+        else return items;
     }
 
-    function getEquppedWear() {
+    function getEquippedInnerwear() {
+        let inventoryDAOs = characterInventory.filter(i=>(i.item.itemType=="Innerwear"));
+        let items = inventoryDAOs.filter(i=>i.inventory.equipped==true);
+        if (items.length == 0) {
+            return emptyInventoryDAO;
+        }
+        else return items[0];
+    }
 
+    function getEquippedOuterwear() {
+        let inventoryDAOs = characterInventory.filter(i=>(i.item.itemType=="Outerwear"));
+        let items = inventoryDAOs.filter(i=>i.inventory.equipped==true);
+        if (items.length == 0) {
+            return emptyInventoryDAO;
+        }
+        else return items[0];
     }
 
     const inventoryRows = makeInventoryRows();
-    
+
     return (
-    <div className="sheet">
+    <div className="preview">
         <div className="invPanel">
             <div className="invTitle">
                 Inventory
@@ -105,7 +127,7 @@ export default function sheet(character : Character, characterInventory : Invent
                             Reagents
                         </div>
                         <div className="reagentsOrdinary">{getInventoryItemQTY(characterInventory, "Ordinary Reagent")} O</div>
-                        <div className="reagentsUncommon">{getInventoryItemQTY(characterInventory, "Uncommon Reagent Reagent")} U</div>
+                        <div className="reagentsUncommon">{getInventoryItemQTY(characterInventory, "Uncommon Reagent")} U</div>
                         <div className="reagentsRare">{getInventoryItemQTY(characterInventory, "Rare Reagent")} R</div>
                         <div className="reagentsLegendary">{getInventoryItemQTY(characterInventory, "Legendary Reagent")} L</div>
                     </div>
@@ -113,40 +135,40 @@ export default function sheet(character : Character, characterInventory : Invent
                         <div className="materialsHead">
                             Materials
                         </div>
-                        <div className="materialsOrdinary">{getInventoryItemQTY(characterInventory, "Ordinary Materials")} O</div>
-                        <div className="materialsUncommon">{getInventoryItemQTY(characterInventory, "Uncommon Material")} U</div>
-                        <div className="materialsRare">{getInventoryItemQTY(characterInventory, "Rare Material")} R</div>
-                        <div className="materialsLegendary">{getInventoryItemQTY(characterInventory, "Legendary Material")} L</div>
+                        <div className="materialsOrdinary">{getInventoryItemQTY(characterInventory, "Ordinary Crafting Material")} O</div>
+                        <div className="materialsUncommon">{getInventoryItemQTY(characterInventory, "Uncommon Crafting Material")} U</div>
+                        <div className="materialsRare">{getInventoryItemQTY(characterInventory, "Rare Crafting Material")} R</div>
+                        <div className="materialsLegendary">{getInventoryItemQTY(characterInventory, "Legendary Crafting Material")} L</div>
                     </div>
                     <div className="equip1">
-                        <div className="weaponName">Longsword</div>
-                        <div className="weaponAttackName">Slash</div>
-                        <div className="weaponAttackCost">2 Actions</div>
-                        <div className="weaponAttackRange">2m</div>
-                        <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
-                        <div className="weaponPropertyName">Balanced</div>
-                        <div className="weaponPropertyCost">FA</div>
-                        <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
-                        <div className="weaponSpecial">Special Properties: None</div>
+                        <div className="weaponName">{equippedItem1?.item.name || "None Equipped"}</div>
+                        <div className="weaponAttackName">{equippedItem1?.item.attack.name || "Attack"}</div>
+                        <div className="weaponAttackCost">{(equippedItem1?.item.attack.action + " Action") || "None"}</div>
+                        <div className="weaponAttackRange">{equippedItem1?.item.attack.range || "None"}</div>
+                        <div className="weaponAttackEffect">{(equippedItem1?.item.attack.damage + " " + equippedItem1?.item.attack.damageType) || "None"}</div>
+                        <div className="weaponPropertyName">{equippedItem1?.item.special.name || "None"}</div>
+                        <div className="weaponPropertyCost">{(equippedItem1?.item.special.action  || "F") + "A"}</div>
+                        <div className="weaponPropertyEffect">{equippedItem1?.item.special.description || "None"}</div>
+                        <div className="weaponSpecial">{equippedItem1?.item.properties || "None"}</div>
                     </div>
                     <div className="equip2">
-                        <div className="weaponName">Katana</div>
-                        <div className="weaponAttackName">Slash</div>
-                        <div className="weaponAttackCost">2 Actions</div>
-                        <div className="weaponAttackRange">2m</div>
-                        <div className="weaponAttackEffect">2d8 + Fitness Slash</div>
-                        <div className="weaponPropertyName">Balanced</div>
-                        <div className="weaponPropertyCost">FA</div>
-                        <div className="weaponPropertyEffect">This weapon's attacks are not interrupted by the evade reaction.</div>
-                        <div className="weaponSpecial">Special Properties: None</div>
+                        <div className="weaponName">{equippedItem2?.item.name || "None Equipped"}</div>
+                        <div className="weaponAttackName">{equippedItem2?.item.attack.name || "None"}</div>
+                        <div className="weaponAttackCost">{(equippedItem2?.item.attack.action + " Action") || "None"}</div>
+                        <div className="weaponAttackRange">{equippedItem2?.item.attack.range || "None"}</div>
+                        <div className="weaponAttackEffect">{(equippedItem2?.item.attack.damage + " " + equippedItem1?.item.attack.damageType) || "None"}</div>
+                        <div className="weaponPropertyName">{equippedItem2?.item.special.name || "None"}</div>
+                        <div className="weaponPropertyCost">{(equippedItem2?.item.special.action  || "F") + "A"}</div>
+                        <div className="weaponPropertyEffect">{equippedItem2?.item.special.description || "None"}</div>
+                        <div className="weaponSpecial">{equippedItem2?.item.properties || "None"}</div>
                     </div>
                     <div className="innerwear">
-                        <div className="innerName">Light Clothing</div>
-                        <div className="innerDesc">+1 Evasion while not wearing armor</div>
+                        <div className="innerName">{getEquippedInnerwear()?.item.name || "No Innerwear Equipped"}</div>
+                        <div className="innerDesc">{getEquippedInnerwear()?.item.description || "-"}</div>
                     </div>
                     <div className="outerwear">
-                        <div className="outerName">Cloak</div>
-                        <div className="outerDesc">Increase stealth skill rolls by +3, and you may conceal light and medium weapons</div>
+                        <div className="outerName">{getEquippedOuterwear()?.item.name || "No Outerwear Equipped"}</div>
+                        <div className="outerDesc">{getEquippedOuterwear()?.item.description || "-"}</div>
                     </div>
                     <div className="expandInventory" onClick={()=>setExpandInventory(true)}> ^^ Expand ^^ </div>
                 </div>)
@@ -159,7 +181,7 @@ export default function sheet(character : Character, characterInventory : Invent
                     QTY
                 </div>
                 <div className="itemTableType">
-                    Item Type
+                    Type
                 </div>
                 <div className="itemTableDesc">
                     <div className="text-[20px] text-center">Description</div>
@@ -172,37 +194,59 @@ export default function sheet(character : Character, characterInventory : Invent
                 Name <br/> {character.name}
             </div>
             <div className="mainArmor">
-                Armor
+                Armor <br/> 
+                Current: {characterState.armor} <br/>
+                Max: {characterState.armorMax} <br/>
+                Min: {characterState.armorMin}
             </div>
             <div className="mainPicture">
                 Picture
             </div>
             <div className="mainHealthMana">
-                Health Mana
+                Health Current: {characterState.hitPoints} <br/>
+                Health Max: {characterState.hitPointsMax} <br/>
+                Mana Current: {characterState.manaPoints} <br/>
+                Mana Max: {characterState.manaMax}
             </div>
             <div className="mainSkills">
-                Skills
+                Skills <br/>
+                Awareness: {characterState.awareness} <br/>
+                Celerity: {characterState.celerity} <br/>
+                Dexterity: {characterState.dexterity} <br/>
+                Evasion: {characterState.evasion} <br/>
+                Subtlety: {characterState.subtlety} <br/>
+                Tenacity: {characterState.tenacity}
             </div>
             <div className="mainConditions">
-                Conditions
+                Conditions: <br/>
+                Max Wounds: {characterState.woundsMax}
             </div>
             <div className="mainFitness">
-                Fitness
+                Fitness: {characterState.fitness}
             </div>
             <div className="mainFocus">
-                Focus
+                Focus: {characterState.focus}
             </div>
             <div className="mainPrecision">
-                Precision
+                Precision: {characterState.precision}
             </div>
             <div className="mainSense">
-                Sense
+                Sense: {characterState.sense}
             </div>
             <div className="mainTalent1">
-                Talent 1
+                {character.talent1.name} <br/>
+                {character.attributes1[0]?.name || ""} <br/>
+                {character.attributes1[1]?.name || ""} <br/>
+                {character.attributes1[2]?.name || ""} <br/>
+                {character.attributes1[3]?.name || ""}
+
             </div>
             <div className="mainTalent2">
-                Talent 2
+                {character.talent2.name} <br/>
+                {character.attributes2[0]?.name || ""} <br/>
+                {character.attributes2[1]?.name || ""} <br/>
+                {character.attributes2[2]?.name || ""} <br/>
+                {character.attributes2[3]?.name || ""}
             </div>
         </div>
         <div className="spellPanel">
@@ -210,10 +254,10 @@ export default function sheet(character : Character, characterInventory : Invent
                 Spells and Abilities
             </div>
             <div className="spellInfo1">
-                spell info 1
+                Spells Capacity: {characterState.spellCapacity}
             </div>
             <div className="spellInfo2">
-                spell info 2
+                Spells Learned: {characterSpells.length}
             </div>
             <div className="spellFilter">
                 spell filter

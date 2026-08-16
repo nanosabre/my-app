@@ -1,4 +1,4 @@
-.sheet {
+.preview {
     display: grid;
     grid-template-areas: "invPanel mainPanel spellPanel";
     grid-template-columns: 1fr 1fr 1fr;
@@ -9,7 +9,7 @@
     background-color: #eeeeee;
 }
 
-.sheet div.invPanel {
+.preview div.invPanel {
     border: 1px solid black;
     grid-area: invPanel;
     display: grid;
@@ -350,7 +350,7 @@
     border: 1px solid black;
 }
 
-.sheet div.mainPanel {
+.preview div.mainPanel {
     border: 1px solid black;
     grid-area: mainPanel;
     display: grid;
@@ -424,7 +424,7 @@
     border: 1px solid black;
 }
 
-.sheet div.spellPanel {
+.preview div.spellPanel {
     border: 1px solid black;
     grid-area: spellPanel;
     display: grid;

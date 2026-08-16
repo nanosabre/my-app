@@ -1,0 +1,65 @@
+.skills {
+    display: grid;
+    grid-template-areas: "skills skills skills skills skills skills1 skills1 skills2 skills3 skills4"
+    "fitness focus precision sense sense skills1 skills1 skills2 skills3 skills4";
+    grid-template-rows: 1fr 10fr;
+    grid-template-columns: 2fr 2fr 2fr 1fr 1fr 1fr 1fr 2fr 2fr 2fr;
+    background-color: #eeeeee;
+    border: 1px solid black;
+    text-align: center;
+    height: calc(100vh - 180px);
+    width: calc(100vw - 130px);
+}
+
+.skills div.skillsTitle {
+    grid-area: skills;
+    font-size: 36px;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.skills div.fitness {
+    line-height: 1.0;
+    font-size: 26px;
+    grid-area: fitness;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.skills div.focus {
+    line-height: 1.0;
+    font-size: 26px;
+    grid-area: focus;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.skills div.precision {
+    line-height: 1.0;
+    font-size: 26px;
+    grid-area: precision;
+    border: 1px solid rgb(31, 31, 31);
+}
+.skills div.sense {
+    line-height: 1.0;
+    font-size: 26px;
+    grid-area: sense;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.skills div.skills1 {
+    grid-area: skills1;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.skills div.skills2 {
+    grid-area: skills2;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.skills div.skills3 {
+    grid-area: skills3;
+    border: 1px solid rgb(31, 31, 31);
+}
+
+.skills div.skills4 {
+    grid-area: skills4;
+    border: 1px solid rgb(31, 31, 31);
+}

@@ -7,7 +7,7 @@ import attributes from "./attributes";
 import spells from "./spells";
 import equipment from "./equipment";
 import story from "./story";
-import sheet from "./sheet";
+import preview from "./preview";
 import { useEffect, useState } from "react";
 import { CalculatedState, Character, emptyCalculatedState, emptyCharacter } from "@/types/characterTypes";
 import { InventoryDAO } from "@/types/itemTypes";
@@ -17,6 +17,7 @@ import appHeader from "@/components/appHeader";
 import { useCharacterSave } from "@/hooks/useCharacterSave";
 import { useSession } from "next-auth/react";
 import skills from "./skills";
+import useCalculateState from "@/hooks/useCalculateState";
 
   //create an empty character, for now.   this will be the master data that everything will update or reference
 
@@ -32,6 +33,10 @@ export default function Home() {
     const { data: session, status } = useSession();
 
     useEffect(()=>setCharacterData(prev=>({...prev, userId: session?.user.id})),[session]);
+
+    useEffect(() => {
+      setCalculatedState(useCalculateState(characterData));
+    }, [currentTab])
 
     //sets current tab when navigating from tabs menu
     function moveTab(tab:string) {
@@ -89,7 +94,7 @@ export default function Home() {
                 <TabsTrigger value="spells">Spells</TabsTrigger>
                 <TabsTrigger value="equipment">Equipment</TabsTrigger>
                 <TabsTrigger value="story">Story</TabsTrigger>
-                <TabsTrigger value="sheet">Character Sheet</TabsTrigger>
+                <TabsTrigger value="preview">Preview</TabsTrigger>
             </TabsList>
             <TabsContent value="background">{background(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="talents">{talents(characterData,setCharacterData)}</TabsContent>
@@ -98,7 +103,7 @@ export default function Home() {
             <TabsContent value="spells">{spells(characterData, currentTab, calculatedState, setCharacterSpells)}</TabsContent>
             <TabsContent value="equipment">{equipment(characterData, setCharacterData, characterInventory, setCharacterInventory)}</TabsContent>
             <TabsContent value="story">{story()}</TabsContent>
-            <TabsContent value="sheet">{sheet(characterData, characterInventory, characterSpells)}</TabsContent>
+            <TabsContent value="preview">{preview(characterData, calculatedState, characterInventory, characterSpells)}</TabsContent>
         </Tabs>
       </div>
       <div className="footerbar">

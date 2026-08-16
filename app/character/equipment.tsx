@@ -107,6 +107,7 @@ export default function equipment(character: Character, setCharacter: Function, 
     function makePackSelector() {
         return (
         <select className="startChoice" defaultValue={packsList.find(p=>p.background===character.background.parentTrait.name)?.name|| ""} onChange={e=>addPack(e.currentTarget.value)}>
+            <option value="">Choose a Starting Pack</option>
             {packsList.map(pack=>(
                 <option key={pack.name} value={pack.name}>{pack.name}</option>
             ))}
@@ -220,7 +221,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                         Reagents
                     </div>
                         <div className="reagentsOrdinary">{getInventoryItemQTY(inventory, "Ordinary Reagent")} O</div>
-                        <div className="reagentsUncommon">{getInventoryItemQTY(inventory, "Uncommon Reagent Reagent")} U</div>
+                        <div className="reagentsUncommon">{getInventoryItemQTY(inventory, "Uncommon Reagent")} U</div>
                         <div className="reagentsRare">{getInventoryItemQTY(inventory, "Rare Reagent")} R</div>
                         <div className="reagentsLegendary">{getInventoryItemQTY(inventory, "Legendary Reagent")} L</div>
                 </div>
@@ -228,10 +229,10 @@ export default function equipment(character: Character, setCharacter: Function, 
                     <div className="materialsHead">
                         Materials
                     </div>
-                        <div className="materialsOrdinary">{getInventoryItemQTY(inventory, "Ordinary Materials")} O</div>
-                        <div className="materialsUncommon">{getInventoryItemQTY(inventory, "Uncommon Material")} U</div>
-                        <div className="materialsRare">{getInventoryItemQTY(inventory, "Rare Material")} R</div>
-                        <div className="materialsLegendary">{getInventoryItemQTY(inventory, "Legendary Material")} L</div>
+                        <div className="materialsOrdinary">{getInventoryItemQTY(inventory, "Ordinary Crafting Material")} O</div>
+                        <div className="materialsUncommon">{getInventoryItemQTY(inventory, "Uncommon Crafting Material")} U</div>
+                        <div className="materialsRare">{getInventoryItemQTY(inventory, "Rare Crafting Material")} R</div>
+                        <div className="materialsLegendary">{getInventoryItemQTY(inventory, "Legendary Crafting Material")} L</div>
                 </div>
                 <div className="innerwear">
                     <div className="innerHead">Innerwear</div>
@@ -259,7 +260,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                         QTY
                     </div>
                     <div className="tableType">
-                        Item Type
+                        Type
                     </div>
                     <div className="tableDesc">
                         Description

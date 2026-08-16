@@ -49,8 +49,8 @@ export default function background(character:Character,setCharacterData:Function
         //add new effects to state
         let state = effects.length > 0 ? useModifyEffect(character.state, true, ...effects) : character.state;
         //remove old effects from state
-        state.activeEffects = state.activeEffects.filter(ae=>ae.name!=character.ancestry.trait1.name || ae.name!=character.ancestry.trait2.name);
-        state.inactiveEffects = state.inactiveEffects.filter(ie=>ie.name!=character.ancestry.trait1.name || ie.name!=character.ancestry.trait2.name);
+        state.activeEffects = state.activeEffects.filter(ae=>ae.name!=character.ancestry.trait1?.name && ae.name!=character.ancestry.trait2?.name);
+        state.inactiveEffects = state.inactiveEffects.filter(ie=>ie.name!=character.ancestry.trait1?.name && ie.name!=character.ancestry.trait2?.name);
         //save to character
         if(value)
             setCharacterData((prev: Character)=>({

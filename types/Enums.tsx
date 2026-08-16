@@ -25,6 +25,8 @@ export const weaponQuantity = new Map([
      ["Throwing Knife", 8],
      ["Shuriken", 12],
      ["Javelin", 4],
+     ["Rope", 5],
+     ["Chain", 5],
      ["", -1]
 ])
 

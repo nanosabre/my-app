@@ -4,40 +4,17 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Plus, Minus } from "lucide-react";
-import { Attribute, Talent } from "@/types/talentTypes";
-import { useGetAttributeList } from "@/hooks/useGetAttributeList";
 import useCalculateState, { applyLimitedEffects } from "@/hooks/useCalculateState";
-import { Effect } from "@/types/stateTypes";
-import { useModifyEffect } from "@/hooks/operations/effectOperations";
 
-export default function skills(character: Character, setCharacterData: Function, currentTab: string, setCalcState: Function) {
+export default function skills(character: Character, setCharacterData: Function, currentTab: string, setCharacterState : Function) {
     const [calculatedState, setCalculatedState] = useState<CalculatedState>(emptyCalculatedState);
     const [ancestryBonuses, setAncestryBonuses] = useState({ ...emptyLimitedState });
     const [keyBonuses, setkeyBonuses] = useState({ ...emptyLimitedState });
 
     var points = (6 - character.baseFitness - character.baseFocus - character.basePrecision - character.baseSense - (-character.attributeLevel));
-    const increaseSkill = (e: any) => {
-        let name = character[e];
-        if (typeof name == "number") {
-            setCharacterData((prev: any) => ({
-                ...prev,
-                [e]: name + 1
-            }))
-        }
-    }
-
-    const decreaseSkill = (e: any) => {
-        let name = character[e];
-        if (typeof name == "number") {
-            setCharacterData((prev: any) => ({
-                ...prev,
-                [e]: name - 1
-            }))
-        }
-    }
 
     useEffect(() => {
-        if (currentTab === "attributes") {
+        if (currentTab === "skills") {
             setCalculatedState(useCalculateState(character));
             let limitedEffects = character.state.activeEffects.filter(ae => ae.description === "Ancestry");
             if (limitedEffects.length > 0)
@@ -48,18 +25,30 @@ export default function skills(character: Character, setCharacterData: Function,
         }
     }, [currentTab, character])
 
+    //whenever a skill is changed via point buy. value is negative if reducing  
+    const handleSkillChange = (e: string, value: number) => {
+        //get current value of associated skill
+        let skill = character[e];
+        //type of check to remove warnings
+        if (typeof skill == "number") {
+            setCharacterData((prev: any) => ({
+                ...prev,
+                [e]: skill + value
+            }))
+        }
+    }
 
     return (
-        <div>
+        <div className="skills">
             <div className="skillsTitle">
                 Remaining Skill Points: {points}
             </div>
             <div className="fitness">
                 Fitness
                 <ButtonGroup className="w-full">
-                    <Button size="icon" onClick={() => { decreaseSkill("baseFitness") }} disabled={character.baseFitness == 0}><Minus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseFitness", -1) }} disabled={character.baseFitness == 0}><Minus /></Button>
                     <div className="w-full border-1 border-black text-[20px]">{character?.baseFitness}</div>
-                    <Button size="icon" onClick={() => { increaseSkill("baseFitness") }} disabled={(character.baseFitness == 6) || (points <= 0)}><Plus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseFitness", 1) }} disabled={(character.baseFitness == 6) || (points <= 0)}><Plus /></Button>
                 </ButtonGroup>
                 +
                 <div className="w-full border-1 border-black text-[20px]"> Ancestry: {ancestryBonuses.fitness}</div>
@@ -72,9 +61,9 @@ export default function skills(character: Character, setCharacterData: Function,
             <div className="focus">
                 Focus
                 <ButtonGroup className="w-full">
-                    <Button size="icon" onClick={() => { decreaseSkill("baseFocus") }} disabled={character.baseFocus == 0}><Minus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseFocus", -1) }} disabled={character.baseFocus == 0}><Minus /></Button>
                     <div className="w-full border-1 border-black text-[20px]">{character?.baseFocus}</div>
-                    <Button size="icon" onClick={() => { increaseSkill("baseFocus") }} disabled={(character.baseFocus == 6) || (points <= 0)}><Plus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseFocus", 1) }} disabled={(character.baseFocus == 6) || (points <= 0)}><Plus /></Button>
                 </ButtonGroup>
                 +
                 <div className="w-full border-1 border-black text-[20px]"> Ancestry: {ancestryBonuses.focus}</div>
@@ -86,9 +75,9 @@ export default function skills(character: Character, setCharacterData: Function,
             <div className="precision">
                 Precision
                 <ButtonGroup className="w-full">
-                    <Button size="icon" onClick={() => { decreaseSkill("basePrecision") }} disabled={character.basePrecision == 0}><Minus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("basePrecision", -1) }} disabled={character.basePrecision == 0}><Minus /></Button>
                     <div className="w-full border-1 border-black text-[20px]">{character?.basePrecision}</div>
-                    <Button size="icon" onClick={() => { increaseSkill("basePrecision") }} disabled={(character.basePrecision == 6) || (points <= 0)}><Plus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("basePrecision", 1) }} disabled={(character.basePrecision == 6) || (points <= 0)}><Plus /></Button>
                 </ButtonGroup>
                 +
                 <div className="w-full border-1 border-black text-[20px]"> Ancestry: {ancestryBonuses.precision}</div>
@@ -100,9 +89,9 @@ export default function skills(character: Character, setCharacterData: Function,
             <div className="sense">
                 Sense
                 <ButtonGroup className="w-full">
-                    <Button size="icon" onClick={() => { decreaseSkill("baseSense") }} disabled={character.baseSense == 0}><Minus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseSense", -1) }} disabled={character.baseSense == 0}><Minus /></Button>
                     <div className="w-full border-1 border-black text-[20px]">{character?.baseSense}</div>
-                    <Button size="icon" onClick={() => { increaseSkill("baseSense") }} disabled={(character.baseSense == 6) || (points <= 0)}><Plus /></Button>
+                    <Button size="icon" onClick={() => { handleSkillChange("baseSense", 1) }} disabled={(character.baseSense == 6) || (points <= 0)}><Plus /></Button>
                 </ButtonGroup>
                 +
                 <div className="w-full border-1 border-black text-[20px]"> Ancestry: {ancestryBonuses.sense}</div>
