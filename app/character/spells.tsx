@@ -5,6 +5,7 @@ import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@/
 import "./spells.css";
 import { CalculatedState, Character } from "@/types/characterTypes";
 import { useGetFilteredSpells } from "@/hooks/useGetFilteredSpells";
+import { Talent, Attribute } from "@/types/talentTypes";
 
 //constant values.  may need to be removed to enums file.
 const maxDomainSpells = 3;
@@ -52,39 +53,43 @@ export default function spells(character: Character, currentTab: string, calcula
         setCurrentSpellList((prev:any)=>[...prev].filter(sd=>allFilters.findIndex(f=>f===sd.spell.source)!=-1))
     }, [availableSpellList])
 
+    //when the current spell list changes, rebuild the tables
     useEffect(() => {
         updateAvailableSpellTable();
         updateCurrentSpellTable();
     }, [currentSpellList])
 
+    //build the list of filter strings that get sent to the backend API
     function buildFilterList() {
         let result: string[] = []
-        if (character.talent1.caster) {
-            character.attributes1.forEach(a => result.push(a.name + " Spell"))
-            result.push(character.talent1.name + " Spell")
-            if (character.attributes1.length >= 2)
-                result.push(character.talent1.name + " Keystone")
-            if (character.attributes1.length == 4)
-                result.push(character.talent1.name + " Capstone")
-        }
-        if (character.talent2.caster) {
-            character.attributes2.forEach(a => result.push(a.name + " Spell"))
-            result.push(character.talent2.name + " Spell")
-            if (character.attributes2.length >= 2)
-                result.push(character.talent2.name + " Keystone")
-            if (character.attributes2.length == 4)
-                result.push(character.talent2.name + " Capstone")
-        }
+        createTalentFilterList(character.talent1, character.attributes1, result);
+        createTalentFilterList(character.talent2, character.attributes2, result);
         setAllFilters(result);
         setActiveFilters(result);
         return result;
     }
 
+    //for a given talent, add all applicable spell filter strings to the list
+    function createTalentFilterList(talent: Talent, attributes: Attribute[], result: string[]){
+        if (talent.caster) {
+            attributes.forEach(a => result.push(a.name + " Spell"))
+            result.push(talent.name + " Spell")
+            if (attributes.length >= 2)
+                result.push(talent.name + " Keystone")
+            if (attributes.length == 4)
+                result.push(talent.name + " Capstone")
+        }
+    }
+
+    //returns true if a spell meets all conditions to be selected from the available spell list 
+    //non-valid spells will be disabled in the available spell table
     function validSpell(spell: Spell) {
         let spellSource = spell.source;
+        //cannot already be selected
         if (currentSpellList.find(sd => sd.spell.name === spell.name)) {
             return (false);
         }
+        //cannot add more spells than the maximum available (for it's type)
         if (spellSource.includes("Domain")) {
             return (maxDomainSpells > spellCounts.domain);
         }
@@ -105,10 +110,11 @@ export default function spells(character: Character, currentTab: string, calcula
         }
     }
 
+    //builds the selectable spell table
     function buildAvailableSpellTable(spellList:Spell[]) {
         return (
             <div className="availableTable">
-                {spellList.map((spell: Spell) => (
+                {(activeFilters.length == 0) ? ("No Filters Selected") : spellList.map((spell: Spell) => (
                     <div key={spell.name} className={(validSpell(spell)) ? ("cell") : ("disabledCell")}>
                         <div onClick={() => { addSpell(spell) }} className={(validSpell(spell)) ? ("w-[30px] bg-[#cccccc] hover:bg-[#aaaaaa]") : ("w-[30px] bg-[#cccccc] hover:bg-[#cc0000]")}>
                             +
@@ -130,12 +136,12 @@ export default function spells(character: Character, currentTab: string, calcula
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
-                        {(activeFilters.length == 0) ? ("No Filters Selected") : ("")}
                     </div>
                 ))}
             </div>)
     }
 
+    //builds the current spell table.
     function buildCurrentSpellTable() {
         return (
             <div className="currentTable">
@@ -167,50 +173,47 @@ export default function spells(character: Character, currentTab: string, calcula
             </div>)
     }
 
-    //TODO on save check all inventory and spell items and make sure characterId is correct (might be done in back end?)
     function addSpell(spell: Spell) {
+        //if the spell does not already exist in the currentSpellList and is a valid spell, then...
         if (currentSpellList.find(s => s.spell.name === spell.name) == undefined && (validSpell(spell))) {
             let temp = [...currentSpellList];
+            //create a new spellDAO object
             let spelld: SpellDAO = { spellCharacter: { id: null, characterId: character.id || "", spellId: spell.id }, spell: spell }
             temp.push(spelld);
             setCurrentSpellList(temp);
             setCharacterSpells(temp);
-            if (spelld.spell.source.includes("Domain")) {
-                spellCounts.domain += 1
-            }
-            else if (spelld.spell.source === character.talent1.name + " Keystone") {
-                spellCounts.keystone1 += 1
-            }
-            else if (spelld.spell.source === character.talent1.name + " Capstone") {
-                spellCounts.capstone1 += 1
-            }
-            else if (spelld.spell.source === character.talent2.name + " Keystone") {
-                spellCounts.keystone2 += 1
-            }
-            else if (spelld.spell.source === character.talent2.name + " Capstone") {
-                spellCounts.capstone2 += 1
-            }
+            //update relevant count
+            updateSpellCounts(spelld.spell.source, true);
         }
     }
 
+
     function removeSpell(spelld: SpellDAO) {
+        //remove the spell from the list
         let temp = currentSpellList.filter(s => s.spell.name != spelld.spell.name)
         setCurrentSpellList(temp);
         setCharacterSpells(temp);
-        if (spelld.spell.source.includes("Domain")) {
-            spellCounts.domain -= 1
+        //update relevant count
+        updateSpellCounts(spelld.spell.source, false);
+        
+    }
+
+    function updateSpellCounts(source:string, direction: boolean) {
+        let q = direction ? 1 : -1
+        if (source.includes("Domain")) {
+            spellCounts.domain += q
         }
-        else if (spelld.spell.source === character.talent1.name + " Keystone") {
-            spellCounts.keystone1 -= 1
+        else if (source === character.talent1.name + " Keystone") {
+            spellCounts.keystone1 += q
         }
-        else if (spelld.spell.source === character.talent1.name + " Capstone") {
-            spellCounts.capstone1 -= 1
+        else if (source === character.talent1.name + " Capstone") {
+            spellCounts.capstone1 += q
         }
-        else if (spelld.spell.source === character.talent2.name + " Keystone") {
-            spellCounts.keystone2 -= 1
+        else if (source === character.talent2.name + " Keystone") {
+            spellCounts.keystone2 += q
         }
-        else if (spelld.spell.source === character.talent2.name + " Capstone") {
-            spellCounts.capstone2 -= 1
+        else if (source === character.talent2.name + " Capstone") {
+            spellCounts.capstone2 += q
         }
     }
 
