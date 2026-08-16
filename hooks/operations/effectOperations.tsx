@@ -45,7 +45,7 @@ function useDeactivateEffect(state: CharacterState, effect: Effect) {
     return result
 }
 
-function removeEffect(state: CharacterState, name:string){
+export function removeEffect(state: CharacterState, name:string){
     return {
         ...state,
         activeEffects: state.activeEffects.filter(ae=>ae.name!=name),
