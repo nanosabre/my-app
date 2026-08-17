@@ -44,7 +44,7 @@ function applyEffects(result: CalculatedState, effects:Effect[]){
         let source = parsed[i+1]==="1" ? 1 : Number(result[parsed[i+1]]);
         let previous = Number(result[parsed[i]]);
         let value = previous + (source * Number(parsed[i+2]));
-        result[parsed[i]] = value > 0 ? value : 0
+        result[parsed[i]] = value// > 0 ? value : 0 This prevents values from becoming negative
     }
 }
 
@@ -61,7 +61,7 @@ export function applyLimitedEffects(effects: Effect[]){
         let source = parsed[i+1]==="1" ? 1 : Number(result[parsed[i+1]]);
         let previous = Number(result[parsed[i]]);
         let value = previous + (source * Number(parsed[i+2]));
-        result[parsed[i]] = value > 0 ? value : 0
+        result[parsed[i]] = value// > 0 ? value : 0 This prevents values from becoming negative
     }
     return result;
 }

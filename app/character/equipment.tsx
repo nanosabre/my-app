@@ -17,7 +17,7 @@ export default function equipment(character: Character, setCharacter: Function, 
     const [typeSelect, setTypeSelect] = useState<string[]>(["","",""]);
     //the weapon card data for proficiencies, display only
     const [profData, setProfData] = useState<Item[]>([emptyItem, emptyItem, emptyItem]);
-
+    
     //API call for screen data.
     useEffect(() => {
         useGetEquipmentScreen("").then(data => {
@@ -44,6 +44,26 @@ export default function equipment(character: Character, setCharacter: Function, 
         character.proficiencies.forEach((p)=>result.push(itemsList.find(i=>i.name===p)||emptyItem));
         return result;
     })},[character.proficiencies])
+    useEffect(()=>{
+        let copyState = {...character.state};
+        copyState.activeEffects=copyState.activeEffects.filter(ae=>ae.effectType!=1);
+        copyState.inactiveEffects=copyState.inactiveEffects.filter(ie=>ie.effectType!=1);
+        let resultEffects = [];
+        for (const invDAO of inventory) {
+            let effectFromItem = effectList.find(i=>i.name===invDAO.item.name);
+            if (effectFromItem && invDAO.inventory.equipped) {
+                resultEffects.push(effectFromItem);
+            }
+        }
+        copyState = useModifyEffect(copyState, true, ...resultEffects);
+        setCharacter(
+            (prev : Character)=>({
+                ...prev,
+                state: copyState
+            })
+        );
+
+    },[inventory])
 
     function makeInventoryRows() {
         return (
@@ -105,18 +125,6 @@ export default function equipment(character: Character, setCharacter: Function, 
     //creates an inventoryDAO item from arguments.  emptyInventory is preloaded with default values
     function makeEquipInventoryItem(itemName: string, quantity: number, equipped: boolean = false){
         let item = itemsList.find(i=>i.name===itemName);
-        let effects = [...effectList];
-        if (effects.filter(i=>i.name==item?.name).length > 0){
-            let newState = useModifyEffect(character.state, true, effects.filter(i=>i.name==item?.name)[0]);
-            setCharacter(
-                (prev : Character)=>({
-                    ...prev,
-                    state: newState
-                })
-            );
-            console.log(newState);
-        }
-
         return {inventory:{
                 ...emptyInventory, 
                 characterId: character.id, 
@@ -308,7 +316,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     <div className="weaponAttackRange">{profData[0]?.attack?.range || ""}m</div>
                     <div className="weaponAttackEffect">{profData[0]?.attack?.damage || ""} {profData[0]?.attack?.damageType  || ""}</div>
                     <div className="weaponPropertyName">{profData[0]?.special?.name || ""}</div>
-                    <div className="weaponPropertyCost">{profData[0]?.special?.action > 0 ? profData[0].special.action : "FA" }</div>
+                    <div className="weaponPropertyCost">{(profData[0]?.special?.action > 0 ? profData[0].special.action : "Free") + " Action"}</div>
                     <div className="weaponPropertyEffect">{profData[0]?.special?.description || ""}</div>
                     <div className="weaponSpecial">Special Properties: { profData[0]?.properties ? profData[0]?.properties: "None"}</div>
                 </div>
@@ -325,7 +333,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     <div className="weaponAttackRange">{profData[1]?.attack?.range || ""}m</div>
                     <div className="weaponAttackEffect">{profData[1]?.attack?.damage || ""} {profData[1]?.attack?.damageType  || ""}</div>
                     <div className="weaponPropertyName">{profData[1]?.special?.name || ""}</div>
-                    <div className="weaponPropertyCost">{profData[1]?.special?.action > 0 ? profData[1].special.action : "FA" }</div>
+                    <div className="weaponPropertyCost">{(profData[1]?.special?.action > 0 ? profData[1].special.action : "Free") + " Action"}</div>
                     <div className="weaponPropertyEffect">{profData[1]?.special?.description || ""}</div>
                     <div className="weaponSpecial">Special Properties: { profData[1]?.properties ? profData[1]?.properties: "None"}</div>
                 </div>
@@ -342,7 +350,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     <div className="weaponAttackRange">{profData[2]?.attack?.range || ""}m</div>
                     <div className="weaponAttackEffect">{profData[2]?.attack?.damage || ""} {profData[2]?.attack?.damageType  || ""}</div>
                     <div className="weaponPropertyName">{profData[2]?.special?.name || ""}</div>
-                    <div className="weaponPropertyCost">{profData[2]?.special?.action > 0 ? profData[2].special.action : "FA" }</div>
+                    <div className="weaponPropertyCost">{(profData[2]?.special?.action > 0 ? profData[2].special.action : "Free") + " Action" }</div>
                     <div className="weaponPropertyEffect">{profData[2]?.special?.description || ""}</div>
                     <div className="weaponSpecial">Special Properties: { profData[2]?.properties ? profData[2]?.properties: "None"}</div>
                 </div>

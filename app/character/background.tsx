@@ -1,9 +1,12 @@
+"use client"
 import { useEffect, useState } from "react";
 import { Character } from "@/types/characterTypes";
 import "./background.css";
 import { useGetBackgroundScreen } from "@/hooks/useGetBackgroundScreen";
 import { Ancestry, Background, Effect, Trait } from "@/types/stateTypes";
 import { useModifyEffect } from "@/hooks/operations/effectOperations";
+import { Combobox, ComboboxContent, ComboboxList, ComboboxItem, ComboboxInput, ComboboxEmpty, ComboboxChips, ComboboxChip, ComboboxValue, ComboboxChipsInput, useComboboxAnchor } from "@/components/ui/combobox";
+import React from "react";
 
 export default function background(character:Character,setCharacterData:Function) {
 
@@ -22,6 +25,9 @@ export default function background(character:Character,setCharacterData:Function
     const [backgroundList, setBackgroundList] = useState<Background[]>([]);
     const [traitsList, setTraitsList] = useState<Trait[]>([]);
     const [effectList, setEffectList] = useState<Effect[]>([]);
+
+    const [sourceFilter, setSourceFilter] = useState<string[]>(["Core"]);
+    const anchor = useComboboxAnchor();
     
 
     //gets all data from backend for screen
@@ -95,7 +101,7 @@ export default function background(character:Character,setCharacterData:Function
 
     //step 2.5 of 3, build the select element for the child menu
     function buildAncestryVariants(parent:string) {
-        let variants = ancestryList?.filter(a=>a.parent===parent);
+        let variants = ancestryList?.filter(a=>a.parent===parent && sourceFilter.includes(a.source));
         return <select defaultValue={character.ancestry?.name} onChange={(e)=>(saveAncestrytoCharacter(e.currentTarget.value))}>Choose Variant
             {variants.map((variant: Ancestry)=>(
                 <option value = {variant.name} key={variant.name}>
@@ -107,7 +113,7 @@ export default function background(character:Character,setCharacterData:Function
     
     //step 2.5/3
     function buildBackgroundVariants(parentTrait: string) {
-        let variants = backgroundList.filter(b=>b.parentTrait===parentTrait)
+        let variants = backgroundList.filter(b=>(b.parentTrait===parentTrait && sourceFilter.includes(b.source)));
         return <select defaultValue={character.background?.name} onChange={(e)=>(saveBackgroundtoCharacter(e.currentTarget.value))}>Choose Variant
             {variants.map((variant: Background)=>(
                 <option value = {variant.name} key={variant.name}>
@@ -151,13 +157,17 @@ export default function background(character:Character,setCharacterData:Function
 
     //Step 1 of 3: build the initial display lists 
     function buildAncestryList() {
-        return <div>{ancestryParentList.map((ancestry: Ancestry) => (
+        let filteredAncestryList = ancestryParentList.filter(anc=>sourceFilter.includes(anc.source));
+        return <div>{filteredAncestryList.map((ancestry: Ancestry) => (
             <div className="cell" key={ancestry.parent} onClick={()=>{ancestryChoice(ancestry)}}>
                 <div className="cellName">
                     {ancestry.parent}
                 </div>
                 <div className="cellDescription">
                     {ancestry.description}
+                </div>
+                <div className="cellWorld">
+                    {ancestry.source}
                 </div>
                 <div className="cellImage">
 
@@ -181,11 +191,43 @@ export default function background(character:Character,setCharacterData:Function
             </div>
         ))}</div>
     }
-
+    
     return (
     <div className="background">
         <div className="name">
             <input className="nameBox" type="text" placeholder="Character Name" value={character.name} onChange={(e)=>(setCharacterData((prev:Character)=>({...prev, name: e.target.value})))}/>
+            <div>
+                <Combobox
+                    multiple
+                    autoHighlight
+                    items={["Core","Ribean","Zaub"]}
+                    defaultValue={["Core"]}
+                    onValueChange={(value)=>(setSourceFilter(value))}
+                    >
+                    <ComboboxChips ref={anchor} className="w-full text-[18px]">
+                        <ComboboxValue>
+                        {(values) => (
+                            <React.Fragment>
+                                {values.map((value: string) => (
+                                    <ComboboxChip key={value} className="text-[28px]">{value}</ComboboxChip>
+                                ))}
+                                <ComboboxChipsInput />
+                            </React.Fragment>
+                        )}
+                        </ComboboxValue>
+                    </ComboboxChips>
+                    <ComboboxContent anchor={anchor}>
+                        <ComboboxEmpty>No items found.</ComboboxEmpty>
+                        <ComboboxList>
+                        {(item) => (
+                            <ComboboxItem key={item} value={item}>
+                            {item}
+                            </ComboboxItem>
+                        )}
+                        </ComboboxList>
+                    </ComboboxContent>
+                </Combobox>
+            </div>
             <div className="image">
                 
             </div>
@@ -208,8 +250,8 @@ export default function background(character:Character,setCharacterData:Function
                 </div>
             </div>
             //parent view
-        ): (<div>
-                Choose an Ancestry
+        ): (<div className="scrollContainer">
+                <div>Choose an Ancestry</div>
                 <div className="scrollList">
                     {buildAncestryList()}
                 </div>
@@ -233,8 +275,8 @@ export default function background(character:Character,setCharacterData:Function
                 </div>
             </div>
             //parent view
-        ): (<div>
-                Choose a Background
+        ): (<div className="scrollContainer">
+                <div>Choose a Background</div>
                 <div className="scrollList">
                     {buildBackgroundList()}
                 </div>

@@ -31,7 +31,6 @@ input {
     border: 1px solid rgb(85, 85, 85);
     background-color: rgb(179, 179, 255);
     flex: 1;
-
 }
 
 .background div.ancestry {
@@ -39,21 +38,25 @@ input {
     border-style: solid;
     height: calc(100vh - 180px);
     border: 1px solid rgb(85, 85, 85);
+}
+
+.scrollContainer {
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 180px);
 }
 
 .scrollList {
-    height: calc(100vh - 295px);
+    grid-area: scroll;
     overflow-y: auto;
 }
 
 .scrollList div.cell {
     display: grid;
-    grid-template-areas: "name image"
-    "description image";
+    grid-template-areas: "name world image"
+    "description description image";
     grid-template-rows: 50px auto;
-    grid-template-columns: 5fr 2fr; 
+    grid-template-columns: 3fr 2fr 2fr; 
     border: 1px solid rgb(85, 85, 85);
     height: 150px;
 }
@@ -77,6 +80,13 @@ input {
     overflow-y: hidden;
 }
 
+.cell div.cellWorld {
+    font-size: 20px;
+    grid-area: world;
+    text-align: right;
+    border: 1px solid rgb(173, 173, 173);
+}
+
 .cell div.cellImage {
     grid-area: image;
     border: 1px solid rgb(173, 173, 173);
@@ -94,7 +104,7 @@ input {
 
 .background div.faction {
     grid-area: faction;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 180px);
     border: 1px solid rgb(85, 85, 85);
     display: flex;
 }
