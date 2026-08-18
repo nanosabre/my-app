@@ -6,6 +6,7 @@ import { Character } from "@/types/characterTypes";
 import { ammoQuantity, proficiencyTypes, weaponQuantity } from "@/types/Enums";
 import { Effect } from "@/types/stateTypes";
 import { useModifyEffect } from "@/hooks/operations/effectOperations";
+import itemSearch from "../itemSearch";
 
 const displayFilters = ["Supplies", "Currency"];
 
@@ -124,6 +125,9 @@ export default function equipment(character: Character, setCharacter: Function, 
 
     //creates an inventoryDAO item from arguments.  emptyInventory is preloaded with default values
     function makeEquipInventoryItem(itemName: string, quantity: number, equipped: boolean = false){
+        if (itemName==="") {
+            return emptyInventoryDAO
+        }
         let item = itemsList.find(i=>i.name===itemName);
         return {inventory:{
                 ...emptyInventory, 
@@ -313,7 +317,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     </select>
                     <div className="weaponAttackName">{profData[0]?.attack?.name || ""}</div>
                     <div className="weaponAttackCost">{profData[0]?.attack?.action || ""} Actions</div>
-                    <div className="weaponAttackRange">{profData[0]?.attack?.range || ""}m</div>
+                    <div className="weaponAttackRange">{profData[0]?.attack?.range || ""}</div>
                     <div className="weaponAttackEffect">{profData[0]?.attack?.damage || ""} {profData[0]?.attack?.damageType  || ""}</div>
                     <div className="weaponPropertyName">{profData[0]?.special?.name || ""}</div>
                     <div className="weaponPropertyCost">{(profData[0]?.special?.action > 0 ? profData[0].special.action : "Free") + " Action"}</div>
@@ -330,7 +334,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     </select>
                     <div className="weaponAttackName">{profData[1]?.attack?.name || ""}</div>
                     <div className="weaponAttackCost">{profData[1]?.attack?.action || ""} Actions</div>
-                    <div className="weaponAttackRange">{profData[1]?.attack?.range || ""}m</div>
+                    <div className="weaponAttackRange">{profData[1]?.attack?.range || ""}</div>
                     <div className="weaponAttackEffect">{profData[1]?.attack?.damage || ""} {profData[1]?.attack?.damageType  || ""}</div>
                     <div className="weaponPropertyName">{profData[1]?.special?.name || ""}</div>
                     <div className="weaponPropertyCost">{(profData[1]?.special?.action > 0 ? profData[1].special.action : "Free") + " Action"}</div>
@@ -347,7 +351,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                     </select>
                     <div className="weaponAttackName">{profData[2]?.attack?.name || ""}</div>
                     <div className="weaponAttackCost">{profData[2]?.attack?.action || ""} Actions</div>
-                    <div className="weaponAttackRange">{profData[2]?.attack?.range || ""}m</div>
+                    <div className="weaponAttackRange">{profData[2]?.attack?.range || ""}</div>
                     <div className="weaponAttackEffect">{profData[2]?.attack?.damage || ""} {profData[2]?.attack?.damageType  || ""}</div>
                     <div className="weaponPropertyName">{profData[2]?.special?.name || ""}</div>
                     <div className="weaponPropertyCost">{(profData[2]?.special?.action > 0 ? profData[2].special.action : "Free") + " Action" }</div>
@@ -356,9 +360,7 @@ export default function equipment(character: Character, setCharacter: Function, 
                 </div>
             </div>
             <div className="search">
-                <div>
-                    Item Search
-                </div>
+                {itemSearch(character, inventory, setInventory)}
             </div>
         </div>
     )

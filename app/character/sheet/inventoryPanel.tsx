@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
-import { emptyItem, InventoryDAO, Item, getInventoryItemQTY, emptyInventory, emptyInventoryDAO, unarmedInventoryDAO } from "@/types/itemTypes";
-import "./preview.css";
-import { CalculatedState, Character } from "@/types/characterTypes";
-import { SpellDAO } from "@/types/spellTypes";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+"use client";
+
+import { emptyInventoryDAO, getInventoryItemQTY, InventoryDAO, unarmedInventoryDAO } from "@/types/itemTypes";
 import { proficiencyTypes } from "@/types/Enums";
-import mainPanel from "./sheet/mainPanel";
+import { useEffect, useState } from "react";
+import "./inventoryPanel.css"
 
 const displayFilters = ["Supplies", "Currency"];
 
-export default function preveiw(character : Character, characterState : CalculatedState ,characterInventory : InventoryDAO[], characterSpells : SpellDAO[]) {
-    const [expandInventory, setExpandInventory] = useState(false);
+export default function inventoryPanel(characterInventory : InventoryDAO[], setInventory : Function) {
+    const [expandInventory, setExpandInventory] = useState(true);
     const [equippedItem1, setEquippedItem1] = useState(getEquippedWeapon()[0]);
     const [equippedItem2, setEquippedItem2] = useState((getEquippedWeapon()[1] || unarmedInventoryDAO));
 
@@ -33,35 +31,6 @@ export default function preveiw(character : Character, characterState : Calculat
             </div>
         )
     }
-
-    function buildCurrentSpellTable() {
-        return (
-            <div className="spellTable">
-                {characterSpells.map((spelld: SpellDAO) => (
-                    <div className="cell" key={spelld.spell.name}>
-                        <Accordion>
-                            <AccordionItem>
-                                <AccordionTrigger>
-                                    <div className="cellContentName" >{spelld.spell.name}</div>
-                                    <div className="cellContentMedium">{spelld.spell.manaCost} Mana</div>
-                                    <div className="cellContentMedium">{spelld.spell.actionCost}</div>
-                                    <div className="cellContentShort">{spelld.spell.range}</div>
-                                    <div className="cellContentLong">{spelld.spell.spellType}</div>
-                                    <div className="cellContentLong">{spelld.spell.source}</div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                    <div className="cellDescription">
-                                        {spelld.spell.description}
-                                    </div>
-                                </AccordionContent>
-                            </AccordionItem>
-                        </Accordion>
-                    </div>
-
-                ))}
-            </div>)
-    }
-
 
     function getEquippedWeapon() {
         let inventoryDAOs = characterInventory.filter(i=>i.inventory.equipped==true);
@@ -90,10 +59,7 @@ export default function preveiw(character : Character, characterState : Calculat
         else return items[0];
     }
 
-    const inventoryRows = makeInventoryRows();
-
     return (
-    <div className="preview">
         <div className="invPanel">
             <div className="invTitle">
                 Inventory
@@ -103,7 +69,7 @@ export default function preveiw(character : Character, characterState : Calculat
                 <div className="inventoryCollapsible">
                     <div className="expandInventory" onClick={()=>setExpandInventory(false)}>  vv Contract vv </div>
                 </div>
-                 ): (
+                    ): (
                 <div className="inventoryCollapsible">
                     <div className="currencies">
                     <div className="currencyHead">
@@ -188,90 +154,7 @@ export default function preveiw(character : Character, characterState : Calculat
                     <div className="text-[20px] text-center">Description</div>
                 </div>
             </div>
-            {inventoryRows}
+            {makeInventoryRows()}
         </div>
-        <div className="mainPanel">
-            <div  className="mainName">
-                Name <br/> {character.name}
-            </div>
-            <div className="mainArmor">
-                Armor <br/> 
-                Current: {characterState.armor} <br/>
-                Max: {characterState.armorMax} <br/>
-                Min: {characterState.armorMin}
-            </div>
-            <div className="mainPicture">
-                Picture
-            </div>
-            <div className="mainHealthMana">
-                Health Current: {character.state.hitPoints} <br/>
-                Health Max: {characterState.hitPointsMax} <br/>
-                Mana Current: {character.state.manaPoints} <br/>
-                Mana Max: {characterState.manaMax}
-            </div>
-            <div className="mainSkills">
-                Skills <br/>
-                Awareness: {characterState.awareness} <br/>
-                Celerity: {characterState.celerity} <br/>
-                Dexterity: {characterState.dexterity} <br/>
-                Evasion: {characterState.evasion} <br/>
-                Subtlety: {characterState.subtlety} <br/>
-                Tenacity: {characterState.tenacity}
-            </div>
-            <div className="mainConditions">
-                Conditions: <br/>
-                Wounds: {character.state.wounds} <br/>
-                Max Wounds: {characterState.woundsMax} <br/>
-                Level: {character.attributeLevel}
-            </div>
-            <div className="mainFitness">
-                Fitness: {characterState.fitness}
-            </div>
-            <div className="mainFocus">
-                Focus: {characterState.focus}
-            </div>
-            <div className="mainPrecision">
-                Precision: {characterState.precision}
-            </div>
-            <div className="mainSense">
-                Sense: {characterState.sense}
-            </div>
-            <div className="mainTalent1">
-                {character.talent1.name} <br/>
-                {character.attributes1[0]?.name || ""} <br/>
-                {character.attributes1[1]?.name || ""} <br/>
-                {character.attributes1[2]?.name || ""} <br/>
-                {character.attributes1[3]?.name || ""}
-                {character.talent1.name==="Covenant" ? character.patronDamageType : ""}
-                {character.talent1.name==="Elemental" ? character.elementDamageType : ""}
-
-            </div>
-            <div className="mainTalent2">
-                {character.talent2.name} <br/>
-                {character.attributes2[0]?.name || ""} <br/>
-                {character.attributes2[1]?.name || ""} <br/>
-                {character.attributes2[2]?.name || ""} <br/>
-                {character.attributes2[3]?.name || ""}
-                {character.talent2.name==="Covenant" ? character.patronDamageType : ""}
-                {character.talent2.name==="Elemental" ? character.elementName+": " : ""}
-                {character.talent2.name==="Elemental" ? character.elementDamageType : ""}
-            </div>
-        </div>
-        <div className="spellPanel">
-            <div className="spellTitle">
-                Spells and Abilities
-            </div>
-            <div className="spellInfo1">
-                Spells Capacity: {characterState.spellCapacity}
-            </div>
-            <div className="spellInfo2">
-                Spells Learned: {characterSpells.length}
-            </div>
-            <div className="spellFilter">
-                spell filter
-            </div>
-            {buildCurrentSpellTable()}
-        </div>
-    </div>
-)
+    )
 }

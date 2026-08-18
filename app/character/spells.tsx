@@ -20,7 +20,7 @@ var spellCounts = {
     capstone2: 0
 }
 
-export default function spells(character: Character, currentTab: string, calculatedState: CalculatedState, setCharacterSpells : Function) {
+export default function spells(character: Character, currentTab: string, calculatedState: CalculatedState, characterSpells : SpellDAO[], setCharacterSpells : Function) {
     //filters for the filter display
     const [allFilters, setAllFilters] = useState<string[]>([]);
     //currently active filters
@@ -38,6 +38,10 @@ export default function spells(character: Character, currentTab: string, calcula
     //map of each filter and if it is active or not.
     const [filterChecks, setFilterChecks] = useState(new Map());
 
+
+    useEffect(()=>{
+        setCurrentSpellList(characterSpells);
+    },[characterSpells])
 
     //get data from API, but only when on the spells tab
     useEffect(() => {

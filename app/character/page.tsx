@@ -20,12 +20,20 @@ import skills from "./skills";
 import useCalculateState from "@/hooks/useCalculateState";
 import { useGetEffects } from "@/hooks/useGetEffectsList";
 import { Effect } from "@/types/stateTypes";
+import { useCharacterById } from "@/hooks/useCharacterById";
+import { useSearchParams } from "next/navigation";
 
   //create an empty character, for now.   this will be the master data that everything will update or reference
 
 const tabs = ["background", "talents", "attributes", "skills", "spells", "equipment", "story", "sheet"];
 
-export default function Home() {
+export default function Builder({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+    const searchId = useSearchParams().get('id');
+
     const [currentTab, setCurrentTab] = useState("background");
     const [characterData, setCharacterData] = useState<Character>(emptyCharacter)
     const [calculatedState, setCalculatedState] = useState<CalculatedState>(emptyCalculatedState);
@@ -38,14 +46,21 @@ export default function Home() {
     useEffect(()=>{
       useGetEffects().then(data=>{
         setEffectList(data.data.data.getEffectList);
+        if (searchId) {
+          useCharacterById(searchId).then(result=>{
+            setCharacterData(result.data.data.fullCharacterById.character);
+            setCharacterInventory(result.data.data.fullCharacterById.inventory);
+            setCharacterSpells(result.data.data.fullCharacterById.spells);
+        });
+        }
       })
-  },[]);
+    },[]);
 
     useEffect(()=>setCharacterData(prev=>({...prev, userId: session?.user.id})),[session]);
 
     useEffect(() => {
       let calcState = useCalculateState(characterData);
-      setCalculatedState({...calcState, hitPoints: calcState.hitPointsMax, manaPoints: calcState.manaMax, armor: calcState.armorMax});
+      setCalculatedState(calcState);
     }, [currentTab])
 
     //sets current tab when navigating from tabs menu
@@ -84,7 +99,7 @@ export default function Home() {
 
   return (
     <main className="main">
-        {appHeader(session, status)}
+      {appHeader(session, status)}
       <div className="page">
         <div className="prevButton" onClick={()=>{prevTab()}}>
             Prev
@@ -110,7 +125,7 @@ export default function Home() {
             <TabsContent value="talents">{talents(characterData,setCharacterData)}</TabsContent>
             <TabsContent value="attributes">{attributes(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
             <TabsContent value="skills">{skills(characterData,setCharacterData, currentTab, setCalculatedState)}</TabsContent>
-            <TabsContent value="spells">{spells(characterData, currentTab, calculatedState, setCharacterSpells)}</TabsContent>
+            <TabsContent value="spells">{spells(characterData, currentTab, calculatedState, characterSpells, setCharacterSpells)}</TabsContent>
             <TabsContent value="equipment">{equipment(characterData, setCharacterData, characterInventory, setCharacterInventory, effectList)}</TabsContent>
             <TabsContent value="story">{story()}</TabsContent>
             <TabsContent value="preview">{preview(characterData, calculatedState, characterInventory, characterSpells)}</TabsContent>

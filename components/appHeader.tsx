@@ -1,5 +1,6 @@
 import { signIn, useSession } from "next-auth/react";
 import SignOutButton from "./signoutButton";
+import "./appHeader.css";
 
 export default function appHeader(session : any, status : any){
 

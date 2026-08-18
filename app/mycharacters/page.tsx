@@ -39,7 +39,7 @@ export default function characterSelect() {
 
 
   return (
-    <div className="flex flex-col flex-1 items-left justify-left bg-zinc-50 font-sans dark:bg-black">
+    <div>
       <main className="main">
         {appHeader(session, status)}
         <div className="characterList">

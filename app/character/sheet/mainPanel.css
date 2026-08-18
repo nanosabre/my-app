@@ -1,0 +1,198 @@
+.mainPanel {
+    height: calc(85vh);
+    max-width: 40vw;
+    border: 1px solid black;
+    display: grid;
+    grid-template-areas: "name name name name name name"
+    "armor armor picture picture health health"
+    "skills skills skills conditions conditions conditions"
+    "fitness focus focus precision precision sense"
+    "talent1Name talent1Name talent1Name talent2Name talent2Name talent2Name"
+    "talent1Attributes talent1Attributes talent1Attributes talent2Attributes talent2Attributes talent2Attributes";
+    grid-template-columns: 6fr 2fr 4fr 4fr 2fr 6fr;
+    grid-template-rows: 1fr 4fr 4fr 1fr 1fr 4fr;
+    font-size: 28px;
+}
+
+.mainPanel div.characterName {
+    grid-area: name;
+    font-size: 56px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.mainPanel div.armor {
+    grid-area: armor;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    font-size: 36px;
+}
+
+.armor div.currentArmor {
+    flex: 1;
+    border: 1px solid black;
+}
+
+.armor div.minArmor {
+    flex: 1;
+    border: 1px solid black;
+}
+
+.armor div.movement {
+    flex: 1;
+    border: 1px solid black;
+}
+
+.mainPanel div.picture {
+    grid-area: picture;
+    background-color: rgb(179, 179, 255);
+    margin-bottom: calc(-4vh);
+}
+
+.mainPanel div.health {
+    grid-area: health;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    font-size: 36px;
+}
+
+.health div.hitPoints {
+    flex: 1;
+    border: 1px solid black;
+}
+
+.hitPoints div.hitCalc {
+    display: inline;
+    font-size: 24px;
+    background-color: rgb(194, 194, 194);
+    border-radius: 10px;
+    padding: 5px;
+    margin-left: 10px;
+}
+.hitPoints div.hitCalc:hover {
+    background-color: rgb(226, 226, 226);
+    cursor: pointer;
+}
+
+.health div.manaPoints {
+    flex: 1;
+    border: 1px solid black;
+}
+
+.health div.wounds {
+    flex: 1;
+    border: 1px solid black;
+}
+
+.mainPanel div.skills {
+    grid-area: skills;
+    border: 1px solid black;
+    text-align: center;
+    display: grid;
+    grid-template-areas: "title title"
+    "awareness evasion"
+    "celerity subtlety"
+    "dexterity tenacity";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.skills div.skillsTitle {
+    grid-area: title;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.skills div.awareness {
+    grid-area: awareness;
+    border: 1px solid black;
+}
+
+.skills div.celerity {
+    grid-area: celerity;
+    border: 1px solid black;
+}
+
+.skills div.dexterity {
+    grid-area: dexterity;
+    border: 1px solid black;
+}
+
+.skills div.evasion {
+    grid-area: evasion;
+    border: 1px solid black;
+}
+
+.skills div.subtlety {
+    grid-area: subtlety;
+    border: 1px solid black;
+}
+
+.skills div.tenacity {
+    grid-area: tenacity;
+    border: 1px solid black;
+}
+
+
+.mainPanel div.conditions {
+    grid-area: conditions;
+    border: 1px solid black;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.conditions textarea {
+    border: 1px solid black;
+    flex: 1;
+}
+
+.mainPanel div.fitness {
+    grid-area: fitness;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.mainPanel div.focus {
+    grid-area: focus;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.mainPanel div.precision {
+    grid-area: precision;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.mainPanel div.sense {
+    grid-area: sense;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.mainPanel div.talent1Name {
+    grid-area: talent1Name;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.mainPanel div.talent2Name {
+    grid-area: talent2Name;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.mainPanel div.talent1Attributes {
+    grid-area: talent1Attributes;
+    border: 1px solid black;
+    font-size: 24px;
+}
+
+.mainPanel div.talent2Attributes {
+    grid-area: talent2Attributes;
+    border: 1px solid black;
+    font-size: 24px;
+}
